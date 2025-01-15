@@ -1,0 +1,86 @@
+[
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/cc  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -o CMakeFiles/glad.dir/third_party/glad/src/glad.c.o -c /home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/src/glad.c",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/src/glad.c",
+  "output": "CMakeFiles/glad.dir/third_party/glad/src/glad.c.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui/backends/imgui_impl_glfw.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends/imgui_impl_glfw.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends/imgui_impl_glfw.cpp",
+  "output": "CMakeFiles/imgui.dir/third_party/imgui/backends/imgui_impl_glfw.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui/backends/imgui_impl_opengl3.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends/imgui_impl_opengl3.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends/imgui_impl_opengl3.cpp",
+  "output": "CMakeFiles/imgui.dir/third_party/imgui/backends/imgui_impl_opengl3.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui/imgui.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/imgui.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/imgui.cpp",
+  "output": "CMakeFiles/imgui.dir/third_party/imgui/imgui.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui/imgui_demo.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/imgui_demo.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/imgui_demo.cpp",
+  "output": "CMakeFiles/imgui.dir/third_party/imgui/imgui_demo.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui/imgui_draw.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/imgui_draw.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/imgui_draw.cpp",
+  "output": "CMakeFiles/imgui.dir/third_party/imgui/imgui_draw.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui/imgui_tables.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/imgui_tables.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/imgui_tables.cpp",
+  "output": "CMakeFiles/imgui.dir/third_party/imgui/imgui_tables.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui/imgui_widgets.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/imgui_widgets.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/imgui_widgets.cpp",
+  "output": "CMakeFiles/imgui.dir/third_party/imgui/imgui_widgets.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/ModelManager.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/src/ModelManager.cpp",
+  "output": "CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/ObjectRenderer.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/src/ObjectRenderer.cpp",
+  "output": "CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/OpenGLerrorreporting.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/src/OpenGLerrorreporting.cpp",
+  "output": "CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/ScreenEffect.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/src/ScreenEffect.cpp",
+  "output": "CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/filemanager.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/src/filemanager.cpp",
+  "output": "CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/main.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/main.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/src/main.cpp",
+  "output": "CMakeFiles/PigeonEngine.dir/src/main.cpp.o"
+}
+]
