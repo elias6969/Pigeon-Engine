@@ -16,6 +16,7 @@
 #include "Camera.h"
 #include "filemanager.h"
 #include "modelLoader.h"
+#include "vao_manager.h"
 
 namespace data
 {

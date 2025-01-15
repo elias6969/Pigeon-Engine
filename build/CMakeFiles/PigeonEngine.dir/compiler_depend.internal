@@ -9,6 +9,7 @@ CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o
  /home/lighht18/Tutorial/OpenglTemplate/project/include/filemanager.h
  /home/lighht18/Tutorial/OpenglTemplate/project/include/mesh.h
  /home/lighht18/Tutorial/OpenglTemplate/project/include/modelLoader.h
+ /home/lighht18/Tutorial/OpenglTemplate/project/include/vao_manager.h
  /home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include/KHR/khrplatform.h
  /home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include/glad/glad.h
  /home/lighht18/Tutorial/OpenglTemplate/project/third_party/stb_image.h

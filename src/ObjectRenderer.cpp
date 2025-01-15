@@ -60,12 +60,14 @@ unsigned int loadTexture(const char* filePath)
 
 namespace Var
 {
+    //Class definitions
     Cube cube;
     Grid grid;
     Sphere sphere;
     Particle particle;
     SkyBox skybox;
-    //Image image;
+    
+    //Path to different folders
     VirtualFileSystem vfs("../resources");
     std::string resourcePath = vfs.getFullPath("Shaders/");
     std::string texturePath = vfs.getFullPath("Textures/");
@@ -174,7 +176,7 @@ void UpdateParticleBuffers(std::vector<glm::vec3> particlePositions) {
 }
 
 void Particle::renderParticles(Shader& shader, int &amount, int speed, Camera &camera,
-    int screen_width, int screen_height, float &height, bool RenderParticle)
+    int screen_width, int screen_height, float &height, bool RenderParticle, GLFWwindow* window)
 {
     if(!RenderParticle)
       return ;
@@ -277,15 +279,11 @@ void Particle::renderParticles(Shader& shader, int &amount, int speed, Camera &c
     // Cleanup: Unbind the VAO and disable blending
     glBindVertexArray(0);
     glDisable(GL_BLEND);
+    if(glfwWindowShouldClose(window)){
+      glDeleteVertexArrays(1, &ParticleVAO);
+      glDeleteBuffers(1, &ParticleVBO);
+    }
 }
-
-void Particle::unloadparticle()
-{
-    glDeleteVertexArrays(1, &Var::particle.ParticleVAO);
-    glDeleteBuffers(1, &Var::particle.ParticleVBO);
-}
-
-
 
 std::vector<float> Grid::generateGrid(float size, float spacing) 
 {
@@ -330,7 +328,7 @@ void Grid::setupGrid(Shader &shader, float size, float spacing) {
     shader.LoadShaders((Var::shaderPath + "grid.vs").c_str(), (Var::shaderPath + "grid.fs").c_str());
 }
 
-void Grid::renderGrid(Shader& shader, Camera& camera) {
+void Grid::renderGrid(Shader& shader, Camera& camera, GLFWwindow* window) {
     if (gridVAO == 0) {
         std::cerr << "Grid VAO is not initialized! Call setupGrid() first.\n";
         return;
@@ -349,6 +347,10 @@ void Grid::renderGrid(Shader& shader, Camera& camera) {
     glBindVertexArray(gridVAO);
     glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(gridVertices.size() / 3));
     glBindVertexArray(0);
+    if(glfwWindowShouldClose(window)){
+      glDeleteVertexArrays(1, &gridVAO);
+      glDeleteBuffers(1, &gridVBO);
+    }
 }
 
 void Cube::loadCube(Shader& shader) {
@@ -573,12 +575,13 @@ void Cube::render(Shader& ourshader,
     // Render cube
     glBindVertexArray(Var::cube.VAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);    // OpenGL rendering code here
+
+    if(glfwWindowShouldClose(window)){
+      glDeleteVertexArrays(1, &VAO);
+      glDeleteBuffers(1, &VBO);
+    }
 }
 
-void Cube::unloadCube() {
-    glDeleteVertexArrays(1, &Var::cube.VAO);
-    glDeleteBuffers(1, &Var::cube.VBO);
-}
 
 unsigned int loadCubemap(std::vector<std::string> faces) {
     GLuint textureID = 0;
@@ -728,12 +731,12 @@ void SkyBox::renderSkybox(Shader& shader, int screenWidth, int screenHeight, GLF
 
     // Restore the depth function to default (for other objects)
     glDepthFunc(GL_LESS);
+    if(glfwWindowShouldClose(window)){
+      glDeleteVertexArrays(1, &vao);
+      glDeleteBuffers(1, &vbo);
+    }
 }
 
-void SkyBox::unloadsky() {
-    glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vbo);
-}
 // Sphere class definition
 Sphere::Sphere() {
     // Initialize sphere properties
@@ -1135,7 +1138,6 @@ void TransparentWindow::render(Camera& camera, GLFWwindow* window)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_SRC_COLOR);
     glBlendEquation(GL_FUNC_SUBTRACT);
-    // Sort windows by distance, farthest first
     std::vector<std::pair<float, glm::vec3>> sorted;
     sorted.reserve(windowsHolder::windows.size());
 
@@ -1145,14 +1147,11 @@ void TransparentWindow::render(Camera& camera, GLFWwindow* window)
         sorted.push_back(std::make_pair(distance, wPos));
     }
 
-    // Sort by distance descending (farthest first)
     std::sort(sorted.begin(), sorted.end(),
               [](auto &a, auto &b){ return a.first > b.first; });
 
-    // Use our window shader
     shader.use();
 
-    // Create projection & view matrices
     glm::mat4 projection = glm::perspective(
         glm::radians(camera.Zoom),
         1200.0f / 1000.0f,
@@ -1163,12 +1162,10 @@ void TransparentWindow::render(Camera& camera, GLFWwindow* window)
     shader.setMat4("projection", projection);
     shader.setMat4("view", view);
 
-    // Bind all the goodies
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    // Draw windows from farthest to nearest
     for (auto &win : sorted)
     {
         glm::mat4 model = glm::mat4(1.0f);
@@ -1177,7 +1174,6 @@ void TransparentWindow::render(Camera& camera, GLFWwindow* window)
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
 
-    // Cleanup if the window wants to close
     if (glfwWindowShouldClose(window))
     {
         glDeleteVertexArrays(1, &VAO);

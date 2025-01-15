@@ -69,7 +69,8 @@ public:
         // delete the shaders as they're linked into our program now and no longer necessary
         glDeleteShader(vertex);
         glDeleteShader(fragment);
-        std::cout << "SUCCESS::SHADER::PROGRAM::SHADERS_SUCCESSFULLY_LOADED \n" << "SUCESS::PATH::VERTEX::" << vertexPath << "\nSUCCES::FRAGMENT::" << fragmentPath << std::endl;
+        std::cout << "SUCCESS::SHADER::PROGRAM::SHADERS_SUCCESSFULLY_LOADED \n" << "SUCESS::PATH::VERTEX::" << vertexPath << 
+                      "\nSUCCESS::FRAGMENT::" << fragmentPath << std::endl;
     }
     // activate the shader
     // ------------------------------------------------------------------------

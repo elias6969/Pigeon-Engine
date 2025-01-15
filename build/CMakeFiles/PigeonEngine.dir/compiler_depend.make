@@ -8,6 +8,7 @@ CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o: /home/lighht18/Tutorial/Open
   /home/lighht18/Tutorial/OpenglTemplate/project/include/filemanager.h \
   /home/lighht18/Tutorial/OpenglTemplate/project/include/mesh.h \
   /home/lighht18/Tutorial/OpenglTemplate/project/include/modelLoader.h \
+  /home/lighht18/Tutorial/OpenglTemplate/project/include/vao_manager.h \
   /home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include/KHR/khrplatform.h \
   /home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include/glad/glad.h \
   /home/lighht18/Tutorial/OpenglTemplate/project/third_party/stb_image.h \
@@ -2701,9 +2702,9 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: /home/lighht18/Tutorial/OpenglTempla
 
 /usr/include/c++/13/cfloat:
 
-/usr/include/assimp/quaternion.h:
-
 /home/lighht18/Tutorial/OpenglTemplate/project/include/modelLoader.h:
+
+/usr/include/assimp/quaternion.h:
 
 /usr/include/c++/13/math.h:
 
@@ -2879,8 +2880,6 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: /home/lighht18/Tutorial/OpenglTempla
 
 /usr/include/c++/13/bits/exception_defines.h:
 
-/usr/include/glm/ext/matrix_double2x3.hpp:
-
 /usr/include/x86_64-linux-gnu/c++/13/bits/c++locale.h:
 
 /usr/include/c++/13/bits/ostream.tcc:
@@ -2947,6 +2946,38 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: /home/lighht18/Tutorial/OpenglTempla
 
 /usr/include/c++/13/bits/concept_check.h:
 
+/usr/include/c++/13/bits/shared_ptr.h:
+
+/usr/include/glm/detail/type_mat4x3.hpp:
+
+/usr/include/c++/13/tr1/poly_hermite.tcc:
+
+/usr/include/x86_64-linux-gnu/bits/types/timer_t.h:
+
+/usr/include/c++/13/bits/regex_compiler.tcc:
+
+/usr/include/c++/13/sstream:
+
+/usr/include/glm/ext/vector_float1_precision.hpp:
+
+/usr/include/c++/13/bits/nested_exception.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h:
+
+/usr/include/c++/13/bits/locale_facets_nonio.h:
+
+/usr/include/glm/detail/type_mat3x4.hpp:
+
+/usr/include/GLFW/glfw3.h:
+
+/usr/include/c++/13/bits/streambuf_iterator.h:
+
+/usr/include/x86_64-linux-gnu/bits/flt-eval-method.h:
+
+/usr/include/glm/ext/vector_bool4_precision.hpp:
+
+/usr/include/c++/13/bits/align.h:
+
 /usr/include/c++/13/bits/shared_ptr_atomic.h:
 
 /home/lighht18/Tutorial/OpenglTemplate/project/third_party/stb_image.h:
@@ -2954,6 +2985,34 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: /home/lighht18/Tutorial/OpenglTempla
 /usr/include/c++/13/bits/basic_string.tcc:
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
+
+/usr/include/c++/13/bits/string_view.tcc:
+
+/usr/include/c++/13/stack:
+
+/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include/glad/glad.h:
+
+/usr/include/assimp/defs.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdint-least.h:
+
+/home/lighht18/Tutorial/OpenglTemplate/project/include/vao_manager.h:
+
+/usr/include/c++/13/tr1/beta_function.tcc:
+
+/usr/include/glm/ext/quaternion_trigonometric.inl:
+
+/usr/include/assert.h:
+
+/usr/include/glm/ext/vector_int3_sized.hpp:
+
+/usr/include/glm/ext/vector_double3_precision.hpp:
+
+/usr/include/c++/13/bits/shared_ptr_base.h:
+
+/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include/KHR/khrplatform.h:
+
+/usr/include/glm/ext/matrix_float3x4_precision.hpp:
 
 /usr/include/assimp/color4.inl:
 
@@ -2972,8 +3031,6 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: /home/lighht18/Tutorial/OpenglTempla
 /usr/include/glm/ext/matrix_double2x3_precision.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
-
-/usr/include/c++/13/bits/shared_ptr.h:
 
 /home/lighht18/Tutorial/OpenglTemplate/project/include/filemanager.h:
 
@@ -3027,24 +3084,6 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: /home/lighht18/Tutorial/OpenglTempla
 
 /usr/include/c++/13/algorithm:
 
-/usr/include/glm/ext/quaternion_trigonometric.inl:
-
-/usr/include/assert.h:
-
-/usr/include/glm/ext/vector_int3_sized.hpp:
-
-/usr/include/glm/ext/vector_bool4_precision.hpp:
-
-/usr/include/c++/13/bits/align.h:
-
-/usr/include/glm/detail/type_mat3x4.hpp:
-
-/usr/include/GLFW/glfw3.h:
-
-/usr/include/c++/13/bits/streambuf_iterator.h:
-
-/usr/include/x86_64-linux-gnu/bits/flt-eval-method.h:
-
 /usr/include/assimp/Importer.hpp:
 
 /usr/include/c++/13/bits/requires_hosted.h:
@@ -3059,41 +3098,15 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: /home/lighht18/Tutorial/OpenglTempla
 
 /usr/include/c++/13/bits/hash_bytes.h:
 
-/usr/include/glm/ext/vector_uint4_sized.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/endianness.h:
-
 /usr/include/wctype.h:
 
 /usr/include/assimp/camera.h:
 
 /usr/include/glm/ext/matrix_float3x3_precision.hpp:
 
-/usr/include/glm/ext/vector_double3_precision.hpp:
+/usr/include/glm/ext/vector_uint4_sized.hpp:
 
-/usr/include/c++/13/bits/shared_ptr_base.h:
-
-/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include/KHR/khrplatform.h:
-
-/usr/include/glm/ext/matrix_float3x4_precision.hpp:
-
-/usr/include/glm/detail/type_mat4x3.hpp:
-
-/usr/include/c++/13/tr1/poly_hermite.tcc:
-
-/usr/include/x86_64-linux-gnu/bits/types/timer_t.h:
-
-/usr/include/c++/13/bits/regex_compiler.tcc:
-
-/usr/include/c++/13/sstream:
-
-/usr/include/glm/ext/vector_float1_precision.hpp:
-
-/usr/include/c++/13/bits/nested_exception.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h:
-
-/usr/include/c++/13/bits/locale_facets_nonio.h:
+/usr/include/x86_64-linux-gnu/bits/endianness.h:
 
 /usr/include/glm/detail/type_mat3x3.inl:
 
@@ -3203,10 +3216,6 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: /home/lighht18/Tutorial/OpenglTempla
 
 /usr/include/glm/gtc/vec1.hpp:
 
-/usr/include/c++/13/tr1/beta_function.tcc:
-
-/home/lighht18/Tutorial/OpenglTemplate/project/include/vao_manager.h:
-
 /usr/include/c++/13/bits/utility.h:
 
 /usr/include/c++/13/bits/stl_function.h:
@@ -3232,16 +3241,6 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: /home/lighht18/Tutorial/OpenglTempla
 /usr/include/c++/13/bits/std_abs.h:
 
 /usr/include/c++/13/bits/locale_facets.tcc:
-
-/usr/include/c++/13/stack:
-
-/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include/glad/glad.h:
-
-/usr/include/assimp/defs.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdint-least.h:
-
-/usr/include/c++/13/bits/string_view.tcc:
 
 /usr/include/c++/13/ratio:
 
@@ -3312,6 +3311,8 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: /home/lighht18/Tutorial/OpenglTempla
 /usr/include/c++/13/locale:
 
 /usr/include/stdint.h:
+
+/usr/include/glm/ext/matrix_double2x3.hpp:
 
 /usr/include/glm/ext/quaternion_relational.hpp:
 

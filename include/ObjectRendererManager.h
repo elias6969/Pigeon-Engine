@@ -16,7 +16,7 @@ public:
 
     void setupGrid(Shader &shader, float size, float spacing);
 
-    void renderGrid(Shader& shader, Camera& camera);
+    void renderGrid(Shader& shader, Camera& camera, GLFWwindow* window);
 private: 
     GLuint gridVAO = 0, gridVBO = 0;
     std::vector<float> gridVertices;
@@ -26,9 +26,7 @@ class Particle {
 public:
     void InitParticle(Shader& shader);
     void renderParticles(Shader& shader, int &amount, int speed, Camera &camera,
-        int screen_width, int screen_height, float &height, bool RenderParticle);
-    void unloadparticle();
-    int poasdsada;
+        int screen_width, int screen_height, float &height, bool RenderParticle, GLFWwindow* windwow);
 private:
     GLuint ParticleVAO, ParticleVBO, Particletexture;
     int x;
@@ -41,9 +39,6 @@ public:
     void render(Shader& ourshader,
         glm::vec3& cubeposition, Camera& camera,
         int screen_width, int screen_height, GLFWwindow* window, double &mouseX, double &mouseY, bool& ishovering, bool& isMoving);              // Render the cube
-    void unloadCube();
-    // Any additional methods for cube-related actions
-
 private:
     GLuint VAO, VBO, texture;                  // Cube-specific OpenGL objects (VAO and VBO)
 };
@@ -52,7 +47,6 @@ class SkyBox {
 public:
     void texturebufferLoading(Shader& shader);
     void renderSkybox(Shader& shader, int screenWidth, int screenHeight, GLFWwindow* window, Camera &camera);
-    void unloadsky();
 private:
     unsigned int vao, vbo;
 };
@@ -74,16 +68,8 @@ private:
 class Cylinder
 {
 public:
-    /// \brief Constructor generates the geometry of the cylinder
-    /// \param radius Radius of the cylinder
-    /// \param height Height of the cylinder
-    /// \param segments Number of segments for the circular cross-section
     void cylinderloader(float radius, float height, int segments);
-
-    /// \brief Destructor cleans up GPU resources
     ~Cylinder();
-
-    /// \brief Draw the cylinder (bind VAO and issue draw call)
     void draw(Shader& shader) const;
 
 private:
@@ -102,22 +88,18 @@ public:
 	void initializeData();          // Initialize sphere data (vertices, texture, etc.)
     void loadSphere();                // Load sphere data (vertices, texture, etc.)
     void render();              // Render the sphere
-    // Any additional methods for sphere-related actions
-
 private:
     GLuint VAO, VBO;                  // Sphere-specific OpenGL objects (VAO and VBO)
 };
 
-// Pigeon-Class for rendering images (Because pigeons like pictures too!)
 class Image {
 public:
     Image(const std::string& filepath);  // Constructor to load an image from a file
     void loadImage();                   // Load image data (texture)
     void render();                // Render the image
-    // Any additional methods for image-related actions
 
 private:
-    GLuint textureID;                   // Image-specific OpenGL texture ID
+    GLuint textureID;                   
 };
 
 class TransparentWindow

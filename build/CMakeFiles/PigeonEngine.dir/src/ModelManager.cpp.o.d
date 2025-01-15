@@ -410,4 +410,5 @@ CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o: \
  /usr/include/glm/gtc/type_ptr.inl \
  /home/lighht18/Tutorial/OpenglTemplate/project/include/Shader.h \
  /home/lighht18/Tutorial/OpenglTemplate/project/include/Camera.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/filemanager.h
+ /home/lighht18/Tutorial/OpenglTemplate/project/include/filemanager.h \
+ /home/lighht18/Tutorial/OpenglTemplate/project/include/vao_manager.h

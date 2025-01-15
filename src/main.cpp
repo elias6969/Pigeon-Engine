@@ -121,14 +121,15 @@ int main()
     Grid grid;
     SkyBox skybox;
     Particle particle;
-    TransparentWindow windowManager;
-
+    TransparentWindow windowManager;  
     CharacterModel skeletonLoader;
     CharacterModel mountainmanager;
-
+    
+    //Models
     Model mountainModel;
     Model housemodel;
 
+    //Shaders declarations
     Shader skeletonShader;
     Shader cubeShader;
     Shader gridShader;
@@ -136,6 +137,7 @@ int main()
     Shader particleShader;
     Shader mountainShader;
     
+    //Inilialization
     windowManager.init();
     cube.loadCube(cubeShader);
     grid.setupGrid(gridShader, 10.0f, 0.5f);
@@ -246,21 +248,26 @@ int main()
         ImGui::End();
         
         // render
-        //
+        glBindFramebuffer(GL_FRAMEBUFFER, PigeonVars::gFrameBuffer);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         cube.render(cubeShader, cubeposition, camera, SCR_WIDTH, SCR_HEIGHT, window, mouseX, mouseY, ishovering, isMoving);
-        grid.renderGrid(gridShader, camera);
-        particle.renderParticles(particleShader, ParticleAmount, particlespeed, camera, SCR_WIDTH, SCR_HEIGHT, height, RenderParticle);
+        grid.renderGrid(gridShader, camera, window);
+        particle.renderParticles(particleShader, ParticleAmount, particlespeed, camera, SCR_WIDTH, SCR_HEIGHT, height, RenderParticle, window);
         skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
         windowManager.render(camera, window);
         skeletonLoader.RenderModel(camera, SCR_WIDTH, SCR_HEIGHT);
         mountainmanager.customRenderModel(camera, 0.01f, 1.0f, mountainposition, SCR_WIDTH, SCR_HEIGHT, mountainModel, mountainShader);
         mountainmanager.customRenderModel(camera, 0.3f, shaderheight, housePosition, SCR_WIDTH, SCR_HEIGHT, housemodel, mountainShader);
+        
         // Render ImGui
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        //glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        //glClear(GL_COLOR_BUFFER_BIT);
+        RenderScreenEFT();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -271,9 +278,6 @@ int main()
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
-    cube.unloadCube();
-
-    // glfw: terminate, clearing all previously allocated GLFW resources.
     glfwTerminate();
     return 0;
 }
