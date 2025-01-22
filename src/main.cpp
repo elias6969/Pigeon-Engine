@@ -20,7 +20,8 @@
 #include "ObjectRendererManager.h"
 #include "filemanager.h"
 #include "modelLoader.h"
-#include "ScreenEffect.h"
+#include "Model.h"
+#include "animator.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -122,30 +123,24 @@ int main()
     SkyBox skybox;
     Particle particle;
     TransparentWindow windowManager;  
-    CharacterModel skeletonLoader;
-    CharacterModel mountainmanager;
-    
+    CharacterModel playerManager;
+    Image imageManager;
+
     //Models
-    Model mountainModel;
-    Model housemodel;
+    Model playerModel;
 
     //Shaders declarations
-    Shader skeletonShader;
     Shader cubeShader;
     Shader gridShader;
     Shader skyboxshader;
     Shader particleShader;
-    Shader mountainShader;
-    
+    Shader PlayerShader;
     //Inilialization
     windowManager.init();
     cube.loadCube(cubeShader);
     grid.setupGrid(gridShader, 10.0f, 0.5f);
     particle.InitParticle(particleShader);
-    skeletonLoader.loadModel();
-    mountainmanager.customModel(mountainShader, housemodel, "house/source/monster-house-with-arm-tree-model/source/update/ps2.obj", "mountain.vs", "mountain.fs");
-    mountainmanager.customModel(mountainShader, mountainModel, "mountain/MountainTerrain.obj", "mountain.vs", "mountain.fs");
-    initScreen(SCR_WIDTH, SCR_HEIGHT);
+    imageManager.loadImage();
     skybox.texturebufferLoading(skyboxshader);
 
     // ImGui: setup
@@ -171,6 +166,17 @@ int main()
     glm::vec3 mountainposition = glm::vec3(10.0f, 0.0f,0.0f);
     glm::vec3 housePosition = glm::vec3(10.0f, 0.0f, 10.0f);
     float shaderheight = 3.0f;
+
+
+    VirtualFileSystem vfs("../resources/");
+    std::string resources = vfs.getFullPath("models/");
+
+    playerManager.customModel(PlayerShader, playerModel, "guitarplaying/guitar.dae", "model.vs", "model.fs");
+    Animation danceanimation((resources + "guitarplaying/guitar.dae"), &playerModel);
+    Animator animator(&danceanimation);
+
+    bool renderDistance = true;
+
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -181,6 +187,7 @@ int main()
 
         // input
         processInput(window, deltaTime);
+        animator.UpdateAnimation(deltaTime);
 
         // Start the ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
@@ -197,6 +204,7 @@ int main()
         ImGui::Checkbox("Hovering Cube", &ishovering);
         ImGui::Checkbox("Out Camera Mode", &isOutcamera);
         ImGui::Checkbox("Moving", &isMoving);
+        ImGui::Text("Soldier position: (%.2f, %.2f, %.2f)", housePosition.x, housePosition.y, housePosition.z);
 
         // Toggle demo window
         ImGui::Checkbox("Show ImGui Demo", &showImGuiDemo);
@@ -248,7 +256,6 @@ int main()
         ImGui::End();
         
         // render
-        glBindFramebuffer(GL_FRAMEBUFFER, PigeonVars::gFrameBuffer);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -257,17 +264,24 @@ int main()
         particle.renderParticles(particleShader, ParticleAmount, particlespeed, camera, SCR_WIDTH, SCR_HEIGHT, height, RenderParticle, window);
         skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
         windowManager.render(camera, window);
-        skeletonLoader.RenderModel(camera, SCR_WIDTH, SCR_HEIGHT);
-        mountainmanager.customRenderModel(camera, 0.01f, 1.0f, mountainposition, SCR_WIDTH, SCR_HEIGHT, mountainModel, mountainShader);
-        mountainmanager.customRenderModel(camera, 0.3f, shaderheight, housePosition, SCR_WIDTH, SCR_HEIGHT, housemodel, mountainShader);
-        
+
+        glm::vec3 Distance = housePosition - camera.Position;
+        float scalarDistance = glm::length(Distance); // Calculate the magnitude of the distance vector
+
+        // Define reasonable thresholds
+        float modelRenderDistance = 20.0f; // Beyond this, render the model
+        float imageRenderDistance = 5.0f; // Within this, render the image
+
+        if (scalarDistance >= modelRenderDistance) {
+        // Render the detailed model when the house is far enough
+          playerManager.customRenderModel(animator, camera, 1.1f, 1.0f, housePosition, SCR_WIDTH, SCR_HEIGHT, playerModel, PlayerShader);
+        } else {
+        // Render the image when the house is within the specified range
+          imageManager.render(camera, housePosition, SCR_WIDTH, SCR_HEIGHT);
+        }
         // Render ImGui
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        //glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        //glClear(GL_COLOR_BUFFER_BIT);
-        RenderScreenEFT();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

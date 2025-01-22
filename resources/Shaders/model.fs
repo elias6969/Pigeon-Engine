@@ -1,7 +1,11 @@
 #version 330 core
-uniform vec3 materialDiffuse; // Diffuse color
 out vec4 FragColor;
 
-void main() {
-    FragColor = vec4(materialDiffuse, 1.0); // Render with diffuse color
+in vec2 TexCoords;
+
+uniform sampler2D texture_diffuse1;
+
+void main()
+{    
+    FragColor = texture(texture_diffuse1, TexCoords);
 }

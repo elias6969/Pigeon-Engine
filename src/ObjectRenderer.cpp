@@ -13,9 +13,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include "filemanager.h"
-#include <map>
-#include <stdexcept>
 #include "vao_manager.h"
+#include <stdexcept>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -1043,13 +1042,77 @@ void Cylinder::draw(Shader& shader) const
 }
 
 // Image class definition
-Image::Image(const std::string& filepath) {
-    // Load image from file
+Image::Image() 
+{
+
 }
 
-void Image::render() {
-    std::cout << "Rendering Image" << std::endl;
-    // OpenGL rendering code here
+void Image::loadImage()
+{
+    float planeVertices[] = {
+        // Positions          // Texture Coords
+        -0.5f,  0.0f, -0.5f,  0.0f, 0.0f,  // Bottom-left
+         0.5f,  0.0f, -0.5f,  1.0f, 0.0f,  // Bottom-right
+         0.5f,  0.0f,  0.5f,  1.0f, 1.0f,  // Top-right
+        -0.5f,  0.0f,  0.5f,  0.0f, 1.0f   // Top-left
+    };
+
+    unsigned int planeIndices[] = {
+        0, 1, 2, // First triangle
+        2, 3, 0  // Second triangle
+    };
+
+    // Generate and bind VAO, VBO, and EBO
+    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vbo);
+    glGenBuffers(1, &ebo);
+
+    glBindVertexArray(vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), planeVertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(planeIndices), planeIndices, GL_STATIC_DRAW);
+
+    // Position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // Texture coordinates attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    textureID = loadTexture((Var::texturePath + "masuka.jpg").c_str());
+    shader.LoadShaders((Var::shaderPath + "plane.vs").c_str(), (Var::shaderPath + "plane.fs").c_str());
+
+}
+
+void Image::render(Camera &camera, glm::vec3 &Position,  unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT) {
+    shader.use();
+
+    // Set up transformations
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, Position);
+    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+
+    shader.setMat4("model", model);
+    shader.setMat4("view", view);
+    shader.setMat4("projection", projection);
+
+    // Bind texture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    shader.setInt("texture1", 0);
+
+    // Draw plane
+    glBindVertexArray(vao);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 }
 
 namespace windowsHolder

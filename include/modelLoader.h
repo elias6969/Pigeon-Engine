@@ -8,13 +8,14 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
+#include "animator.h"
 
 class CharacterModel
 {
 public:
     void customModel(Shader &shader, Model &model, std::string modelname, std::string vertexname, std::string fragmentname );
 
-    void customRenderModel(Camera &camera, float modelsize, float height, glm::vec3 Position, const unsigned int SCR_WIDTH, const unsigned int SCR_HEIGHT, Model &threedmodel, Shader &shader);
+    void customRenderModel(Animator &animator, Camera &camera, float modelsize, float height, glm::vec3 Position, const unsigned int SCR_WIDTH, const unsigned int SCR_HEIGHT, Model &threedmodel, Shader &shader);
     void loadModel();
 
     void RenderModel(Camera &camera, const unsigned int SCR_WIDTH, const unsigned int SCR_HEIGHT);

@@ -1,3 +1,4 @@
+#include "animator.h"
 #include "modelLoader.h"
 #include <cstdlib>
 #include <glad/glad.h>
@@ -17,6 +18,7 @@
 #include "filemanager.h"
 #include "modelLoader.h"
 #include "vao_manager.h"
+#include "animator.h"
 
 namespace data
 {
@@ -76,7 +78,7 @@ void CharacterModel::customModel(Shader &shader, Model &model, std::string model
   model.loadModel((data::ModelPath + modelname).c_str());
 }
 
-void CharacterModel::customRenderModel(Camera &camera, float modelsize, float height, glm::vec3 Position, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT, Model &threedmodel, Shader &shader)
+void CharacterModel::customRenderModel(Animator &animator, Camera &camera, float modelsize, float height, glm::vec3 Position, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT, Model &threedmodel, Shader &shader)
 {
     glm::mat4 projection = glm::perspective(
         glm::radians(45.0f),
@@ -91,16 +93,12 @@ void CharacterModel::customRenderModel(Camera &camera, float modelsize, float he
     shader.use();
     shader.setMat4("projection", projection);
     shader.setMat4("view", view);
-    shader.setFloat("minHeight", 0.0f);
-    shader.setFloat("maxHeight", height);
-    glUniform1f(glGetUniformLocation(shader.ID, "uTime"), currentime);
 
-    //Diffuse
-    glm::vec3 diffuse = glm::vec3(0.5f,1.0f,10.0f);
-    diffuse.x = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-    diffuse.y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX); 
-    diffuse.z = static_cast<float>(rand()) / static_cast<float>(RAND_MAX); 
-    shader.setVec3("materialDiffuse", diffuse);
+
+    auto transforms = animator.GetFinalBoneMatrices();
+		for (int i = 0; i < transforms.size(); ++i){
+		  shader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+    }
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, Position);

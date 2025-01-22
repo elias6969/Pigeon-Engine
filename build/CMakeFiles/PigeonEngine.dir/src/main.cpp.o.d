@@ -387,5 +387,46 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: \
  /usr/include/c++/13/bits/stl_map.h \
  /usr/include/c++/13/bits/stl_multimap.h \
  /usr/include/c++/13/bits/erase_if.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/filemanager.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/ScreenEffect.h
+ /home/lighht18/Tutorial/OpenglTemplate/project/include/assimp_glm_helpers.h \
+ /usr/include/glm/gtc/quaternion.hpp \
+ /usr/include/glm/ext/vector_relational.hpp \
+ /usr/include/glm/ext/vector_relational.inl \
+ /usr/include/glm/detail/type_float.hpp \
+ /usr/include/glm/ext/quaternion_common.hpp \
+ /usr/include/glm/ext/quaternion_geometric.hpp \
+ /usr/include/glm/ext/quaternion_geometric.inl \
+ /usr/include/glm/ext/quaternion_common.inl \
+ /usr/include/glm/ext/quaternion_float.hpp \
+ /usr/include/glm/detail/type_quat.hpp \
+ /usr/include/glm/ext/quaternion_relational.hpp \
+ /usr/include/glm/ext/quaternion_relational.inl \
+ /usr/include/glm/detail/type_quat.inl \
+ /usr/include/glm/ext/quaternion_float_precision.hpp \
+ /usr/include/glm/ext/quaternion_double.hpp \
+ /usr/include/glm/ext/quaternion_double_precision.hpp \
+ /usr/include/glm/ext/quaternion_trigonometric.hpp \
+ /usr/include/glm/ext/quaternion_trigonometric.inl \
+ /usr/include/glm/ext/quaternion_transform.hpp \
+ /usr/include/glm/ext/quaternion_transform.inl \
+ /usr/include/glm/gtc/quaternion.inl /usr/include/glm/gtc/epsilon.hpp \
+ /usr/include/glm/detail/setup.hpp /usr/include/glm/gtc/epsilon.inl \
+ /home/lighht18/Tutorial/OpenglTemplate/project/include/animdata.h \
+ /home/lighht18/Tutorial/OpenglTemplate/project/include/animator.h \
+ /home/lighht18/Tutorial/OpenglTemplate/project/include/animation.h \
+ /home/lighht18/Tutorial/OpenglTemplate/project/include/bone.h \
+ /usr/include/c++/13/list /usr/include/c++/13/bits/stl_list.h \
+ /usr/include/c++/13/bits/list.tcc /usr/include/glm/gtx/quaternion.hpp \
+ /usr/include/glm/ext/quaternion_exponential.hpp \
+ /usr/include/glm/ext/quaternion_exponential.inl \
+ /usr/include/glm/gtx/norm.hpp /usr/include/glm/gtx/component_wise.hpp \
+ /usr/include/glm/detail/setup.hpp \
+ /usr/include/glm/gtx/component_wise.inl /usr/include/glm/gtx/norm.inl \
+ /usr/include/glm/gtx/quaternion.inl /usr/include/c++/13/functional \
+ /usr/include/c++/13/bits/std_function.h \
+ /usr/include/c++/13/unordered_map \
+ /usr/include/c++/13/bits/unordered_map.h \
+ /usr/include/c++/13/bits/hashtable.h \
+ /usr/include/c++/13/bits/hashtable_policy.h \
+ /usr/include/c++/13/bits/enable_special_members.h \
+ /usr/include/c++/13/array /usr/include/c++/13/compare \
+ /home/lighht18/Tutorial/OpenglTemplate/project/include/Model.h

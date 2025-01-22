@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 #include <stb_image.h>
 #include <iostream>
@@ -94,12 +95,14 @@ private:
 
 class Image {
 public:
-    Image(const std::string& filepath);  // Constructor to load an image from a file
+    Image();  // Constructor to load an image from a file
     void loadImage();                   // Load image data (texture)
-    void render();                // Render the image
+    void render(Camera &camera, glm::vec3 &Position, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT);                // Render the image
 
 private:
     GLuint textureID;                   
+    GLuint vao, vbo, ebo;
+    Shader shader;
 };
 
 class TransparentWindow

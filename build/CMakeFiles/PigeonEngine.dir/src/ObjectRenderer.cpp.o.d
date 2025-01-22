@@ -22,12 +22,16 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
  /usr/include/GLFW/glfw3.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h \
- /usr/include/glm/glm.hpp /usr/include/glm/detail/_fixes.hpp \
- /usr/include/c++/13/cmath /usr/include/c++/13/bits/requires_hosted.h \
+ /usr/include/glm/fwd.hpp /usr/include/glm/detail/qualifier.hpp \
+ /usr/include/glm/detail/setup.hpp /usr/include/c++/13/cassert \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/cpu_defines.h \
- /usr/include/c++/13/pstl/pstl_config.h \
+ /usr/include/c++/13/pstl/pstl_config.h /usr/include/assert.h \
+ /usr/include/c++/13/cstddef /usr/include/glm/simd/platform.h \
+ /usr/include/c++/13/cstdint /usr/include/c++/13/type_traits \
+ /usr/include/glm/glm.hpp /usr/include/glm/detail/_fixes.hpp \
+ /usr/include/c++/13/cmath /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/c++/13/bits/cpp_type_traits.h \
  /usr/include/c++/13/ext/type_traits.h /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
@@ -73,8 +77,8 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/c++/13/bits/functexcept.h \
  /usr/include/c++/13/bits/exception_defines.h \
  /usr/include/c++/13/ext/numeric_traits.h \
- /usr/include/c++/13/bits/stl_pair.h /usr/include/c++/13/type_traits \
- /usr/include/c++/13/bits/move.h /usr/include/c++/13/bits/utility.h \
+ /usr/include/c++/13/bits/stl_pair.h /usr/include/c++/13/bits/move.h \
+ /usr/include/c++/13/bits/utility.h \
  /usr/include/c++/13/bits/stl_iterator_base_types.h \
  /usr/include/c++/13/bits/stl_iterator_base_funcs.h \
  /usr/include/c++/13/bits/concept_check.h \
@@ -94,10 +98,7 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/c++/13/tr1/poly_hermite.tcc \
  /usr/include/c++/13/tr1/poly_laguerre.tcc \
  /usr/include/c++/13/tr1/riemann_zeta.tcc \
- /usr/include/glm/detail/setup.hpp /usr/include/c++/13/cassert \
- /usr/include/assert.h /usr/include/c++/13/cstddef \
- /usr/include/glm/simd/platform.h /usr/include/c++/13/cstdint \
- /usr/include/c++/13/climits \
+ /usr/include/glm/detail/setup.hpp /usr/include/c++/13/climits \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/limits.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/syslimits.h \
  /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
@@ -108,9 +109,7 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
  /usr/include/x86_64-linux-gnu/bits/uio_lim.h /usr/include/c++/13/cfloat \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/float.h \
- /usr/include/glm/fwd.hpp /usr/include/glm/detail/qualifier.hpp \
- /usr/include/glm/detail/setup.hpp /usr/include/glm/vec2.hpp \
- /usr/include/glm/ext/vector_bool2.hpp \
+ /usr/include/glm/vec2.hpp /usr/include/glm/ext/vector_bool2.hpp \
  /usr/include/glm/detail/type_vec2.hpp \
  /usr/include/glm/detail/type_vec2.inl \
  /usr/include/glm/detail/compute_vector_relational.hpp \
