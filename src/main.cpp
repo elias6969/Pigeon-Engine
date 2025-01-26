@@ -14,6 +14,7 @@
 #include <string>
 #include <stb_image.h>
 #include <chrono>
+#include <thread>
 
 #include "Shader.h"
 #include "Camera.h"
@@ -23,10 +24,12 @@
 #include "Model.h"
 #include "animator.h"
 
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window, float deltaTime);
+void LoadAnimationInThread(Animation* animation, Animator* animator, const std::string& animationPath, Model* model);
 
 // settings
 const unsigned int SCR_WIDTH = 1200;
@@ -80,6 +83,7 @@ void setWindowIcon(GLFWwindow* window) {
         std::cerr << "Failed to load icon image from: " << (imagepath + "Break.jpg") << std::endl;
     }
 }
+
 
 int main()
 {
@@ -171,9 +175,11 @@ int main()
     VirtualFileSystem vfs("../resources/");
     std::string resources = vfs.getFullPath("models/");
 
-    playerManager.customModel(PlayerShader, playerModel, "guitarplaying/guitar.dae", "model.vs", "model.fs");
-    Animation danceanimation((resources + "guitarplaying/guitar.dae"), &playerModel);
-    Animator animator(&danceanimation);
+    //playerManager.customModel(PlayerShader, playerModel, "guitarplaying/guitar.dae", "model.vs", "model.fs");
+    //Animation danceanimation;
+    //danceanimation.LoadAnimation((resources + "guitarplaying/guitar.dae"), &playerModel);
+    //Animator animator;
+    //animator.loadAnimator(&danceanimation);
 
     bool renderDistance = true;
 
@@ -187,7 +193,7 @@ int main()
 
         // input
         processInput(window, deltaTime);
-        animator.UpdateAnimation(deltaTime);
+        //animator.UpdateAnimation(deltaTime);
 
         // Start the ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
@@ -273,10 +279,8 @@ int main()
         float imageRenderDistance = 5.0f; // Within this, render the image
 
         if (scalarDistance >= modelRenderDistance) {
-        // Render the detailed model when the house is far enough
-          playerManager.customRenderModel(animator, camera, 1.1f, 1.0f, housePosition, SCR_WIDTH, SCR_HEIGHT, playerModel, PlayerShader);
+          //playerManager.customRenderModel(animator, camera, 1.1f, 1.0f, housePosition, SCR_WIDTH, SCR_HEIGHT, playerModel, PlayerShader);
         } else {
-        // Render the image when the house is within the specified range
           imageManager.render(camera, housePosition, SCR_WIDTH, SCR_HEIGHT);
         }
         // Render ImGui
@@ -294,6 +298,12 @@ int main()
 
     glfwTerminate();
     return 0;
+}
+
+void LoadAnimationInThread(Animation* animation, Animator* animator, const std::string& animationPath, Model* model) {
+    animation->LoadAnimation(animationPath, model);
+    animator->loadAnimator(animation);
+    std::cout << "Animation loaded in thread!" << std::endl;
 }
 
 void processInput(GLFWwindow* window, float deltaTime) {
