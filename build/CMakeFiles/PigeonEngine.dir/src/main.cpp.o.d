@@ -431,4 +431,6 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: \
  /usr/include/c++/13/bits/hashtable_policy.h \
  /usr/include/c++/13/bits/enable_special_members.h \
  /usr/include/c++/13/array /usr/include/c++/13/compare \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/Model.h
+ /home/lighht18/Tutorial/OpenglTemplate/project/include/Model.h \
+ /home/lighht18/Tutorial/OpenglTemplate/project/include/BoundingBox.h \
+ /home/lighht18/Tutorial/OpenglTemplate/project/include/IMGUIManager.h

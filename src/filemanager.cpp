@@ -8,7 +8,7 @@ VirtualFileSystem::VirtualFileSystem(const std::string& basePath) : baseDir(base
         std::cerr << "Base directory does not exist: " << fs::absolute(baseDir) << std::endl;
         throw std::runtime_error("Base directory does not exist: " + baseDir);
     }
-    std::cout << "Base directory found: " << fs::absolute(baseDir) << std::endl;
+    std::cout << "BASE-DIRECTORY-FOUND::" << fs::absolute(baseDir) << std::endl;
 }
 
 std::string VirtualFileSystem::getFullPath(const std::string& relativePath) const {

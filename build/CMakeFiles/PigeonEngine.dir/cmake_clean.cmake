@@ -1,6 +1,10 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o"
+  "CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o.d"
   "CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o"
   "CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o.d"
+  "CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o"
+  "CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o.d"
   "CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o"
   "CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o.d"
   "CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o"

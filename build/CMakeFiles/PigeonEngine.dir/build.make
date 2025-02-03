@@ -69,10 +69,24 @@ include CMakeFiles/PigeonEngine.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/PigeonEngine.dir/flags.make
 
+CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o: CMakeFiles/PigeonEngine.dir/flags.make
+CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o: /home/lighht18/Tutorial/OpenglTemplate/project/src/BoundingBox.cpp
+CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o: CMakeFiles/PigeonEngine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o -MF CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o.d -o CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/BoundingBox.cpp
+
+CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lighht18/Tutorial/OpenglTemplate/project/src/BoundingBox.cpp > CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.i
+
+CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lighht18/Tutorial/OpenglTemplate/project/src/BoundingBox.cpp -o CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.s
+
 CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o: CMakeFiles/PigeonEngine.dir/flags.make
 CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o: /home/lighht18/Tutorial/OpenglTemplate/project/src/ModelManager.cpp
 CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o: CMakeFiles/PigeonEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o -MF CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o.d -o CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/ModelManager.cpp
 
 CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.i: cmake_force
@@ -83,10 +97,24 @@ CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lighht18/Tutorial/OpenglTemplate/project/src/ModelManager.cpp -o CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.s
 
+CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o: CMakeFiles/PigeonEngine.dir/flags.make
+CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o: /home/lighht18/Tutorial/OpenglTemplate/project/src/ObjectGenerationIMGUI.cpp
+CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o: CMakeFiles/PigeonEngine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o -MF CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o.d -o CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/ObjectGenerationIMGUI.cpp
+
+CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lighht18/Tutorial/OpenglTemplate/project/src/ObjectGenerationIMGUI.cpp > CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.i
+
+CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lighht18/Tutorial/OpenglTemplate/project/src/ObjectGenerationIMGUI.cpp -o CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.s
+
 CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: CMakeFiles/PigeonEngine.dir/flags.make
 CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: /home/lighht18/Tutorial/OpenglTemplate/project/src/ObjectRenderer.cpp
 CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: CMakeFiles/PigeonEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o -MF CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o.d -o CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/ObjectRenderer.cpp
 
 CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.i: cmake_force
@@ -100,7 +128,7 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.s: cmake_force
 CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o: CMakeFiles/PigeonEngine.dir/flags.make
 CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o: /home/lighht18/Tutorial/OpenglTemplate/project/src/OpenGLerrorreporting.cpp
 CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o: CMakeFiles/PigeonEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o -MF CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o.d -o CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/OpenGLerrorreporting.cpp
 
 CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.i: cmake_force
@@ -114,7 +142,7 @@ CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.s: cmake_force
 CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o: CMakeFiles/PigeonEngine.dir/flags.make
 CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o: /home/lighht18/Tutorial/OpenglTemplate/project/src/ScreenEffect.cpp
 CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o: CMakeFiles/PigeonEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o -MF CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o.d -o CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/ScreenEffect.cpp
 
 CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.i: cmake_force
@@ -128,7 +156,7 @@ CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.s: cmake_force
 CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.o: CMakeFiles/PigeonEngine.dir/flags.make
 CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.o: /home/lighht18/Tutorial/OpenglTemplate/project/src/filemanager.cpp
 CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.o: CMakeFiles/PigeonEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.o -MF CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.o.d -o CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/filemanager.cpp
 
 CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.i: cmake_force
@@ -142,7 +170,7 @@ CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.s: cmake_force
 CMakeFiles/PigeonEngine.dir/src/main.cpp.o: CMakeFiles/PigeonEngine.dir/flags.make
 CMakeFiles/PigeonEngine.dir/src/main.cpp.o: /home/lighht18/Tutorial/OpenglTemplate/project/src/main.cpp
 CMakeFiles/PigeonEngine.dir/src/main.cpp.o: CMakeFiles/PigeonEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/PigeonEngine.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/PigeonEngine.dir/src/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/PigeonEngine.dir/src/main.cpp.o -MF CMakeFiles/PigeonEngine.dir/src/main.cpp.o.d -o CMakeFiles/PigeonEngine.dir/src/main.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/main.cpp
 
 CMakeFiles/PigeonEngine.dir/src/main.cpp.i: cmake_force
@@ -155,7 +183,9 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.s: cmake_force
 
 # Object files for target PigeonEngine
 PigeonEngine_OBJECTS = \
+"CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o" \
 "CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o" \
+"CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o" \
 "CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o" \
 "CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o" \
 "CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o" \
@@ -165,7 +195,9 @@ PigeonEngine_OBJECTS = \
 # External object files for target PigeonEngine
 PigeonEngine_EXTERNAL_OBJECTS =
 
+PigeonEngine: CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o
 PigeonEngine: CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o
+PigeonEngine: CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o
 PigeonEngine: CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o
 PigeonEngine: CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o
 PigeonEngine: CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o
@@ -177,7 +209,7 @@ PigeonEngine: libimgui.a
 PigeonEngine: /usr/lib/x86_64-linux-gnu/libglfw.so.3.3
 PigeonEngine: /usr/lib/x86_64-linux-gnu/libGL.so
 PigeonEngine: CMakeFiles/PigeonEngine.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable PigeonEngine"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable PigeonEngine"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/PigeonEngine.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

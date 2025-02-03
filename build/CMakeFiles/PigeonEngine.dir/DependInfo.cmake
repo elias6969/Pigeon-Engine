@@ -8,7 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/lighht18/Tutorial/OpenglTemplate/project/src/BoundingBox.cpp" "CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o" "gcc" "CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o.d"
   "/home/lighht18/Tutorial/OpenglTemplate/project/src/ModelManager.cpp" "CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o" "gcc" "CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o.d"
+  "/home/lighht18/Tutorial/OpenglTemplate/project/src/ObjectGenerationIMGUI.cpp" "CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o" "gcc" "CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o.d"
   "/home/lighht18/Tutorial/OpenglTemplate/project/src/ObjectRenderer.cpp" "CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o" "gcc" "CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o.d"
   "/home/lighht18/Tutorial/OpenglTemplate/project/src/OpenGLerrorreporting.cpp" "CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o" "gcc" "CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o.d"
   "/home/lighht18/Tutorial/OpenglTemplate/project/src/ScreenEffect.cpp" "CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o" "gcc" "CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o.d"

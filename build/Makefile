@@ -155,6 +155,30 @@ PigeonEngine/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/PigeonEngine.dir/build.make CMakeFiles/PigeonEngine.dir/build
 .PHONY : PigeonEngine/fast
 
+src/BoundingBox.o: src/BoundingBox.cpp.o
+.PHONY : src/BoundingBox.o
+
+# target to build an object file
+src/BoundingBox.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PigeonEngine.dir/build.make CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o
+.PHONY : src/BoundingBox.cpp.o
+
+src/BoundingBox.i: src/BoundingBox.cpp.i
+.PHONY : src/BoundingBox.i
+
+# target to preprocess a source file
+src/BoundingBox.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PigeonEngine.dir/build.make CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.i
+.PHONY : src/BoundingBox.cpp.i
+
+src/BoundingBox.s: src/BoundingBox.cpp.s
+.PHONY : src/BoundingBox.s
+
+# target to generate assembly for a file
+src/BoundingBox.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PigeonEngine.dir/build.make CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.s
+.PHONY : src/BoundingBox.cpp.s
+
 src/ModelManager.o: src/ModelManager.cpp.o
 .PHONY : src/ModelManager.o
 
@@ -178,6 +202,30 @@ src/ModelManager.s: src/ModelManager.cpp.s
 src/ModelManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/PigeonEngine.dir/build.make CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.s
 .PHONY : src/ModelManager.cpp.s
+
+src/ObjectGenerationIMGUI.o: src/ObjectGenerationIMGUI.cpp.o
+.PHONY : src/ObjectGenerationIMGUI.o
+
+# target to build an object file
+src/ObjectGenerationIMGUI.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PigeonEngine.dir/build.make CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o
+.PHONY : src/ObjectGenerationIMGUI.cpp.o
+
+src/ObjectGenerationIMGUI.i: src/ObjectGenerationIMGUI.cpp.i
+.PHONY : src/ObjectGenerationIMGUI.i
+
+# target to preprocess a source file
+src/ObjectGenerationIMGUI.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PigeonEngine.dir/build.make CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.i
+.PHONY : src/ObjectGenerationIMGUI.cpp.i
+
+src/ObjectGenerationIMGUI.s: src/ObjectGenerationIMGUI.cpp.s
+.PHONY : src/ObjectGenerationIMGUI.s
+
+# target to generate assembly for a file
+src/ObjectGenerationIMGUI.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PigeonEngine.dir/build.make CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.s
+.PHONY : src/ObjectGenerationIMGUI.cpp.s
 
 src/ObjectRenderer.o: src/ObjectRenderer.cpp.o
 .PHONY : src/ObjectRenderer.o
@@ -502,9 +550,15 @@ help:
 	@echo "... PigeonEngine"
 	@echo "... glad"
 	@echo "... imgui"
+	@echo "... src/BoundingBox.o"
+	@echo "... src/BoundingBox.i"
+	@echo "... src/BoundingBox.s"
 	@echo "... src/ModelManager.o"
 	@echo "... src/ModelManager.i"
 	@echo "... src/ModelManager.s"
+	@echo "... src/ObjectGenerationIMGUI.o"
+	@echo "... src/ObjectGenerationIMGUI.i"
+	@echo "... src/ObjectGenerationIMGUI.s"
 	@echo "... src/ObjectRenderer.o"
 	@echo "... src/ObjectRenderer.i"
 	@echo "... src/ObjectRenderer.s"

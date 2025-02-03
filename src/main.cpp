@@ -23,7 +23,8 @@
 #include "modelLoader.h"
 #include "Model.h"
 #include "animator.h"
-
+#include "BoundingBox.h"
+#include "IMGUIManager.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -49,6 +50,7 @@ int ParticleAmount = 100000;
 int particlespeed = 10;
 
 bool showImGuiDemo = false; // To toggle ImGui demo window
+bool Collided = false;
 
 // timing
 float deltaTime = 0.0f;    
@@ -121,6 +123,7 @@ int main()
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
 
+    VirtualFileSystem vfs("../resources/");
     //Classes
     Cube cube;
     Grid grid;
@@ -139,6 +142,7 @@ int main()
     Shader skyboxshader;
     Shader particleShader;
     Shader PlayerShader;
+    Shader boxShader;
     //Inilialization
     windowManager.init();
     cube.loadCube(cubeShader);
@@ -151,6 +155,12 @@ int main()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+    ImVector<ImWchar> emojiRanges;
+    AddEmojiRanges(emojiRanges);
+    std::string fontPath = vfs.getFullPath("fonts/");
+    ImFont* font = io.Fonts->AddFontFromFileTTF((fontPath + "noto-emoji-main/fonts/NotoColorEmoji-emojicompat.ttf").c_str(), 16.0f, NULL, emojiRanges.Data);
+    if(font == nullptr){
+      std::cout << "FAILED::LOAD-EMOJI::" << fontPath << std::endl;
     (void)io;
     ImGui::StyleColorsDark();
     ImGuiStyle& style = ImGui::GetStyle();
@@ -172,7 +182,6 @@ int main()
     float shaderheight = 3.0f;
 
 
-    VirtualFileSystem vfs("../resources/");
     std::string resources = vfs.getFullPath("models/");
 
     //playerManager.customModel(PlayerShader, playerModel, "guitarplaying/guitar.dae", "model.vs", "model.fs");
@@ -182,6 +191,12 @@ int main()
     //animator.loadAnimator(&danceanimation);
 
     bool renderDistance = true;
+
+    int counter = 0;
+
+    BoundingBox bbox(glm::vec3(-1,-1,-1), glm::vec3(1,1,1));
+    
+    initIMGUI(window);
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -211,6 +226,7 @@ int main()
         ImGui::Checkbox("Out Camera Mode", &isOutcamera);
         ImGui::Checkbox("Moving", &isMoving);
         ImGui::Text("Soldier position: (%.2f, %.2f, %.2f)", housePosition.x, housePosition.y, housePosition.z);
+        ImGui::Checkbox("Collided with Cube", &Collided);
 
         // Toggle demo window
         ImGui::Checkbox("Show ImGui Demo", &showImGuiDemo);
@@ -260,12 +276,20 @@ int main()
        if(originalparticlewindowpos.x != particleWindowPos.x || originalparticlewindowpos.y != originalparticlewindowpos.y)
          ImGui::SetWindowPos(particleWindowPos);
         ImGui::End();
-        
+        CreationManager();
         // render
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        glm::vec3 min = cubeposition - glm::vec3(0.8f);
+        glm::vec3 max = cubeposition + glm::vec3(0.8f);
+        bbox.update(min, max);
+        if(CheckCollision(cubeposition, camera.Position, 1.0f)){
+          Collided = true;
+        }else{
+          Collided = false;
+        }
         cube.render(cubeShader, cubeposition, camera, SCR_WIDTH, SCR_HEIGHT, window, mouseX, mouseY, ishovering, isMoving);
+        bbox.render(camera);
         grid.renderGrid(gridShader, camera, window);
         particle.renderParticles(particleShader, ParticleAmount, particlespeed, camera, SCR_WIDTH, SCR_HEIGHT, height, RenderParticle, window);
         skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
@@ -371,5 +395,5 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    camera.ProcessMouseScroll(static_cast<float>(yoffset));
+    //camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }

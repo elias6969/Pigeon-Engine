@@ -11,6 +11,9 @@
 #include "Camera.h"
 #include "vao_manager.h"
 
+
+bool CheckCollision(glm::vec3 &Position1, glm::vec3 &Position2, float size);
+
 class Grid {
 public:
     std::vector<float> generateGrid(float size, float spacing);
@@ -35,13 +38,15 @@ private:
 
 // Pigeon-Class for rendering cubes (Because even pigeons need boxes!)
 class Cube {
+private:
+    GLuint VAO, VBO, texture; 
+    glm::vec3 size;
 public: 
+    float Cubesize;
     void loadCube(Shader& shader);                  // Load cube data (vertices, texture, etc.)
     void render(Shader& ourshader,
         glm::vec3& cubeposition, Camera& camera,
         int screen_width, int screen_height, GLFWwindow* window, double &mouseX, double &mouseY, bool& ishovering, bool& isMoving);              // Render the cube
-private:
-    GLuint VAO, VBO, texture;                  // Cube-specific OpenGL objects (VAO and VBO)
 };
 
 class SkyBox {

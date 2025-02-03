@@ -13,7 +13,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include "filemanager.h"
+#include "modelLoader.h"
 #include "vao_manager.h"
+#include <iterator>
 #include <stdexcept>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -85,6 +87,14 @@ namespace Var
 
     unsigned int cubemapTexture = 0;
 };
+
+bool CheckCollision(glm::vec3 &Position1, glm::vec3 &Position2, float size)
+{
+  bool collisionX = Position1.x + size >= Position2.x && Position2.x + size >= Position1.x;
+  bool collisionY = Position1.y + size >= Position2.y && Position2.y + size >= Position1.y;
+  bool collisionZ = Position1.z + size >= Position2.z && Position2.z + size >= Position1.z;
+  return collisionX && collisionY && collisionZ;
+}
 
 void Particle::InitParticle(Shader& shader)
 {
@@ -405,6 +415,7 @@ void Cube::loadCube(Shader& shader) {
 
     // Upload vertex data
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices);
 
     // Vertex attributes setup
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -449,6 +460,7 @@ void Cube::loadCube(Shader& shader) {
     // Shader setup
     shader.use();
     shader.setInt("texture1", 0);
+    size = glm::vec3(1.0f);
 }
 
 void Cube::render(Shader& ourshader,
@@ -470,6 +482,7 @@ void Cube::render(Shader& ourshader,
     glm::mat4 model = glm::mat4(1.0f); 
     model = glm::translate(model, cubeposition); 
     model = glm::rotate(model, glm::radians(rotationAngle), glm::vec3(0.01f, 0.01f, 0.01f)); 
+    model = glm::scale(model, size);
                                                                                  //
     glm::mat4 view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up); // View matrix
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)screen_width / (float)screen_height, 0.1f, 100.0f); // Projection matrix

@@ -49,9 +49,21 @@
 },
 {
   "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/BoundingBox.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/src/BoundingBox.cpp",
+  "output": "CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
   "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/ModelManager.cpp",
   "file": "/home/lighht18/Tutorial/OpenglTemplate/project/src/ModelManager.cpp",
   "output": "CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o"
+},
+{
+  "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
+  "command": "/usr/bin/c++  -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o -c /home/lighht18/Tutorial/OpenglTemplate/project/src/ObjectGenerationIMGUI.cpp",
+  "file": "/home/lighht18/Tutorial/OpenglTemplate/project/src/ObjectGenerationIMGUI.cpp",
+  "output": "CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o"
 },
 {
   "directory": "/home/lighht18/Tutorial/OpenglTemplate/project/build",
