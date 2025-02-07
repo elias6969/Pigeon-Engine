@@ -1,64 +1,58 @@
 cmake_minimum_required(VERSION 3.10)
-
-# Project name and version
 project(PigeonEngine VERSION 1.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_BUILD_TYPE Debug)
 
-# Add source files
 file(GLOB_RECURSE SRC_FILES
     src/*.cpp
 )
 
-# Add include directory for your headers
+# Include directories
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/third_party)
+include_directories(${CMAKE_SOURCE_DIR}/third_party/glad/include)
+include_directories(${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui)
+include_directories(${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui/backends)
 
-# Include third_party directories
-set(THIRD_PARTY_DIR ${CMAKE_SOURCE_DIR}/third_party)
+# GLAD library
+add_library(glad STATIC ${CMAKE_SOURCE_DIR}/third_party/glad/src/glad.c)
 
-include_directories(${THIRD_PARTY_DIR}/glad/include)
-include_directories(${THIRD_PARTY_DIR}/imgui)
-include_directories(${THIRD_PARTY_DIR}/imgui/backends)
-
-# Add glad
-add_library(glad STATIC ${THIRD_PARTY_DIR}/glad/src/glad.c)
-
-# Add ImGui with backends
+# ImGui library
 file(GLOB IMGUI_SOURCES
-    ${THIRD_PARTY_DIR}/imgui/*.cpp
-    ${THIRD_PARTY_DIR}/imgui/*.h
-    ${THIRD_PARTY_DIR}/imgui/backends/imgui_impl_glfw.cpp
-    ${THIRD_PARTY_DIR}/imgui/backends/imgui_impl_opengl3.cpp
+    ${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui/*.cpp
+    ${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui/backends/imgui_impl_glfw.cpp
+    ${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui/backends/imgui_impl_opengl3.cpp
 )
 add_library(imgui STATIC ${IMGUI_SOURCES})
 
-# Find OpenGL
 find_package(OpenGL REQUIRED)
 find_package(assimp REQUIRED)
-# Find GLFW (system-installed or in third_party)
+
+# Find or build GLFW
 find_package(glfw3 QUIET)
 if(NOT glfw3_FOUND)
-    # If not found, use GLFW from third_party
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-
-    add_subdirectory(${THIRD_PARTY_DIR}/glfw)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/glfw)
     set(GLFW_LIB glfw)
 else()
     set(GLFW_LIB glfw)
 endif()
 
-# Add executable
+# ADD TINYFILEDIALOGS LIBRARY HERE
+add_library(tinyfiledialogs STATIC ${CMAKE_SOURCE_DIR}/src/tinyfiledialogs.c)
+target_include_directories(tinyfiledialogs PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+# Add the main executable
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE
+    tinyfiledialogs    
     glad
     imgui
     ${GLFW_LIB}
@@ -66,11 +60,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     assimp
 )
 
-# Add include directories for the target
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/include
-    ${THIRD_PARTY_DIR}/glad/include
-    ${THIRD_PARTY_DIR}/imgui
-    ${THIRD_PARTY_DIR}/imgui/backends
-    ${ASSIMP_INCLUDE_DIRS} 
+    ${CMAKE_SOURCE_DIR}/third_party/glad/include
+    ${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui
+    ${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui/backends
+    ${ASSIMP_INCLUDE_DIRS}
 )

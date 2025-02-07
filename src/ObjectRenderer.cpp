@@ -6,6 +6,7 @@
 #include <glm/ext/quaternion_transform.hpp>
 #include <glm/fwd.hpp>
 #include <glm/geometric.hpp>
+#include <glm/trigonometric.hpp>
 #include <iostream>
 #include <bits/stdc++.h>
 #include "Shader.h"
@@ -20,6 +21,12 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+/*
+▗▄▄▄  ▗▄▄▄▖ ▗▄▄▖▗▖    ▗▄▖ ▗▄▄▖  ▗▄▖▗▄▄▄▖▗▄▄▄▖ ▗▄▖ ▗▖  ▗▖
+▐▌  █ ▐▌   ▐▌   ▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌ █    █  ▐▌ ▐▌▐▛▚▖▐▌
+▐▌  █ ▐▛▀▀▘▐▌   ▐▌   ▐▛▀▜▌▐▛▀▚▖▐▛▀▜▌ █    █  ▐▌ ▐▌▐▌ ▝▜▌
+▐▙▄▄▀ ▐▙▄▄▖▝▚▄▄▖▐▙▄▄▖▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌ █  ▗▄█▄▖▝▚▄▞▘▐▌  ▐▌
+*/
 unsigned int loadCubemap(std::vector<std::string> faces);
 
 unsigned int loadTexture(const char* filePath)
@@ -64,7 +71,6 @@ namespace Var
     //Class definitions
     Cube cube;
     Grid grid;
-    Sphere sphere;
     Particle particle;
     SkyBox skybox;
     
@@ -96,6 +102,12 @@ bool CheckCollision(glm::vec3 &Position1, glm::vec3 &Position2, float size)
   return collisionX && collisionY && collisionZ;
 }
 
+/*
+▗▄▄▖  ▗▄▖ ▗▄▄▖▗▄▄▄▖▗▄▄▄▖ ▗▄▄▖▗▖   ▗▄▄▄▖
+▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌ █    █  ▐▌   ▐▌   ▐▌   
+▐▛▀▘ ▐▛▀▜▌▐▛▀▚▖ █    █  ▐▌   ▐▌   ▐▛▀▀▘
+▐▌   ▐▌ ▐▌▐▌ ▐▌ █  ▗▄█▄▖▝▚▄▄▖▐▙▄▄▖▐▙▄▄▖
+*/
 void Particle::InitParticle(Shader& shader)
 {
     // Define vertices for a small quad representing a particle.
@@ -294,6 +306,12 @@ void Particle::renderParticles(Shader& shader, int &amount, int speed, Camera &c
     }
 }
 
+/*
+ ▗▄▄▖▗▄▄▖ ▗▄▄▄▖▗▄▄▄  
+▐▌   ▐▌ ▐▌  █  ▐▌  █ 
+▐▌▝▜▌▐▛▀▚▖  █  ▐▌  █ 
+▝▚▄▞▘▐▌ ▐▌▗▄█▄▖▐▙▄▄▀ 
+*/
 std::vector<float> Grid::generateGrid(float size, float spacing) 
 {
     std::vector<float> vertices;
@@ -362,69 +380,84 @@ void Grid::renderGrid(Shader& shader, Camera& camera, GLFWwindow* window) {
     }
 }
 
+/* 
+ ▗▄▄▖▗▖ ▗▖▗▄▄▖ ▗▄▄▄▖
+▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌   
+▐▌   ▐▌ ▐▌▐▛▀▚▖▐▛▀▀▘
+▝▚▄▄▖▝▚▄▞▘▐▙▄▞▘▐▙▄▄▖
+*/
+
 void Cube::loadCube(Shader& shader) {
     float vertices[] = {
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        // 36 vertices, each with:
+        //   3 floats for position (x, y, z)
+        //   2 floats for texture coords (u, v)
+        // => 5 floats per vertex
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
 
+    // Generate and bind VAO/VBO
     glGenVertexArrays(1, &Var::cube.VAO);
     glGenBuffers(1, &Var::cube.VBO);
 
     glBindVertexArray(Var::cube.VAO);
+
+    // Make sure you bind Var::cube.VBO, not just VBO
     glBindBuffer(GL_ARRAY_BUFFER, Var::cube.VBO);
-
-    // Upload vertex data
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices);
 
-    // Vertex attributes setup
+    // Position attribute: layout(location = 0)
+    // Each vertex is 5 floats (3 pos + 2 tex coords)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    // Texture coordinates attribute: layout(location = 1)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    // Generate texture
+    // (No color attribute pointer here, since we only have 3 + 2 = 5 floats)
+
+    // ================== Generate and Load Texture ==================
     glGenTextures(1, &Var::cube.texture);
     glBindTexture(GL_TEXTURE_2D, Var::cube.texture);
 
@@ -434,167 +467,202 @@ void Cube::loadCube(Shader& shader) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    // Load image
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char* datatexture = stbi_load((Var::texturePath + "cube.jpeg").c_str(), &width, &height, &nrChannels, 0);
+    unsigned char* datatexture = stbi_load((Var::texturePath + "cube.jpeg").c_str(),
+                                           &width, &height, &nrChannels, 0);
+
     if (datatexture) {
         GLenum format;
-        if (nrChannels == 1)
-            format = GL_RED;
-        else if (nrChannels == 3)
-            format = GL_RGB;
-        else if (nrChannels == 4)
-            format = GL_RGBA;
-        else
-            throw std::runtime_error("Unsupported texture format");
+        if (nrChannels == 1)      format = GL_RED;
+        else if (nrChannels == 3) format = GL_RGB;
+        else if (nrChannels == 4) format = GL_RGBA;
+        else throw std::runtime_error("Unsupported texture format");
 
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, datatexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0,
+                     format, GL_UNSIGNED_BYTE, datatexture);
         glGenerateMipmap(GL_TEXTURE_2D);
-    }
+    } 
     else {
         throw std::runtime_error("Failed to load texture");
     }
     stbi_image_free(datatexture);
-    shader.LoadShaders((Var::shaderPath + "normalCube.vs").c_str(), (Var::shaderPath + "normalCube.fs").c_str());
-    // Shader setup
+
+    // ================== Compile and Use Shader ==================
+    shader.LoadShaders((Var::shaderPath + "normalCube.vs").c_str(),
+                       (Var::shaderPath + "normalCube.fs").c_str());
     shader.use();
     shader.setInt("texture1", 0);
+
+    // Optional: set default transforms, color values, etc.
     size = glm::vec3(1.0f);
+    r = 0.0f; 
+    g = 1.5f; 
+    b = 3.0f; // (If you're using these somewhere else)
 }
 
-void Cube::render(Shader& ourshader,
-    glm::vec3& cubeposition, Camera& camera,
-    int screen_width, int screen_height, GLFWwindow* window, double &mouseX, double &mouseY, bool& ishovering, bool& isMoving) {
-  
-    // Activate texture
+
+void Cube::render(Shader& shader,
+                  Camera& camera,
+                  int screenWidth,
+                  int screenHeight,
+                  GLFWwindow* window,
+                  double &mouseX,
+                  double &mouseY,
+                  bool &ishovering,
+                  bool &isMoving)
+{
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // Bind texture to texture unit 0
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, Var::cube.texture);
 
-    static float rotationAngle = 0.0f;
-    rotationAngle+=0.05f;
-    if(rotationAngle>=360.0f)
-      rotationAngle -=360.0f;
+    // Use our shader
+    shader.use();
+    shader.setFloat("r", r);
+    shader.setFloat("g", g);
+    shader.setFloat("b", b);
+    shader.setFloat("Alpha", Alpha);
+    shader.setInt("Basetexture", 0); // Let the shader know texture is on unit 0
 
-    ourshader.use();
+    // ----------------------------------------------------
+    // MODEL MATRIX: Translate -> Rotate -> Scale
+    // ----------------------------------------------------
+    glm::mat4 model(1.0f);
+    model = glm::translate(model, Position);
 
-    // Setup matrices
-    glm::mat4 model = glm::mat4(1.0f); 
-    model = glm::translate(model, cubeposition); 
-    model = glm::rotate(model, glm::radians(rotationAngle), glm::vec3(0.01f, 0.01f, 0.01f)); 
+    // Rotate around X, Y, Z by editor-controlled degrees
+    model = glm::rotate(model, glm::radians(Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     model = glm::scale(model, size);
-                                                                                 //
-    glm::mat4 view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up); // View matrix
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)screen_width / (float)screen_height, 0.1f, 100.0f); // Projection matrix
 
-    // Cube's 8 vertices (in world space, relative to the cube's center)
-    glm::vec3 cubeVertices[8] = {
-        cubeposition + glm::vec3(-0.5f, -0.5f, -0.5f),
-        cubeposition + glm::vec3(0.5f, -0.5f, -0.5f),
-        cubeposition + glm::vec3(0.5f,  0.5f, -0.5f),
-        cubeposition + glm::vec3(-0.5f,  0.5f, -0.5f),
-        cubeposition + glm::vec3(-0.5f, -0.5f,  0.5f),
-        cubeposition + glm::vec3(0.5f, -0.5f,  0.5f),
-        cubeposition + glm::vec3(0.5f,  0.5f,  0.5f),
-        cubeposition + glm::vec3(-0.5f,  0.5f,  0.5f)
+    // VIEW & PROJECTION
+    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 projection = glm::perspective(
+        glm::radians(45.0f),
+        (float)screenWidth / (float)screenHeight,
+        0.1f,
+        100.0f
+    );
+
+    // Send matrices to shader
+    shader.setMat4("model", model);
+    shader.setMat4("view", view);
+    shader.setMat4("projection", projection);
+
+    // ---------------------------------------------------------------
+    // Bounding Box for Hover Detection (in screen space)
+    // ---------------------------------------------------------------
+    // Start with local-space corners of the cube [-0.5..0.5]
+    glm::vec3 localCorners[8] = {
+        { -0.5f, -0.5f, -0.5f },
+        {  0.5f, -0.5f, -0.5f },
+        {  0.5f,  0.5f, -0.5f },
+        { -0.5f,  0.5f, -0.5f },
+        { -0.5f, -0.5f,  0.5f },
+        {  0.5f, -0.5f,  0.5f },
+        {  0.5f,  0.5f,  0.5f },
+        { -0.5f,  0.5f,  0.5f },
     };
 
-    // Variables to store the min and max screen-space coordinates
     float minX = FLT_MAX, maxX = -FLT_MAX;
     float minY = FLT_MAX, maxY = -FLT_MAX;
 
-    // Project each vertex to screen space
-    for (int i = 0; i < 8; ++i) {
-        glm::vec4 vertex = projection * view * glm::vec4(cubeVertices[i], 1.0f);
+    for (int i = 0; i < 8; ++i)
+    {
+        // Transform corner to world space, then clip space
+        glm::vec4 worldPos = model * glm::vec4(localCorners[i], 1.0f);
+        glm::vec4 clipSpace = projection * view * worldPos;
 
-        // Convert to normalized device coordinates (NDC)
-        glm::vec3 ndc = glm::vec3(vertex) / vertex.w;
+        // Convert to normalized device coords
+        glm::vec3 ndc = glm::vec3(clipSpace) / clipSpace.w;
 
-        // Convert to screen space
-        float screenX = (ndc.x * 0.5f + 0.5f) * screen_width;
-        float screenY = (0.5f - ndc.y * 0.5f) * screen_height;
+        // Convert to screen coords
+        float screenX = (ndc.x * 0.5f + 0.5f) * screenWidth;
+        float screenY = (0.5f - ndc.y * 0.5f) * screenHeight;
 
-        // Update min/max bounds in screen space
+        // Expand bounding rect
         minX = std::min(minX, screenX);
         maxX = std::max(maxX, screenX);
         minY = std::min(minY, screenY);
         maxY = std::max(maxY, screenY);
     }
 
-    // Calculate cube width and height in screen space
-    float cubeScreenWidth = maxX - minX;
-    float cubeScreenHeight = maxY - minY;
-
-    // Check if the cursor is within the cube's bounds
-    if (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY) {
+    // Check if mouse is within bounding box
+    if (mouseX >= minX && mouseX <= maxX && 
+        mouseY >= minY && mouseY <= maxY)
+    {
         ishovering = true;
     }
-    else ishovering = false;
+    else {
+        ishovering = false;
+    }
 
-    // If hovering and left mouse button is pressed, enable cube dragging
-    if (ishovering && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-        static bool isDraggingInitialized = false; // Ensure drag initialization happens once
+    // ------------------------------------------
+    // Dragging logic (move cube with mouse)
+    // ------------------------------------------
+    if (ishovering && (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS))
+    {
+        static bool dragInit = false; // tracks initialization of this drag
 
         if (!isMoving) {
             isMoving = true;
-            isDraggingInitialized = false; // Reset initialization state for a new drag
+            dragInit = false;
         }
-
         if (isMoving) {
-            static double lastMouseX;
-            static double lastMouseY;
-
-            // Initialize the drag state only once when the movement starts
-            if (!isDraggingInitialized) {
-                lastMouseX = mouseX;
-                lastMouseY = mouseY;
-                isDraggingInitialized = true; // Prevent reinitialization during dragging
+            static double lastX, lastY;
+            if (!dragInit) {
+                lastX = mouseX;
+                lastY = mouseY;
+                dragInit = true;
             }
+            double dX = (mouseX - lastX);
+            double dY = (mouseY - lastY);
+            lastX = mouseX;
+            lastY = mouseY;
 
-            // Calculate the mouse movement delta
-            double deltaX = mouseX - lastMouseX;
-            double deltaY = mouseY - lastMouseY;
+            // Move along camera vectors
+            float moveScale = 0.01f;
+            glm::vec3 camRight = glm::normalize(glm::cross(camera.Front, camera.Up));
+            glm::vec3 camUp    = glm::normalize(camera.Up);
 
-            // Update the last mouse position
-            lastMouseX = mouseX;
-            lastMouseY = mouseY;
-            glm::vec3 cameraRight = glm::normalize(glm::cross(camera.Front, camera.Up)); // Right vector
-            glm::vec3 cameraUp = glm::normalize(camera.Up);                            // Up vector
-            glm::vec3 cameraForward = glm::normalize(camera.Front);                   // Forward vector
-
-            // Adjust movement for screen-to-world scale (tweak 0.01f for speed adjustment)
-            float scale = 0.01f;
-            cubeposition += cameraRight * static_cast<float>(deltaX) * scale; // Move along camera's right
-            cubeposition -= cameraUp * static_cast<float>(deltaY) * scale;
+            Position += camRight * static_cast<float>(dX) * moveScale;
+            Position -= camUp   * static_cast<float>(dY) * moveScale;
         }
     }
     else {
-        // Reset dragging state if the mouse button is released
+        // Mouse not pressed or no longer hovering
         isMoving = false;
     }
 
-    // If right mouse button is pressed, exit "select cube mode"
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
-        isMoving = false;  // Stop moving the cube
+    // Right-click ends movement
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+    {
+        isMoving = false;
     }
 
-    // Pass matrices to the shader
-    ourshader.setMat4("model", model);
-    ourshader.setMat4("view", view);
-    ourshader.setMat4("projection", projection);
-    glUniform1i(glGetUniformLocation(ourshader.ID, "Basetexture"), 0);
-
-    // Render cube
+    // ------------------------------------------
+    // Render the cube
+    // ------------------------------------------
     glBindVertexArray(Var::cube.VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);    // OpenGL rendering code here
+    glDrawArrays(GL_TRIANGLES, 0, 36);
 
-    if(glfwWindowShouldClose(window)){
-      glDeleteVertexArrays(1, &VAO);
-      glDeleteBuffers(1, &VBO);
+    // Cleanup if the window is closing
+    if (glfwWindowShouldClose(window))
+    {
+        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(1, &VBO);
     }
+    glDisable(GL_BLEND);
 }
-
-
+/*
+ ▗▄▄▖▗▖ ▗▖▗▖  ▗▖▗▄▄▖  ▗▄▖ ▗▖  ▗▖
+▐▌   ▐▌▗▞▘ ▝▚▞▘ ▐▌ ▐▌▐▌ ▐▌ ▝▚▞▘ 
+ ▝▀▚▖▐▛▚▖   ▐▌  ▐▛▀▚▖▐▌ ▐▌  ▐▌  
+▗▄▄▞▘▐▌ ▐▌  ▐▌  ▐▙▄▞▘▝▚▄▞▘▗▞▘▝▚▖
+*/
 unsigned int loadCubemap(std::vector<std::string> faces) {
     GLuint textureID = 0;
     glGenTextures(1, &textureID);
@@ -749,315 +817,10 @@ void SkyBox::renderSkybox(Shader& shader, int screenWidth, int screenHeight, GLF
     }
 }
 
-// Sphere class definition
-Sphere::Sphere() {
-    // Initialize sphere properties
-}
-
-void Sphere::render() {
-    std::cout << "Rendering Sphere" << std::endl;
-    // OpenGL rendering code here
-}
-
-_VBO::_VBO() : _vboID(0), _isInitialized(false) {}
-
-// Initialize the VBO (generate a buffer ID)
-void _VBO::initializeData() {
-    if (!_isInitialized) {
-        glGenBuffers(1, &_vboID); // Generate the VBO
-        _isInitialized = true;
-        std::cout << "VBO initialized with ID: " << _vboID << std::endl;
-    }
-    else {
-        std::cout << "VBO is already initialized." << std::endl;
-    }
-}
-
-// Add raw data to the internal buffer (to be loaded into the GPU later)
-void _VBO::addRawData(const void* data, int size) {
-    if (!_isInitialized) {
-        std::cerr << "Error: VBO not initialized. Call initializeData() first." << std::endl;
-        return;
-    }
-
-    // Append raw data to the _data vector
-    const char* rawData = static_cast<const char*>(data);
-    _data.insert(_data.end(), rawData, rawData + size);
-    std::cout << "Added " << size << " bytes of raw data to VBO buffer." << std::endl;
-}
-
-// Upload the raw data to the GPU
-void _VBO::loadVBO() {
-    if (!_isInitialized) {
-        std::cerr << "Error: VBO not initialized. Call initializeData() first." << std::endl;
-        return;
-    }
-
-    if (_data.empty()) {
-        std::cerr << "Error: No data to upload to VBO." << std::endl;
-        return;
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, _vboID);  // Bind the VBO
-    glBufferData(GL_ARRAY_BUFFER, _data.size(), _data.data(), GL_STATIC_DRAW); // Upload data
-    glBindBuffer(GL_ARRAY_BUFFER, 0);  // Unbind the VBO
-
-    std::cout << "VBO loaded with " << _data.size() << " bytes of data." << std::endl;
-
-    // Clear the local data buffer after uploading
-    _data.clear();
-}
-
-// Render the VBO (bind it for use in rendering)
-void _VBO::render() {
-    if (!_isInitialized) {
-        std::cerr << "Error: VBO not initialized. Call initializeData() first." << std::endl;
-        return;
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, _vboID);  // Bind the VBO
-    // Rendering logic is dependent on how the data is used, typically done elsewhere
-    std::cout << "VBO bound for rendering with ID: " << _vboID << std::endl;
-    glBindBuffer(GL_ARRAY_BUFFER, 0);  // Unbind after rendering
-}
-
-bool hasPositions(){
-	return true;
-}
-bool hasNormals() {
-	return true;
-}
-bool hasTexCoords() {
-	return true;
-}
-bool hasTangents() {
-	return true;
-}
-bool hasBitangents() {
-	return true;
-}
-bool hasColors() {
-	return true;
-}
-bool hasBones() {
-	return true;
-}
-bool hasIndices() {
-	return true;
-}
-bool hasMaterialIDs() {
-	return true;
-}
-bool hasAnimations() {
-	return true;
-}
-
-// Helper constant for PI
-static constexpr float PI = 3.14159265359f;
-
-void Cylinder::cylinderloader(float radius, float height, int segments)
-{
-    Position = glm::vec3(5.0f, 0.0f, 0.0f);
-    std::vector<float> positions; // each vertex = 5 floats: (x, y, z, u, v)
-    positions.reserve((2 + 2 * segments) * 5);
-
-    std::vector<unsigned int> indices;
-
-    float halfHeight = height * 0.5f;
-    float angleStep = 2.0f * PI / float(segments);
-
-    // -- TOP CENTER --
-    positions.push_back(0.0f);        // x
-    positions.push_back(+halfHeight); // y
-    positions.push_back(0.0f);        // z
-    positions.push_back(0.5f);        // u
-    positions.push_back(0.5f);        // v
-
-    // -- TOP CIRCLE --
-    for (int i = 0; i < segments; ++i)
-    {
-        float angle = i * angleStep;
-        float x = radius * std::cos(angle);
-        float z = radius * std::sin(angle);
-
-        positions.push_back(x);
-        positions.push_back(+halfHeight);
-        positions.push_back(z);
-
-        // Radial mapping for top circle
-        float u = 0.5f + (x / (2.0f * radius));
-        float v = 0.5f + (z / (2.0f * radius));
-        positions.push_back(u);
-        positions.push_back(v);
-    }
-
-    unsigned int bottomCenterIndex = (unsigned int)(positions.size() / 5);
-    // -- BOTTOM CENTER --
-    positions.push_back(0.0f);
-    positions.push_back(-halfHeight);
-    positions.push_back(0.0f);
-    positions.push_back(0.5f);
-    positions.push_back(0.5f);
-
-    unsigned int bottomRingStart = bottomCenterIndex + 1;
-    // -- BOTTOM CIRCLE --
-    for (int i = 0; i < segments; ++i)
-    {
-        float angle = i * angleStep;
-        float x = radius * std::cos(angle);
-        float z = radius * std::sin(angle);
-
-        positions.push_back(x);
-        positions.push_back(-halfHeight);
-        positions.push_back(z);
-
-        float u = 0.5f + (x / (2.0f * radius));
-        float v = 0.5f + (z / (2.0f * radius));
-        positions.push_back(u);
-        positions.push_back(v);
-    }
-
-    // -- BUILD INDICES --
-    // Top cap
-    for (int i = 1; i <= segments; ++i)
-    {
-        int next = (i == segments) ? 1 : (i + 1);
-        indices.push_back(0);     // top center
-        indices.push_back(i);
-        indices.push_back(next);
-    }
-
-    // Bottom cap
-    for (int i = bottomRingStart; i < bottomRingStart + segments; ++i)
-    {
-        int next = (i == bottomRingStart + segments - 1) ? bottomRingStart : (i + 1);
-        indices.push_back(bottomCenterIndex);
-        indices.push_back(i);
-        indices.push_back(next);
-    }
-
-    // Side
-    for (int i = 1; i <= segments; ++i)
-    {
-        int top_i = i;
-        int top_next = (i == segments) ? 1 : (i + 1);
-
-        int bottom_i = bottomRingStart + (i - 1);
-        int bottom_next = bottomRingStart + (top_next - 1);
-
-        indices.push_back(top_i);
-        indices.push_back(bottom_i);
-        indices.push_back(top_next);
-
-        indices.push_back(top_next);
-        indices.push_back(bottom_i);
-        indices.push_back(bottom_next);
-    }
-
-    indexCount_ = (unsigned int)indices.size();
-
-    // == CREATE / BIND VAO, VBO, EBO ==
-    glGenVertexArrays(1, &VAO_);
-    glGenBuffers(1, &VBO_);
-    glGenBuffers(1, &EBO_);
-
-    glBindVertexArray(VAO_);
-
-    // VBO
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-    glBufferData(GL_ARRAY_BUFFER,
-        positions.size() * sizeof(float),
-        positions.data(),
-        GL_STATIC_DRAW);
-
-    // EBO
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-        indices.size() * sizeof(unsigned int),
-        indices.data(),
-        GL_STATIC_DRAW);
-
-    // Positions => layout(location = 0)
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(
-        0,
-        3,
-        GL_FLOAT,
-        GL_FALSE,
-        5 * sizeof(float),
-        (void*)0
-    );
-
-    // Texture coords => layout(location = 1)
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(
-        1,
-        2,
-        GL_FLOAT,
-        GL_FALSE,
-        5 * sizeof(float),
-        (void*)(3 * sizeof(float))
-    );
-
-    glBindVertexArray(0);
-
-    // Load your texture here and store the returned ID
-    // Replace with the desired texture path
-    textureID_ = loadTexture((Var::resourcePath + "Textures/bottom.jpg").c_str());
-    isInitialized_ = true;
-}
-
-Cylinder::~Cylinder()
-{
-    glDeleteBuffers(1, &VBO_);
-    glDeleteBuffers(1, &EBO_);
-    glDeleteVertexArrays(1, &VAO_);
-
-    // If you'd like to also delete the texture to avoid leaks:
-    // glDeleteTextures(1, &textureID_);
-}
-
-void Cylinder::draw(Shader& shader) const
-{
-	if (!isInitialized_)
-	{
-		std::cerr << "Cylinder is not initialized!" << std::endl;
-		return;
-	}
-
-    // Use our shader
-    shader.use(); // Ensure we're using this shader
-
-    // Bind our VAO
-    glBindVertexArray(VAO_);
-    glm::vec3 cylinderPosition = Position; // Your cylinder position
-    shader.setVec3("position", cylinderPosition);
-    // Set active texture unit to 0 and bind our cylinder texture
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textureID_);
-
-    // Let the shader know that 'myTexture' is at texture unit 0
-    int textureLoc = glGetUniformLocation(shader.ID, "myTexture");
-    glUniform1i(textureLoc, 0);
-
-    // Draw filled
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDrawElements(GL_TRIANGLES, indexCount_, GL_UNSIGNED_INT, nullptr);
-
-    // Optional wireframe overlay
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glDrawElements(GL_TRIANGLES, indexCount_, GL_UNSIGNED_INT, nullptr);
-
-    // Reset to fill mode
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    glBindVertexArray(0);
-}
-
 // Image class definition
 Image::Image() 
 {
-
+  std::cout << "LOADING::IMAGE" << std::endl;
 }
 
 void Image::loadImage()
@@ -1099,23 +862,30 @@ void Image::loadImage()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    textureID = loadTexture((Var::texturePath + "masuka.jpg").c_str());
+    textureID = loadTexture(imagePath);
     shader.LoadShaders((Var::shaderPath + "plane.vs").c_str(), (Var::shaderPath + "plane.fs").c_str());
 
 }
 
-void Image::render(Camera &camera, glm::vec3 &Position,  unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT) {
+void Image::render(Camera &camera,  unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT) {
     shader.use();
 
     // Set up transformations
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, Position);
+    model = glm::rotate(model, glm::radians(Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
 
     shader.setMat4("model", model);
     shader.setMat4("view", view);
     shader.setMat4("projection", projection);
+    shader.setFloat("r", r);
+    shader.setFloat("b", b);
+    shader.setFloat("g", g);
+    shader.setFloat("Alpha", Alpha);
 
     // Bind texture
     glActiveTexture(GL_TEXTURE0);
@@ -1128,6 +898,12 @@ void Image::render(Camera &camera, glm::vec3 &Position,  unsigned int SCR_WIDTH,
     glBindVertexArray(0);
 }
 
+/*
+▗▖ ▗▖▗▄▄▄▖▗▖  ▗▖▗▄▄▄   ▗▄▖ ▗▖ ▗▖ ▗▄▄▖
+▐▌ ▐▌  █  ▐▛▚▖▐▌▐▌  █ ▐▌ ▐▌▐▌ ▐▌▐▌   
+▐▌ ▐▌  █  ▐▌ ▝▜▌▐▌  █ ▐▌ ▐▌▐▌ ▐▌ ▝▀▚▖
+▐▙█▟▌▗▄█▄▖▐▌  ▐▌▐▙▄▄▀ ▝▚▄▞▘▐▙█▟▌▗▄▄▞▘
+*/
 namespace windowsHolder
 {
   std::vector<glm::vec3> windows 
@@ -1196,16 +972,9 @@ void TransparentWindow::init()
         1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
         (void*)(3 * sizeof(float))
     );
-
     glBindVertexArray(0); // Unbind for safety
-
     // Load texture
     texture = loadTexture((Var::texturePath + "window.png").c_str());
-
-    // (Optional) Test draw - You can remove or relocate this as desired
-    // glBindVertexArray(VAO);
-    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    // glBindVertexArray(0);
     glDisable(GL_BLEND);
 }
 

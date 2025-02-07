@@ -1,9 +1,9 @@
 CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o: \
- /home/lighht18/Tutorial/OpenglTemplate/project/src/OpenGLerrorreporting.cpp \
+ /home/lighht18/Template/Pigeon-Engine/src/OpenGLerrorreporting.cpp \
  /usr/include/stdc-predef.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/openglErrorReporting.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include/glad/glad.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include/KHR/khrplatform.h \
+ /home/lighht18/Template/Pigeon-Engine/include/openglErrorReporting.h \
+ /home/lighht18/Template/Pigeon-Engine/third_party/glad/include/glad/glad.h \
+ /home/lighht18/Template/Pigeon-Engine/third_party/glad/include/KHR/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \

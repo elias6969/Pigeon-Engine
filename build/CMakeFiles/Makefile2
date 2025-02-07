@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lighht18/Tutorial/OpenglTemplate/project
+CMAKE_SOURCE_DIR = /home/lighht18/Template/Pigeon-Engine
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lighht18/Tutorial/OpenglTemplate/project/build
+CMAKE_BINARY_DIR = /home/lighht18/Template/Pigeon-Engine/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -65,6 +65,7 @@ CMAKE_BINARY_DIR = /home/lighht18/Tutorial/OpenglTemplate/project/build
 # The main recursive "all" target.
 all: CMakeFiles/glad.dir/all
 all: CMakeFiles/imgui.dir/all
+all: CMakeFiles/tinyfiledialogs.dir/all
 all: CMakeFiles/PigeonEngine.dir/all
 .PHONY : all
 
@@ -75,6 +76,7 @@ preinstall:
 # The main recursive "clean" target.
 clean: CMakeFiles/glad.dir/clean
 clean: CMakeFiles/imgui.dir/clean
+clean: CMakeFiles/tinyfiledialogs.dir/clean
 clean: CMakeFiles/PigeonEngine.dir/clean
 .PHONY : clean
 
@@ -85,14 +87,14 @@ clean: CMakeFiles/PigeonEngine.dir/clean
 CMakeFiles/glad.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/glad.dir/build.make CMakeFiles/glad.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/glad.dir/build.make CMakeFiles/glad.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=10,11 "Built target glad"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lighht18/Template/Pigeon-Engine/build/CMakeFiles --progress-num=10,11 "Built target glad"
 .PHONY : CMakeFiles/glad.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/glad.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Template/Pigeon-Engine/build/CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/glad.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Template/Pigeon-Engine/build/CMakeFiles 0
 .PHONY : CMakeFiles/glad.dir/rule
 
 # Convenience name for target.
@@ -111,14 +113,14 @@ CMakeFiles/glad.dir/clean:
 CMakeFiles/imgui.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/imgui.dir/build.make CMakeFiles/imgui.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/imgui.dir/build.make CMakeFiles/imgui.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=12,13,14,15,16,17,18,19 "Built target imgui"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lighht18/Template/Pigeon-Engine/build/CMakeFiles --progress-num=12,13,14,15,16,17,18,19 "Built target imgui"
 .PHONY : CMakeFiles/imgui.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/imgui.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles 8
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Template/Pigeon-Engine/build/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/imgui.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Template/Pigeon-Engine/build/CMakeFiles 0
 .PHONY : CMakeFiles/imgui.dir/rule
 
 # Convenience name for target.
@@ -131,21 +133,48 @@ CMakeFiles/imgui.dir/clean:
 .PHONY : CMakeFiles/imgui.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/tinyfiledialogs.dir
+
+# All Build rule for target.
+CMakeFiles/tinyfiledialogs.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tinyfiledialogs.dir/build.make CMakeFiles/tinyfiledialogs.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tinyfiledialogs.dir/build.make CMakeFiles/tinyfiledialogs.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lighht18/Template/Pigeon-Engine/build/CMakeFiles --progress-num=20,21 "Built target tinyfiledialogs"
+.PHONY : CMakeFiles/tinyfiledialogs.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/tinyfiledialogs.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Template/Pigeon-Engine/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/tinyfiledialogs.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Template/Pigeon-Engine/build/CMakeFiles 0
+.PHONY : CMakeFiles/tinyfiledialogs.dir/rule
+
+# Convenience name for target.
+tinyfiledialogs: CMakeFiles/tinyfiledialogs.dir/rule
+.PHONY : tinyfiledialogs
+
+# clean rule for target.
+CMakeFiles/tinyfiledialogs.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tinyfiledialogs.dir/build.make CMakeFiles/tinyfiledialogs.dir/clean
+.PHONY : CMakeFiles/tinyfiledialogs.dir/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/PigeonEngine.dir
 
 # All Build rule for target.
 CMakeFiles/PigeonEngine.dir/all: CMakeFiles/glad.dir/all
 CMakeFiles/PigeonEngine.dir/all: CMakeFiles/imgui.dir/all
+CMakeFiles/PigeonEngine.dir/all: CMakeFiles/tinyfiledialogs.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/PigeonEngine.dir/build.make CMakeFiles/PigeonEngine.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/PigeonEngine.dir/build.make CMakeFiles/PigeonEngine.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9 "Built target PigeonEngine"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lighht18/Template/Pigeon-Engine/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9 "Built target PigeonEngine"
 .PHONY : CMakeFiles/PigeonEngine.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/PigeonEngine.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles 19
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Template/Pigeon-Engine/build/CMakeFiles 21
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/PigeonEngine.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Tutorial/OpenglTemplate/project/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lighht18/Template/Pigeon-Engine/build/CMakeFiles 0
 .PHONY : CMakeFiles/PigeonEngine.dir/rule
 
 # Convenience name for target.

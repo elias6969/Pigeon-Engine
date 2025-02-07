@@ -37,16 +37,25 @@ private:
 };
 
 // Pigeon-Class for rendering cubes (Because even pigeons need boxes!)
+
 class Cube {
 private:
     GLuint VAO, VBO, texture; 
-    glm::vec3 size;
-public: 
-    float Cubesize;
-    void loadCube(Shader& shader);                  // Load cube data (vertices, texture, etc.)
-    void render(Shader& ourshader,
-        glm::vec3& cubeposition, Camera& camera,
-        int screen_width, int screen_height, GLFWwindow* window, double &mouseX, double &mouseY, bool& ishovering, bool& isMoving);              // Render the cube
+public:
+    glm::vec3 Position; 
+    glm::vec3 Rotation; 
+    float Alpha;
+    glm::vec3 size;      
+    float r, g, b;      
+
+    void loadCube(Shader& shader);
+    void render(Shader& shader,
+                Camera& camera,
+                int screenWidth,
+                int screenHeight,
+                GLFWwindow* window,
+                double &mouseX, double &mouseY,
+                bool &ishovering, bool &isMoving);
 };
 
 class SkyBox {
@@ -57,52 +66,16 @@ private:
     unsigned int vao, vbo;
 };
 
-class _VBO {
-public:
-    _VBO();
-    void initializeData();
-    void loadVBO();
-    void render();
-    void addRawData(const void* data, int size);
-
-private:
-    unsigned int _vboID;  // OpenGL VBO ID
-    std::vector<char> _data;  // Raw data to be uploaded to GPU
-    bool _isInitialized; // Flag to indicate if the VBO is initialized
-};
-
-class Cylinder
-{
-public:
-    void cylinderloader(float radius, float height, int segments);
-    ~Cylinder();
-    void draw(Shader& shader) const;
-
-private:
-	bool isInitialized_{ false }; ///< Flag to indicate if the cylinder is initialized
-    GLuint textureID_;
-    unsigned int VAO_{ 0 };       ///< Vertex Array Object
-    unsigned int VBO_{ 0 };       ///< Vertex Buffer Object
-    unsigned int EBO_{ 0 };       ///< Element Buffer Object
-    unsigned int indexCount_{ 0 };///< How many indices we have to draw
-    glm::vec3 Position;
-};
-
-class Sphere {
-public:
-    Sphere();                         // Constructor to initialize sphere
-	void initializeData();          // Initialize sphere data (vertices, texture, etc.)
-    void loadSphere();                // Load sphere data (vertices, texture, etc.)
-    void render();              // Render the sphere
-private:
-    GLuint VAO, VBO;                  // Sphere-specific OpenGL objects (VAO and VBO)
-};
-
 class Image {
 public:
+    const char* imagePath;
+    glm::vec3 Position;
+    glm::vec3 Rotation;
+    float Alpha, r,b,g;
+    glm::vec3 size;
     Image();  // Constructor to load an image from a file
     void loadImage();                   // Load image data (texture)
-    void render(Camera &camera, glm::vec3 &Position, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT);                // Render the image
+    void render(Camera &camera, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT);                // Render the image
 
 private:
     GLuint textureID;                   

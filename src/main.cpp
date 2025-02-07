@@ -4,8 +4,9 @@
 #include <glm/fwd.hpp>
 #include <iostream>
 #include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+#include <imguiThemes.h>
 
 #include <glm/glm.hpp>
 #include <glm/vec3.hpp>
@@ -28,7 +29,6 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window, float deltaTime);
 void LoadAnimationInThread(Animation* animation, Animator* animator, const std::string& animationPath, Model* model);
 
@@ -57,36 +57,6 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 
-void setWindowIcon(GLFWwindow* window) {
-    int width, height, channels;
-
-    // Get the full path to the image using your virtual file system
-    VirtualFileSystem resources("../resources/");
-    std::string imagepath = resources.getFullPath("Textures/");
-
-    // Ensure imagepath ends with a '/' if needed
-    if (!imagepath.empty() && imagepath.back() != '/')
-        imagepath += '/';
-
-    // Load the image
-    unsigned char* image = stbi_load((imagepath + "Break.jpg").c_str(), &width, &height, &channels, 4);
-    if (image) {
-        // Set the icon
-        GLFWimage icon;
-        icon.width = width;
-        icon.height = height;
-        icon.pixels = image;
-        glfwSetWindowIcon(window, 1, &icon);
-
-        // Free the image memory
-        stbi_image_free(image);
-    } else {
-        // Handle error gracefully
-        std::cerr << "Failed to load icon image from: " << (imagepath + "Break.jpg") << std::endl;
-    }
-}
-
-
 int main()
 {
     // glfw: initialize and configure
@@ -107,11 +77,9 @@ int main()
         glfwTerminate();
         return -1;
     }
-    setWindowIcon(window);
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -124,6 +92,8 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     VirtualFileSystem vfs("../resources/");
+    std::string resources = vfs.getFullPath("models/");
+
     //Classes
     Cube cube;
     Grid grid;
@@ -151,23 +121,31 @@ int main()
     imageManager.loadImage();
     skybox.texturebufferLoading(skyboxshader);
 
-    // ImGui: setup
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    ImVector<ImWchar> emojiRanges;
-    AddEmojiRanges(emojiRanges);
-    std::string fontPath = vfs.getFullPath("fonts/");
-    ImFont* font = io.Fonts->AddFontFromFileTTF((fontPath + "noto-emoji-main/fonts/NotoColorEmoji-emojicompat.ttf").c_str(), 16.0f, NULL, emojiRanges.Data);
-    if(font == nullptr){
-      std::cout << "FAILED::LOAD-EMOJI::" << fontPath << std::endl;
-    (void)io;
-    ImGui::StyleColorsDark();
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.Colors[ImGuiCol_WindowBg].w = 0.5f;
 
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+#pragma region imgui
+#if REMOVE_IMGUI == 0
+	ImGui::CreateContext();
+	imguiThemes::embraceTheDarkness();
+
+	ImGuiIO &io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         
+
+	io.FontGlobalScale = 1.0f; 
+  ImGui::GetStyle().Colors[ImGuiCol_Text] = ImVec4(0.0f, 1.0f, 1.0f, 1.0f); 
+	ImGuiStyle &style = ImGui::GetStyle();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		//style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 0.f;
+		style.Colors[ImGuiCol_DockingEmptyBg].w = 0.f;
+	}
+
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
+#endif
+#pragma endregion
 
     glm::vec3 cubeposition = glm::vec3(0.0f, 0.0f, 0.0f);
     
@@ -182,13 +160,6 @@ int main()
     float shaderheight = 3.0f;
 
 
-    std::string resources = vfs.getFullPath("models/");
-
-    //playerManager.customModel(PlayerShader, playerModel, "guitarplaying/guitar.dae", "model.vs", "model.fs");
-    //Animation danceanimation;
-    //danceanimation.LoadAnimation((resources + "guitarplaying/guitar.dae"), &playerModel);
-    //Animator animator;
-    //animator.loadAnimator(&danceanimation);
 
     bool renderDistance = true;
 
@@ -196,7 +167,7 @@ int main()
 
     BoundingBox bbox(glm::vec3(-1,-1,-1), glm::vec3(1,1,1));
     
-    initIMGUI(window);
+    //initIMGUI(window);
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -208,13 +179,14 @@ int main()
 
         // input
         processInput(window, deltaTime);
-        //animator.UpdateAnimation(deltaTime);
-
-        // Start the ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
         
+	    #pragma region imgui
+		    ImGui_ImplOpenGL3_NewFrame();
+		    ImGui_ImplGlfw_NewFrame();
+		    ImGui::NewFrame();
+		    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+	    #pragma endregion
+
         // ImGui window
         ImGui::Begin("Pigeon Engine Debug");
 
@@ -227,59 +199,12 @@ int main()
         ImGui::Checkbox("Moving", &isMoving);
         ImGui::Text("Soldier position: (%.2f, %.2f, %.2f)", housePosition.x, housePosition.y, housePosition.z);
         ImGui::Checkbox("Collided with Cube", &Collided);
-
-        // Toggle demo window
-        ImGui::Checkbox("Show ImGui Demo", &showImGuiDemo);
-        if (showImGuiDemo)
-          ImGui::ShowDemoWindow();
-
-        ImGui::Separator();
-        ImGui::Text("Window Snapping");
-        ImVec2 OriginalWindowpos = ImGui::GetWindowPos();
-        ImVec2 debugWindowPos = OriginalWindowpos;
-        ImVec2 debugWindowSize = ImGui::GetWindowSize();
-
-        if (debugWindowPos.x <= snapDistance) // Snap to left edge
-          debugWindowPos.x = 0;
-        if (debugWindowPos.x + debugWindowSize.x >= SCR_WIDTH - snapDistance) // Snap to right edge
-          debugWindowPos.x = SCR_WIDTH - debugWindowSize.x;
-        if (debugWindowPos.y <= snapDistance) // Snap to top edge
-          debugWindowPos.y = 0;
-        if (debugWindowPos.y + debugWindowSize.y >= SCR_HEIGHT - snapDistance) // Snap to bottom edge
-           debugWindowPos.y = SCR_HEIGHT - debugWindowSize.y;
-
-        if(OriginalWindowpos.x != debugWindowPos.x || OriginalWindowpos.y != debugWindowPos.y)
-          ImGui::SetWindowPos(OriginalWindowpos);
-
         ImGui::End();
-
-        ImGui::Begin("Particle");
-        ImGui::Checkbox("Render Particle", &RenderParticle);
-        ImGui::InputInt("Amount", &ParticleAmount);
-        ImGui::InputFloat("shader height", &shaderheight);
-        ImGui::Separator();
-        ImGui::Text("Window Snapping");
-
-        ImVec2 originalparticlewindowpos = ImGui::GetWindowPos();
-        ImVec2 particleWindowPos = originalparticlewindowpos;
-        ImVec2 particleWindowSize = ImGui::GetWindowSize();
-
-        if (particleWindowPos.x <= snapDistance) // Snap to left edge
-          particleWindowPos.x = 0;
-        if (particleWindowPos.x + particleWindowSize.x >= SCR_WIDTH - snapDistance) // Snap to right edge
-          particleWindowPos.x = SCR_WIDTH - particleWindowSize.x;
-        if (particleWindowPos.y <= snapDistance) // Snap to top edge
-          particleWindowPos.y = 0;
-       if (particleWindowPos.y + particleWindowSize.y >= SCR_HEIGHT - snapDistance) // Snap to bottom edge
-          particleWindowPos.y = SCR_HEIGHT - particleWindowSize.y;
-
-       if(originalparticlewindowpos.x != particleWindowPos.x || originalparticlewindowpos.y != originalparticlewindowpos.y)
-         ImGui::SetWindowPos(particleWindowPos);
-        ImGui::End();
-        CreationManager();
         // render
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        //CreationManager(window, cubeShader, camera, SCR_WIDTH, SCR_HEIGHT, mouseX, mouseY, ishovering, isMoving);
         glm::vec3 min = cubeposition - glm::vec3(0.8f);
         glm::vec3 max = cubeposition + glm::vec3(0.8f);
         bbox.update(min, max);
@@ -288,7 +213,7 @@ int main()
         }else{
           Collided = false;
         }
-        cube.render(cubeShader, cubeposition, camera, SCR_WIDTH, SCR_HEIGHT, window, mouseX, mouseY, ishovering, isMoving);
+        //cube.render(cubeShader, camera, SCR_WIDTH, SCR_HEIGHT, window, mouseX, mouseY, ishovering, isMoving);
         bbox.render(camera);
         grid.renderGrid(gridShader, camera, window);
         particle.renderParticles(particleShader, ParticleAmount, particlespeed, camera, SCR_WIDTH, SCR_HEIGHT, height, RenderParticle, window);
@@ -305,22 +230,31 @@ int main()
         if (scalarDistance >= modelRenderDistance) {
           //playerManager.customRenderModel(animator, camera, 1.1f, 1.0f, housePosition, SCR_WIDTH, SCR_HEIGHT, playerModel, PlayerShader);
         } else {
-          imageManager.render(camera, housePosition, SCR_WIDTH, SCR_HEIGHT);
+          //imageManager.render(camera, housePosition, SCR_WIDTH, SCR_HEIGHT);
         }
-        // Render ImGui
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	      #pragma region imgui
+		      ImGui::Render();
+		      int display_w, display_h;
+		      glfwGetFramebufferSize(window, &display_w, &display_h);
+		      glViewport(0, 0, display_w, display_h);
+		      ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		      if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	      	{
+	      		GLFWwindow *backup_current_context = glfwGetCurrentContext();
+	      		ImGui::UpdatePlatformWindows();
+	      		ImGui::RenderPlatformWindowsDefault();
+	      		glfwMakeContextCurrent(backup_current_context);
+	      	}
+        #pragma endregion
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    // Cleanup
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-
-    glfwTerminate();
+    glfwDestroyWindow(window);
+      glfwTerminate();
     return 0;
 }
 
@@ -391,9 +325,4 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     lastY = ypos;
 
     camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-    //camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }

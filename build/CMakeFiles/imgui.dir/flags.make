@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/lighht18/Tutorial/OpenglTemplate/project/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui -I/home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends
+CXX_INCLUDES = -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends
 
 CXX_FLAGS = -g -std=gnu++17
 

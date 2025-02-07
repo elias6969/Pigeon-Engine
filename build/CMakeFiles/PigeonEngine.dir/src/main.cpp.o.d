@@ -1,8 +1,8 @@
 CMakeFiles/PigeonEngine.dir/src/main.cpp.o: \
- /home/lighht18/Tutorial/OpenglTemplate/project/src/main.cpp \
+ /home/lighht18/Template/Pigeon-Engine/src/main.cpp \
  /usr/include/stdc-predef.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include/glad/glad.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/third_party/glad/include/KHR/khrplatform.h \
+ /home/lighht18/Template/Pigeon-Engine/third_party/glad/include/glad/glad.h \
+ /home/lighht18/Template/Pigeon-Engine/third_party/glad/include/KHR/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -288,12 +288,13 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: \
  /usr/include/c++/13/bits/basic_ios.tcc \
  /usr/include/c++/13/bits/ostream.tcc /usr/include/c++/13/istream \
  /usr/include/c++/13/bits/istream.tcc \
- /home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/imgui.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/imconfig.h \
+ /home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imgui.h \
+ /home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imconfig.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/float.h /usr/include/string.h \
  /usr/include/strings.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends/imgui_impl_glfw.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/third_party/imgui/backends/imgui_impl_opengl3.h \
+ /home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends/imgui_impl_glfw.h \
+ /home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends/imgui_impl_opengl3.h \
+ /home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imguiThemes.h \
  /usr/include/glm/glm.hpp /usr/include/c++/13/climits \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/limits.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/syslimits.h \
@@ -309,20 +310,20 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: \
  /usr/include/glm/detail/type_half.hpp \
  /usr/include/glm/detail/type_half.inl /usr/include/glm/integer.hpp \
  /usr/include/glm/detail/func_integer.inl \
- /home/lighht18/Tutorial/OpenglTemplate/project/third_party/stb_image.h \
+ /home/lighht18/Template/Pigeon-Engine/third_party/stb_image.h \
  /usr/include/c++/13/stdlib.h /usr/include/c++/13/chrono \
  /usr/include/c++/13/bits/chrono.h /usr/include/c++/13/ratio \
  /usr/include/c++/13/ctime /usr/include/c++/13/bits/parse_numbers.h \
  /usr/include/c++/13/thread /usr/include/c++/13/bits/std_thread.h \
  /usr/include/c++/13/bits/unique_ptr.h \
  /usr/include/c++/13/bits/this_thread_sleep.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/Shader.h \
+ /home/lighht18/Template/Pigeon-Engine/include/Shader.h \
  /usr/include/c++/13/fstream /usr/include/c++/13/bits/codecvt.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/basic_file.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++io.h \
  /usr/include/c++/13/bits/fstream.tcc /usr/include/c++/13/sstream \
  /usr/include/c++/13/bits/sstream.tcc \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/Camera.h \
+ /home/lighht18/Template/Pigeon-Engine/include/Camera.h \
  /usr/include/glm/gtc/matrix_transform.hpp \
  /usr/include/glm/ext/matrix_projection.hpp \
  /usr/include/glm/gtc/constants.hpp \
@@ -335,15 +336,15 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: \
  /usr/include/glm/ext/matrix_transform.hpp \
  /usr/include/glm/ext/matrix_transform.inl \
  /usr/include/glm/gtc/matrix_transform.inl \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/ObjectRendererManager.h \
+ /home/lighht18/Template/Pigeon-Engine/include/ObjectRendererManager.h \
  /usr/include/c++/13/vector /usr/include/c++/13/bits/stl_uninitialized.h \
  /usr/include/c++/13/bits/stl_vector.h \
  /usr/include/c++/13/bits/stl_bvector.h \
  /usr/include/c++/13/bits/vector.tcc \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/Shader.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/Camera.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/vao_manager.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/filemanager.h \
+ /home/lighht18/Template/Pigeon-Engine/include/Shader.h \
+ /home/lighht18/Template/Pigeon-Engine/include/Camera.h \
+ /home/lighht18/Template/Pigeon-Engine/include/vao_manager.h \
+ /home/lighht18/Template/Pigeon-Engine/include/filemanager.h \
  /usr/include/c++/13/filesystem /usr/include/c++/13/bits/fs_fwd.h \
  /usr/include/c++/13/bits/fs_path.h /usr/include/c++/13/locale \
  /usr/include/c++/13/bits/locale_facets_nonio.h \
@@ -358,8 +359,8 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: \
  /usr/include/c++/13/bits/allocated_ptr.h \
  /usr/include/c++/13/ext/aligned_buffer.h \
  /usr/include/c++/13/bits/fs_dir.h /usr/include/c++/13/bits/fs_ops.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/modelLoader.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/Model.h \
+ /home/lighht18/Template/Pigeon-Engine/include/modelLoader.h \
+ /home/lighht18/Template/Pigeon-Engine/include/Model.h \
  /usr/include/assimp/Importer.hpp /usr/include/assimp/types.h \
  /usr/include/assimp/defs.h /usr/include/assimp/config.h \
  /usr/include/assimp/vector2.h /usr/include/assimp/vector3.h \
@@ -383,13 +384,13 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: \
  /usr/include/assimp/camera.h /usr/include/assimp/material.h \
  /usr/include/assimp/material.inl /usr/include/assimp/anim.h \
  /usr/include/assimp/metadata.h /usr/include/assimp/postprocess.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/mesh.h \
+ /home/lighht18/Template/Pigeon-Engine/include/mesh.h \
  /usr/include/c++/13/map /usr/include/c++/13/bits/stl_tree.h \
  /usr/include/c++/13/bits/node_handle.h \
  /usr/include/c++/13/bits/stl_map.h \
  /usr/include/c++/13/bits/stl_multimap.h \
  /usr/include/c++/13/bits/erase_if.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/assimp_glm_helpers.h \
+ /home/lighht18/Template/Pigeon-Engine/include/assimp_glm_helpers.h \
  /usr/include/glm/gtc/quaternion.hpp \
  /usr/include/glm/ext/vector_relational.hpp \
  /usr/include/glm/ext/vector_relational.inl \
@@ -412,10 +413,10 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: \
  /usr/include/glm/ext/quaternion_transform.inl \
  /usr/include/glm/gtc/quaternion.inl /usr/include/glm/gtc/epsilon.hpp \
  /usr/include/glm/detail/setup.hpp /usr/include/glm/gtc/epsilon.inl \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/animdata.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/animator.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/animation.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/bone.h \
+ /home/lighht18/Template/Pigeon-Engine/include/animdata.h \
+ /home/lighht18/Template/Pigeon-Engine/include/animator.h \
+ /home/lighht18/Template/Pigeon-Engine/include/animation.h \
+ /home/lighht18/Template/Pigeon-Engine/include/bone.h \
  /usr/include/c++/13/list /usr/include/c++/13/bits/stl_list.h \
  /usr/include/c++/13/bits/list.tcc /usr/include/glm/gtx/quaternion.hpp \
  /usr/include/glm/ext/quaternion_exponential.hpp \
@@ -431,6 +432,6 @@ CMakeFiles/PigeonEngine.dir/src/main.cpp.o: \
  /usr/include/c++/13/bits/hashtable_policy.h \
  /usr/include/c++/13/bits/enable_special_members.h \
  /usr/include/c++/13/array /usr/include/c++/13/compare \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/Model.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/BoundingBox.h \
- /home/lighht18/Tutorial/OpenglTemplate/project/include/IMGUIManager.h
+ /home/lighht18/Template/Pigeon-Engine/include/Model.h \
+ /home/lighht18/Template/Pigeon-Engine/include/BoundingBox.h \
+ /home/lighht18/Template/Pigeon-Engine/include/IMGUIManager.h
