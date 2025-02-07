@@ -3,21 +3,6 @@
 PigeonEngine is a **lightweight** and **modular** graphics engine built for **Linux**, primarily **Ubuntu**. It provides a **custom editor** that allows users to create and manipulate objects easily by specifying file paths for **textures** and **3D models**. The engine is currently in development, with ongoing improvements, including a **real-time text editor** for adjusting lighting and materials.
 
 PigeonEngine is designed to combine elements of **Blender** and **Unity**, but with a streamlined workflow and performance-focused design.
-
-
-
-## Roadmap
-✅ Basic scene editor with object loading.
-✅ Support for Assimp models and stb_image textures.
-⬜Real-time material & lighting editor (In Progress).
-⬜Improved UI for object manipulation.
-⬜Scene-saving and serialization.
-## Roadmap
-✅ Basic scene editor with object loading.
-✅ Support for Assimp models and stb_image textures.
-⬜Real-time material & lighting editor (In Progress).
-⬜Improved UI for object manipulation.
-⬜Scene-saving and serialization.
 ## Roadmap
 ✅ Basic scene editor with object loading.
 ✅ Support for Assimp models and stb_image textures.
