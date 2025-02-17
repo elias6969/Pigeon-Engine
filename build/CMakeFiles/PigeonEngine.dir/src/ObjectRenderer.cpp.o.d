@@ -329,7 +329,10 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/glm/ext/matrix_transform.inl \
  /usr/include/glm/gtc/matrix_transform.inl \
  /home/lighht18/Template/Pigeon-Engine/include/vao_manager.h \
- /usr/include/GL/gl.h /usr/include/glm/ext/quaternion_transform.hpp \
+ /usr/include/GL/gl.h /usr/include/dirent.h \
+ /usr/include/x86_64-linux-gnu/bits/dirent.h \
+ /usr/include/x86_64-linux-gnu/bits/dirent_ext.h \
+ /usr/include/glm/ext/quaternion_transform.hpp \
  /usr/include/glm/ext/quaternion_transform.inl \
  /usr/include/x86_64-linux-gnu/c++/13/bits/stdc++.h \
  /usr/include/c++/13/ciso646 /usr/include/c++/13/csetjmp \

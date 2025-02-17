@@ -1683,6 +1683,7 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o
  /usr/include/c++/13/variant
  /usr/include/c++/13/vector
  /usr/include/ctype.h
+ /usr/include/dirent.h
  /usr/include/endian.h
  /usr/include/errno.h
  /usr/include/features-time64.h
@@ -1892,6 +1893,8 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o
  /usr/include/x86_64-linux-gnu/bits/byteswap.h
  /usr/include/x86_64-linux-gnu/bits/confname.h
  /usr/include/x86_64-linux-gnu/bits/cpu-set.h
+ /usr/include/x86_64-linux-gnu/bits/dirent.h
+ /usr/include/x86_64-linux-gnu/bits/dirent_ext.h
  /usr/include/x86_64-linux-gnu/bits/endian.h
  /usr/include/x86_64-linux-gnu/bits/endianness.h
  /usr/include/x86_64-linux-gnu/bits/environments.h

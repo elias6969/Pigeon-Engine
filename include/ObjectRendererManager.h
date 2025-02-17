@@ -28,9 +28,16 @@ private:
 
 class Particle {
 public:
-    void InitParticle(Shader& shader);
-    void renderParticles(Shader& shader, int &amount, int speed, Camera &camera,
-        int screen_width, int screen_height, float &height, bool RenderParticle, GLFWwindow* windwow);
+    Shader shader;
+    glm::vec3 Position;
+    glm::vec3 Rotation;
+    int ParticleAmount;
+    float Height;
+    float Speed;
+    const char* texturePath;
+    void InitParticle();
+    void renderParticles(Camera &camera,
+        int screen_width, int screen_height, bool RenderParticle, GLFWwindow* windwow);
 private:
     GLuint ParticleVAO, ParticleVBO, Particletexture;
     int x;
@@ -42,15 +49,16 @@ class Cube {
 private:
     GLuint VAO, VBO, texture; 
 public:
+    Shader shader;
     glm::vec3 Position; 
     glm::vec3 Rotation; 
     float Alpha;
     glm::vec3 size;      
     float r, g, b;      
+    const char* texturePath;
 
-    void loadCube(Shader& shader);
-    void render(Shader& shader,
-                Camera& camera,
+    void loadCube();
+    void render(Camera& camera,
                 int screenWidth,
                 int screenHeight,
                 GLFWwindow* window,
@@ -68,6 +76,7 @@ private:
 
 class Image {
 public:
+    Shader shader;
     const char* imagePath;
     glm::vec3 Position;
     glm::vec3 Rotation;
@@ -80,7 +89,6 @@ public:
 private:
     GLuint textureID;                   
     GLuint vao, vbo, ebo;
-    Shader shader;
 };
 
 class TransparentWindow

@@ -44,13 +44,13 @@ bool firstMouse = true;
 bool ishovering = false;
 bool isOutcamera = false;
 bool isMoving = false;
-bool RenderParticle = false;
 double mouseX=0.0, mouseY = 0.0;
 int ParticleAmount = 100000;
 int particlespeed = 10;
 
 bool showImGuiDemo = false; // To toggle ImGui demo window
 bool Collided = false;
+bool isRender = true;
 
 // timing
 float deltaTime = 0.0f;    
@@ -70,7 +70,7 @@ int main()
 #endif
 
     // glfw window creation
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Pigeon Engine!", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Pigeon Engine", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -115,10 +115,7 @@ int main()
     Shader boxShader;
     //Inilialization
     windowManager.init();
-    cube.loadCube(cubeShader);
     grid.setupGrid(gridShader, 10.0f, 0.5f);
-    particle.InitParticle(particleShader);
-    imageManager.loadImage();
     skybox.texturebufferLoading(skyboxshader);
 
 
@@ -155,8 +152,6 @@ int main()
     const float snapDistance = 20.0f;
     float height = 0.0f;
 
-    glm::vec3 mountainposition = glm::vec3(10.0f, 0.0f,0.0f);
-    glm::vec3 housePosition = glm::vec3(10.0f, 0.0f, 10.0f);
     float shaderheight = 3.0f;
 
 
@@ -165,10 +160,10 @@ int main()
 
     int counter = 0;
 
-    BoundingBox bbox(glm::vec3(-1,-1,-1), glm::vec3(1,1,1));
     
     //initIMGUI(window);
 
+    particle.InitParticle();
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -197,41 +192,18 @@ int main()
         ImGui::Checkbox("Hovering Cube", &ishovering);
         ImGui::Checkbox("Out Camera Mode", &isOutcamera);
         ImGui::Checkbox("Moving", &isMoving);
-        ImGui::Text("Soldier position: (%.2f, %.2f, %.2f)", housePosition.x, housePosition.y, housePosition.z);
         ImGui::Checkbox("Collided with Cube", &Collided);
         ImGui::End();
         // render
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //CreationManager(window, cubeShader, camera, SCR_WIDTH, SCR_HEIGHT, mouseX, mouseY, ishovering, isMoving);
-        glm::vec3 min = cubeposition - glm::vec3(0.8f);
-        glm::vec3 max = cubeposition + glm::vec3(0.8f);
-        bbox.update(min, max);
-        if(CheckCollision(cubeposition, camera.Position, 1.0f)){
-          Collided = true;
-        }else{
-          Collided = false;
-        }
-        //cube.render(cubeShader, camera, SCR_WIDTH, SCR_HEIGHT, window, mouseX, mouseY, ishovering, isMoving);
-        bbox.render(camera);
+        CreationManager(window, cubeShader, camera, SCR_WIDTH, SCR_HEIGHT, mouseX, mouseY, ishovering, isMoving);
+
         grid.renderGrid(gridShader, camera, window);
-        particle.renderParticles(particleShader, ParticleAmount, particlespeed, camera, SCR_WIDTH, SCR_HEIGHT, height, RenderParticle, window);
         skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
         windowManager.render(camera, window);
-
-        glm::vec3 Distance = housePosition - camera.Position;
-        float scalarDistance = glm::length(Distance); // Calculate the magnitude of the distance vector
-
-        // Define reasonable thresholds
-        float modelRenderDistance = 20.0f; // Beyond this, render the model
-        float imageRenderDistance = 5.0f; // Within this, render the image
-
-        if (scalarDistance >= modelRenderDistance) {
-          //playerManager.customRenderModel(animator, camera, 1.1f, 1.0f, housePosition, SCR_WIDTH, SCR_HEIGHT, playerModel, PlayerShader);
-        } else {
-          //imageManager.render(camera, housePosition, SCR_WIDTH, SCR_HEIGHT);
-        }
+        particle.renderParticles(camera, SCR_WIDTH, SCR_HEIGHT, isRender, window);
 
 	      #pragma region imgui
 		      ImGui::Render();
@@ -254,7 +226,7 @@ int main()
     }
 
     glfwDestroyWindow(window);
-      glfwTerminate();
+    glfwTerminate();
     return 0;
 }
 
@@ -269,10 +241,8 @@ void processInput(GLFWwindow* window, float deltaTime) {
         glfwSetWindowShouldClose(window, true);
     }
 
-    if (glfwGetKey(window, glfwGetKeyScancode(GLFW_KEY_LEFT_SHIFT)) == GLFW_PRESS) {
-      camera.MovementSpeed += 1.0f;
-    }
-
+    camera.SPEED = (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) ? 10.0f : 2.5f;
+    
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && !isOutcamera) {
         isOutcamera = true;
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

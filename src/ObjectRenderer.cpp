@@ -1,5 +1,6 @@
 #include "ObjectRendererManager.h"
 #include <GL/gl.h>
+#include <dirent.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_transform.hpp>
@@ -108,7 +109,8 @@ bool CheckCollision(glm::vec3 &Position1, glm::vec3 &Position2, float size)
 ▐▛▀▘ ▐▛▀▜▌▐▛▀▚▖ █    █  ▐▌   ▐▌   ▐▛▀▀▘
 ▐▌   ▐▌ ▐▌▐▌ ▐▌ █  ▗▄█▄▖▝▚▄▄▖▐▙▄▄▖▐▙▄▄▖
 */
-void Particle::InitParticle(Shader& shader)
+
+void Particle::InitParticle()
 {
     // Define vertices for a small quad representing a particle.
     float particleVertices[] = {
@@ -154,7 +156,18 @@ void Particle::InitParticle(Shader& shader)
     // Load the texture image using stb_image.
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(false);
-    unsigned char* data = stbi_load((Var::texturePath + "Break.jpg").c_str(), &width, &height, &nrChannels, 0);
+    std::string fullPath;
+    std::cout << "TEXTURE::PATH::" << texturePath << std::endl;
+
+    if(texturePath == nullptr || strlen(texturePath) == 0) {
+      std::cout << "TEXTURE::PATH::NULL OR EMPTY\n";
+      fullPath = Var::texturePath + "masuka.jpg";
+      texturePath = (Var::texturePath + "masuka.jpg").c_str();
+    }
+
+    texturePath = "/home/lighht18/Template/Pigeon-Engine/resources/Textures/masuka.jpg";
+    std::cout << "TEXTURE::PATH::" << texturePath << std::endl;
+    unsigned char* data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
 
     // Check if the texture was successfully loaded.
     if (data) {
@@ -175,7 +188,7 @@ void Particle::InitParticle(Shader& shader)
     }
     else {
         // Handle texture loading failure.
-        throw std::runtime_error("Failed to load texture: " + Var::texturePath + "cube.jpeg");
+        //throw std::runtime_error("Failed to load texture: for particle");
     }
 
     // Free the texture image memory after uploading it to the GPU.
@@ -196,28 +209,29 @@ void UpdateParticleBuffers(std::vector<glm::vec3> particlePositions) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Particle::renderParticles(Shader& shader, int &amount, int speed, Camera &camera,
-    int screen_width, int screen_height, float &height, bool RenderParticle, GLFWwindow* window)
+//RENDER PARTICLE
+void Particle::renderParticles(Camera &camera,
+        int screen_width, int screen_height, bool RenderParticle, GLFWwindow* windwow)
 {
     if(!RenderParticle)
       return ;
-    if(amount < 0) amount = 0;
+    if(ParticleAmount < 0) ParticleAmount = 0;
 
-    // Ensure the particle system is initialized only once.
     static std::vector<glm::vec3> particlePositions; //Storing particle positions
     static std::vector<glm::vec3> particleVelocities; //Storing Particle velocity 
     static std::vector<glm::vec3> test;
     static bool initialized = false;
+    //particlePositions.push_back(Position);
 
     if (!initialized) {
         initialized = true;
-    if (particlePositions.size() != static_cast<size_t>(amount)) {
+    if (particlePositions.size() != static_cast<size_t>(ParticleAmount)) {
         // Resize vectors to match the desired particle amount.
-        particlePositions.resize(amount);
-        particleVelocities.resize(amount);
+        particlePositions.resize(ParticleAmount);
+        particleVelocities.resize(ParticleAmount);
         
         // Initialize particles with random positions and velocities.
-        for (int i = 0; i < amount; ++i) {
+        for (int i = 0; i < ParticleAmount; ++i) {
             particlePositions[i] = glm::vec3(
                 (float(rand()) / float(RAND_MAX)) * 2.0f - 1.0f,  // Random X position
                 (float(rand()) / float(RAND_MAX)) * 2.0f,         // Random Y position
@@ -234,11 +248,11 @@ void Particle::renderParticles(Shader& shader, int &amount, int speed, Camera &c
     }
 
     // Update particle positions
-    for (int i = 0; i < amount; ++i) {
+    for (int i = 0; i < ParticleAmount; ++i) {
         particlePositions[i] += particleVelocities[i] * 0.01f; // Simulate time delta
 
         // Reset particles that fall below a threshold or exceed a height limit
-        if (particlePositions[i].y < -0.5f || particlePositions[i].y > height) {
+        if (particlePositions[i].y < -0.5f || particlePositions[i].y > Height) {
             particlePositions[i] = glm::vec3(
                 (float(rand()) / float(RAND_MAX)) * 2.0f - 1.0f,  // Reset X position
                 (float(rand()) / float(RAND_MAX)) * 2.0f,         // Reset Y position
@@ -300,7 +314,7 @@ void Particle::renderParticles(Shader& shader, int &amount, int speed, Camera &c
     // Cleanup: Unbind the VAO and disable blending
     glBindVertexArray(0);
     glDisable(GL_BLEND);
-    if(glfwWindowShouldClose(window)){
+    if(glfwWindowShouldClose(windwow)){
       glDeleteVertexArrays(1, &ParticleVAO);
       glDeleteBuffers(1, &ParticleVBO);
     }
@@ -387,7 +401,7 @@ void Grid::renderGrid(Shader& shader, Camera& camera, GLFWwindow* window) {
 ▝▚▄▄▖▝▚▄▞▘▐▙▄▞▘▐▙▄▄▖
 */
 
-void Cube::loadCube(Shader& shader) {
+void Cube::loadCube() {
     float vertices[] = {
         // 36 vertices, each with:
         //   3 floats for position (x, y, z)
@@ -468,32 +482,15 @@ void Cube::loadCube(Shader& shader) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char* datatexture = stbi_load((Var::texturePath + "cube.jpeg").c_str(),
-                                           &width, &height, &nrChannels, 0);
-
-    if (datatexture) {
-        GLenum format;
-        if (nrChannels == 1)      format = GL_RED;
-        else if (nrChannels == 3) format = GL_RGB;
-        else if (nrChannels == 4) format = GL_RGBA;
-        else throw std::runtime_error("Unsupported texture format");
-
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0,
-                     format, GL_UNSIGNED_BYTE, datatexture);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    } 
-    else {
-        throw std::runtime_error("Failed to load texture");
-    }
-    stbi_image_free(datatexture);
+    texture = loadTexture(texturePath);
 
     // ================== Compile and Use Shader ==================
     shader.LoadShaders((Var::shaderPath + "normalCube.vs").c_str(),
                        (Var::shaderPath + "normalCube.fs").c_str());
     shader.use();
     shader.setInt("texture1", 0);
-
+std::cout << "Loading texture for image: " << texturePath 
+          << " | Assigned textureID: " << texture << std::endl;
     // Optional: set default transforms, color values, etc.
     size = glm::vec3(1.0f);
     r = 0.0f; 
@@ -502,8 +499,7 @@ void Cube::loadCube(Shader& shader) {
 }
 
 
-void Cube::render(Shader& shader,
-                  Camera& camera,
+void Cube::render(Camera& camera,
                   int screenWidth,
                   int screenHeight,
                   GLFWwindow* window,
@@ -516,7 +512,7 @@ void Cube::render(Shader& shader,
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // Bind texture to texture unit 0
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, Var::cube.texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
 
     // Use our shader
     shader.use();
@@ -524,7 +520,7 @@ void Cube::render(Shader& shader,
     shader.setFloat("g", g);
     shader.setFloat("b", b);
     shader.setFloat("Alpha", Alpha);
-    shader.setInt("Basetexture", 0); // Let the shader know texture is on unit 0
+    shader.setInt("Basetexture", 0); 
 
     // ----------------------------------------------------
     // MODEL MATRIX: Translate -> Rotate -> Scale
@@ -862,9 +858,14 @@ void Image::loadImage()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    textureID = loadTexture(imagePath);
+    if(imagePath == NULL){
+      textureID = loadTexture("example");
+      std::cout << "ERROR::NO-IMAGE-PATH-WAS-ASSIGNED" << std::endl;
+    }else{
+      textureID = loadTexture(imagePath);
+    }
     shader.LoadShaders((Var::shaderPath + "plane.vs").c_str(), (Var::shaderPath + "plane.fs").c_str());
-
+    std::cout << "LOADING::COMPLETE" << std::endl;
 }
 
 void Image::render(Camera &camera,  unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT) {
@@ -878,14 +879,11 @@ void Image::render(Camera &camera,  unsigned int SCR_WIDTH, unsigned int SCR_HEI
     model = glm::rotate(model, glm::radians(Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
-
+    glm::vec4 colorTint = glm::vec4(r,b,g,Alpha);
     shader.setMat4("model", model);
     shader.setMat4("view", view);
     shader.setMat4("projection", projection);
-    shader.setFloat("r", r);
-    shader.setFloat("b", b);
-    shader.setFloat("g", g);
-    shader.setFloat("Alpha", Alpha);
+    shader.setVec4("colorTint", colorTint);
 
     // Bind texture
     glActiveTexture(GL_TEXTURE0);

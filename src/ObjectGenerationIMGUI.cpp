@@ -16,6 +16,7 @@
 #include "imstb_textedit.h"
 #include "ObjectRendererManager.h"
 #include "tinyfiledialogs.h"
+#include "Shader.h"
 
 // Forward declarations (if needed)
 void addCube(GLFWwindow* window);
@@ -33,6 +34,10 @@ ObjectType selectedType = CUBE;
 
 // Collision Box
 bool enableCollisionBox = false;
+bool RenderParticle = true;
+int amount;
+float particleSpeed;
+float particleHeight;
 
 // Object Transform
 float objectSize[3]   = { 1.0f, 1.0f, 1.0f };
@@ -56,6 +61,8 @@ int   selectedPhysicsType = 0; // Index into the physics options array
 char modelPath[256] = "";
 
 const char* filePath;
+
+float defaultPosition[3] = {0.0f,0.0f,0.0f};
 // Simple color struct
 struct Color {
     float r, g, b;
@@ -64,6 +71,7 @@ struct Color {
 // Configuration to store newly created objects
 struct ObjectConfig {
     ObjectType type;
+    int vectorIndex;
     bool       hasCollisionBox;
     float      size[3];
     float      Position[3];
@@ -74,13 +82,16 @@ struct ObjectConfig {
     float      reflectivity;
     float      lightIntensity;
     int        physicsType;
+    int        amount;
+    float      height;
     std::string modelPath;
     const char* filepath;
 };
 
 std::vector<Cube> cubes;              // All cubes in the scene
 std::vector<Image> images; //images storage
-std::vector<Particle> paricles; //Particle storage
+std::vector<Particle> particles; //Particle storage
+std::vector<Shader> shaders;
 std::vector<ObjectConfig> createdObjects; // Stores all created object configs
 
 // --------------------------------------------------------------------------
@@ -114,22 +125,22 @@ void CreationManager(GLFWwindow* window,
                      bool &isMoving)
 {
     // Begin ImGui window
-    ImGui::Begin("🎨 Pigeon Engine - Object Creator & Editor");
+    ImGui::Begin("Pigeon Engine - Object Creator & Editor");
 
     // ------------------------------------------------
     // SCENE MANAGEMENT (Simple placeholders)
     // ------------------------------------------------
-    ImGui::Text("🌐 Scene Management");
+    ImGui::Text("Scene Management");
     ImGui::Separator();
     ImGui::InputText("Scene Name", sceneName, IM_ARRAYSIZE(sceneName));
     ImGui::SameLine();
-    if (ImGui::Button("💾 Save"))
+    if (ImGui::Button("Save"))
     {
         // TODO: Implement a Save Scene function (serialize objects to a file).
         std::cout << "Saving scene named: " << sceneName << std::endl;
     }
     ImGui::SameLine();
-    if (ImGui::Button("📂 Load"))
+    if (ImGui::Button("Load"))
     {
         // TODO: Implement a Load Scene function (deserialize from a file).
         std::cout << "Loading scene into: " << sceneName << std::endl;
@@ -145,7 +156,7 @@ void CreationManager(GLFWwindow* window,
     ImGui::Separator();
 
     // Object Type Selection
-    ImGui::Text("🔹 Select Object Type:");
+    ImGui::Text("Select Object Type:");
     const char* objectTypes[] = { "Particle", "Cube", "3D Model (OBJ)", "Image" };
     int currentItem = static_cast<int>(selectedType);
     if (ImGui::Combo("##ObjectType", &currentItem, objectTypes, IM_ARRAYSIZE(objectTypes)))
@@ -154,39 +165,63 @@ void CreationManager(GLFWwindow* window,
     }
 
     // Collision Box Toggle
-    ImGui::Checkbox("📦 Enable Collision Box", &enableCollisionBox);
+    ImGui::Checkbox("Enable Collision Box", &enableCollisionBox);
     ImGui::SameLine();
     ImGui::TextDisabled("(?)");
     if (ImGui::IsItemHovered())
         ImGui::SetTooltip("Enable this to add a collision box for physics calculations.");
 
     // Object Size
-    ImGui::Text("📏 Size:");
+    ImGui::Text("Size:");
     ImGui::DragFloat3("##Size", objectSize, 0.1f, 0.1f, 50.0f, "%.2f");
 
     // Rotation
-    ImGui::Text("🔄 Rotation:");
+    ImGui::Text("Rotation:");
     ImGui::DragFloat3("##Rotation", objectRotation, 0.1f, -360.0f, 360.0f, "%.1f");
 
     // Object Color Picker
-    ImGui::Text("🎨 Color:");
+    ImGui::Text("Color:");
     ImGui::ColorEdit3("##Color", objectColor);
 
     // Transparency Slider
-    ImGui::Text("🌫 Transparency:");
+    ImGui::Text("Transparency:");
     ImGui::SliderFloat("##Transparency", &objectTransparency, 0.0f, 1.0f, "%.2f");
 
     // Physics Options
-    ImGui::Text("🛠 Physics Properties:");
+    ImGui::Text("Physics Properties:");
     const char* physicsOptions[] = { "None", "Rigid Body", "Soft Body", "Static" };
     ImGui::Combo("##PhysicsType", &selectedPhysicsType, physicsOptions, IM_ARRAYSIZE(physicsOptions));
     if (selectedType == IMAGE)
     {
-        ImGui::Text("📁 Image Path:");
+        ImGui::Text("Image Path:");
         ImGui::InputText("##ImagePath", modelPath, IM_ARRAYSIZE(modelPath));
 
         ImGui::SameLine();
-        if (ImGui::Button("📂 Browse"))
+        if (ImGui::Button("Browse"))
+        {
+          const char* filter[] = { "*.png", "*.jpg", "*.jpeg", "*.bmp" };
+          filePath = tinyfd_openFileDialog(
+            "Select an Image",     // aTitle
+            "",                    // aDefaultPathAndFile
+            4,                     // aNumOfFilterPatterns
+            filter,                // aFilterPatterns
+            "Image Files",         // aSingleFilterDescription
+            0                      // aAllowMultipleSelects (0 = single file)
+);
+
+          if (filePath)
+          {
+            strncpy(modelPath, filePath, IM_ARRAYSIZE(modelPath));
+          }
+        }
+    }
+    if (selectedType == CUBE)
+    {
+        ImGui::Text("Texture Path:");
+        ImGui::InputText("##TexturePath", modelPath, IM_ARRAYSIZE(modelPath));
+
+        ImGui::SameLine();
+        if (ImGui::Button("Browse"))
         {
           const char* filter[] = { "*.png", "*.jpg", "*.jpeg", "*.bmp" };
           filePath = tinyfd_openFileDialog(
@@ -207,23 +242,64 @@ void CreationManager(GLFWwindow* window,
     // Model Path Input (only if 3D Model is selected)
     if (selectedType == MODEL_OBJ)
     {
-        ImGui::Text("📁 Model Path:");
-        ImGui::InputText("##ModelPath", modelPath, IM_ARRAYSIZE(modelPath));
+        ImGui::Text("Model Path:");
+        ImGui::InputText("##Model Path", modelPath, IM_ARRAYSIZE(modelPath));
 
         ImGui::SameLine();
-        if (ImGui::Button("📂 Browse"))
+        if (ImGui::Button("Browse"))
         {
-            // TODO: Implement your file dialog
+          const char* filter[] = { "*.png", "*.jpg", "*.jpeg", "*.bmp" };
+          filePath = tinyfd_openFileDialog(
+            "Select an Image",     // aTitle
+            "",                    // aDefaultPathAndFile
+            4,                     // aNumOfFilterPatterns
+            filter,                // aFilterPatterns
+            "Image Files",         // aSingleFilterDescription
+            0                      // aAllowMultipleSelects (0 = single file)
+);
+
+          if (filePath)
+          {
+            strncpy(modelPath, filePath, IM_ARRAYSIZE(modelPath));
+          }
         }
     }
+    if (selectedType == PARTICLE)
+    {
+        ImGui::Text("Particle Values");
+        ImGui::SliderInt("##Amount", &amount, 0, 1000);
+        ImGui::SliderFloat("Speed", &particleSpeed, 0.0f, 10.0f);
+        ImGui::SliderFloat("height", &particleHeight, 0.0f, 100.0f);
+          
+        ImGui::Text("Texture Path:");
+        ImGui::InputText("##Texture Path", modelPath, IM_ARRAYSIZE(modelPath));
 
+        ImGui::SameLine();
+        if (ImGui::Button("Browse"))
+        {
+          const char* filter[] = { "*.png", "*.jpg", "*.jpeg", "*.bmp" };
+          filePath = tinyfd_openFileDialog(
+            "Select an Image",     // aTitle
+            "",                    // aDefaultPathAndFile
+            4,                     // aNumOfFilterPatterns
+            filter,                // aFilterPatterns
+            "Image Files",         // aSingleFilterDescription
+            0                      // aAllowMultipleSelects (0 = single file)
+);
+
+          if (filePath)
+          {
+            strncpy(modelPath, filePath, IM_ARRAYSIZE(modelPath));
+          }
+        }
+    }
     // Material Settings
     ImGui::Text("🛠 Material Properties:");
     ImGui::SliderFloat("Shininess", &objectShininess, 1.0f, 128.0f, "%.1f");
     ImGui::SliderFloat("Reflectivity", &objectReflectivity, 0.0f, 1.0f, "%.2f");
 
     // Lighting Settings
-    ImGui::Text("💡 Lighting:");
+    ImGui::Text("Lighting:");
     ImGui::SliderFloat("Intensity", &lightIntensity, 0.0f, 10.0f, "%.1f");
 
     // Separator before creation button
@@ -232,12 +308,14 @@ void CreationManager(GLFWwindow* window,
     // Create Object Button
     if (ImGui::Button("➕ Create Object", ImVec2(200, 40)))
     {
-        // Build the object configuration
+        // Build the base object configuration
         ObjectConfig newObj;
         newObj.type            = selectedType;
         newObj.hasCollisionBox = enableCollisionBox;
         memcpy(newObj.size,      objectSize,     sizeof(objectSize));
         memcpy(newObj.rotation,  objectRotation, sizeof(objectRotation));
+        memcpy(newObj.Position,  defaultPosition, sizeof(newObj.Position)); 
+           // If you want the created object at a specific position, set it here, or from the UI
         newObj.color           = { objectColor[0], objectColor[1], objectColor[2] };
         newObj.transparency    = objectTransparency;
         newObj.shininess       = objectShininess;
@@ -245,45 +323,65 @@ void CreationManager(GLFWwindow* window,
         newObj.lightIntensity  = lightIntensity;
         newObj.physicsType     = selectedPhysicsType;
         newObj.modelPath       = modelPath;
-        newObj.filepath = filePath;
-        // Store this config
-        createdObjects.push_back(newObj);
+        newObj.filepath        = filePath;
 
-        // If it's a cube, create a Cube instance
+        int newIndex = -1;
+
         if (selectedType == CUBE)
         {
             Cube newCube;
-            newCube.r = newObj.color.r;
-            newCube.g = newObj.color.g;
-            newCube.b = newObj.color.b;
-            newCube.Alpha = newObj.transparency;
+            newCube.r        = newObj.color.r;
+            newCube.g        = newObj.color.g;
+            newCube.b        = newObj.color.b;
+            newCube.Alpha    = newObj.transparency;
             newCube.Rotation = glm::vec3(newObj.rotation[0], newObj.rotation[1], newObj.rotation[2]);
-
-            // Assign a position. Hard-coded at (5,5,5) or something more interesting:
-            newCube.Position = glm::vec3(
-                5.0f + (float)cubes.size() * 1.5f, 
-                1.0f, 
-                -5.0f
-            );
-            newCube.size = glm::vec3(objectSize[0], objectSize[1], objectSize[2]);
+            newCube.Position = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
+            newCube.size     = glm::vec3(objectSize[0], objectSize[1], objectSize[2]);
+            newCube.texturePath = newObj.filepath;
 
             std::cout << "Cube created at: "
                       << newCube.Position.x << ", "
                       << newCube.Position.y << ", "
                       << newCube.Position.z << std::endl;
 
-            // Add it to our list of cubes
+            newCube.loadCube();
             cubes.push_back(newCube);
+
+            newIndex = static_cast<int>(cubes.size()) - 1;
         }
-        else if(selectedType == IMAGE)
+        else if (selectedType == IMAGE)
         {
-          Image newImage;
-          newImage.Position = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
-         // newImage.Rotation = glm::vec3(newObj.rotation[0], newObj.rotation[1], newObj.rotation[2]);
-          newImage.imagePath = filePath;
-          newImage.loadImage();
-          images.push_back(newImage);
+            Image newImage;
+            newImage.Position  = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
+            newImage.Rotation  = glm::vec3(newObj.rotation[0], newObj.rotation[1], newObj.rotation[2]);
+            newImage.imagePath = newObj.filepath;
+            newImage.loadImage();
+
+            images.push_back(newImage);
+
+            newIndex = static_cast<int>(images.size()) - 1;
+            std::cout << "DEBUG: images.size() now = " << images.size() << std::endl;
         }
+        else if (selectedType == PARTICLE)
+        {
+          Particle newParticle;
+          newParticle.Position = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
+          newParticle.texturePath = newObj.filepath;
+          newParticle.Height = newObj.height;
+          newParticle.ParticleAmount = newObj.amount;
+          //newParticle.Speed = newObj.Speed;
+          newParticle.InitParticle();
+          particles.push_back(newParticle);
+          newIndex = static_cast<int>(particles.size()) - 1;
+        }
+        else if (selectedType == MODEL_OBJ)
+        {
+
+        }
+
+        newObj.vectorIndex = newIndex;
+        // Now we push the final newObj into createdObjects
+        createdObjects.push_back(newObj);
     }
 
     ImGui::Spacing();
@@ -292,15 +390,23 @@ void CreationManager(GLFWwindow* window,
     // ------------------------------------------------
     // OBJECT LIST & SELECTION
     // ------------------------------------------------
-    ImGui::Text("📋 Created Objects (%d)", (int)createdObjects.size());
+    ImGui::Text("Created Objects (%d)", (int)createdObjects.size());
 
-    // We can put the list of objects in a child window or just inline
     ImGui::BeginChild("ObjectList", ImVec2(0, 100), true);
     for (int i = 0; i < (int)createdObjects.size(); i++)
     {
         char label[64];
-        snprintf(label, 64, "Object %d (%s)", i,
-                 (createdObjects[i].type == CUBE) ? "Cube" : "Other");
+        const char* typeLabel;
+        switch (createdObjects[i].type)
+        {
+            case CUBE:       typeLabel = "Cube";      break;
+            case IMAGE:      typeLabel = "Image";     break;
+            case PARTICLE:   typeLabel = "Particle";  break;
+            case MODEL_OBJ:  typeLabel = "Model";     break;
+            default:         typeLabel = "Other";     break;
+        }
+
+        snprintf(label, 64, "Object %d (%s)", i, typeLabel);
 
         if (ImGui::Selectable(label, (selectedObjectIndex == i)))
         {
@@ -312,7 +418,6 @@ void CreationManager(GLFWwindow* window,
     // ------------------------------------------------
     // EDIT THE SELECTED OBJECT
     // ------------------------------------------------
-
     if (selectedObjectIndex >= 0 && selectedObjectIndex < (int)createdObjects.size())
     {
         ObjectConfig &obj = createdObjects[selectedObjectIndex];
@@ -323,7 +428,9 @@ void CreationManager(GLFWwindow* window,
         ImGui::DragFloat3("Edit Size", obj.size, 0.1f, 0.1f, 50.0f, "%.2f");
         // Edit rotation
         ImGui::DragFloat3("Edit Rotation", obj.rotation, 0.1f, -360.0f, 360.0f, "%.1f");
-        ImGui::DragFloat3("Edit Position", obj.Position, 0.1f,0.1f,50.0f,"%.2f");
+        // Edit position
+        ImGui::DragFloat3("Edit Position", obj.Position, 0.1f, -50.0f, 50.0f, "%.2f");
+
         // Edit color
         float tempColor[3] = { obj.color.r, obj.color.g, obj.color.b };
         ImGui::ColorEdit3("Edit Color", tempColor);
@@ -331,49 +438,92 @@ void CreationManager(GLFWwindow* window,
         obj.color.g = tempColor[1];
         obj.color.b = tempColor[2];
 
-        if(obj.type == IMAGE && selectedObjectIndex < (int)images.size())
-        {
-          images[selectedObjectIndex].Position = glm::vec3(obj.Position[0],obj.Position[1],obj.Position[2]);
-          images[selectedObjectIndex].imagePath = filePath;
-        }
-        if (obj.type == CUBE && selectedObjectIndex < (int)cubes.size())
-        {
-            cubes[selectedObjectIndex].r     = obj.color.r;
-            cubes[selectedObjectIndex].g     = obj.color.g;
-            cubes[selectedObjectIndex].b     = obj.color.b;
-            cubes[selectedObjectIndex].size  = glm::vec3(obj.size[0], obj.size[1], obj.size[2]);
-            cubes[selectedObjectIndex].Alpha = obj.transparency;
-            cubes[selectedObjectIndex].Rotation = glm::vec3(obj.rotation[0], obj.rotation[1], obj.rotation[2]);
-            cubes[selectedObjectIndex].Position = glm::vec3(obj.Position[0], obj.Position[1],obj.Position[2]);
-        }
-        
-
-        // Optionally, more edits: transparency, shininess, etc.
+        // Transparency, shininess, etc.
         ImGui::SliderFloat("Edit Transparency", &obj.transparency, 0.0f, 1.0f, "%.2f");
         ImGui::SliderFloat("Edit Shininess", &obj.shininess, 1.0f, 128.0f, "%.1f");
         ImGui::SliderFloat("Edit Reflectivity", &obj.reflectivity, 0.0f, 1.0f, "%.2f");
         ImGui::SliderFloat("Edit Intensity", &obj.lightIntensity, 0.0f, 10.0f, "%.1f");
 
-        // Delete button
-        if (ImGui::Button("❌ Delete Object"))
+        // Update the matching object in images/cubes with these new values
+        int idx = obj.vectorIndex;
+        if (obj.type == IMAGE && idx >= 0 && idx < (int)images.size())
         {
+            images[idx].r     = obj.color.r;
+            images[idx].g     = obj.color.g;
+            images[idx].b     = obj.color.b;
+            images[idx].Alpha = obj.transparency;
+            images[idx].Rotation = glm::vec3(obj.rotation[0], obj.rotation[1], obj.rotation[2]);
+            images[idx].Position = glm::vec3(obj.Position[0], obj.Position[1], obj.Position[2]);
+            // If you want to allow changing the image path at runtime:
+            // images[idx].imagePath = obj.filepath;
+        }
+        else if (obj.type == CUBE && idx >= 0 && idx < (int)cubes.size())
+        {
+            cubes[idx].r     = obj.color.r;
+            cubes[idx].g     = obj.color.g;
+            cubes[idx].b     = obj.color.b;
+            cubes[idx].Alpha = obj.transparency;
+            cubes[idx].Rotation = glm::vec3(obj.rotation[0], obj.rotation[1], obj.rotation[2]);
+            cubes[idx].Position = glm::vec3(obj.Position[0], obj.Position[1], obj.Position[2]);
+            cubes[idx].size  = glm::vec3(obj.size[0], obj.size[1], obj.size[2]);
+            // cubes[idx].texturePath = obj.filepath;
+        }
+        // else if (obj.type == PARTICLE) ...
+        // else if (obj.type == MODEL_OBJ) ...
+
+        // -------------------
+        // Delete button
+        // -------------------
+        if (ImGui::Button("Delete Object"))
+        {
+            // Remove from createdObjects
             createdObjects.erase(createdObjects.begin() + selectedObjectIndex);
 
-            if (obj.type == CUBE && selectedObjectIndex < (int)cubes.size())
+            // Also remove from the specific vector
+            if (obj.type == IMAGE && idx >= 0 && idx < (int)images.size())
             {
-                cubes.erase(cubes.begin() + selectedObjectIndex);
+                images.erase(images.begin() + idx);
+                std::cout << "DELETED::IMAGE" << std::endl;
+            }
+            if (obj.type == IMAGE && idx >= 0 && idx < (int)images.size())
+            { 
+              images.erase(images.begin() + idx);
+              std::cout << "DELETED::IMAGE" << std::endl;
+
+            for (auto &otherObj : createdObjects)
+            {
+              if (otherObj.type == IMAGE && otherObj.vectorIndex > idx)
+              {
+                otherObj.vectorIndex--; // Shift index down
+              }
+            }
+
+            std::cout << "DEBUG: images.size() now = " << images.size() << std::endl;
+            }
+            
+            if (obj.type == CUBE && idx >= 0 && idx < (int)cubes.size())
+            {
+                cubes.erase(cubes.begin() + idx);
             }
             selectedObjectIndex = -1;
+            std::cout << "DEBUG: images.size() now = " << images.size() << std::endl;
         }
     }
 
+    // ------------------------------------------------
+    // RENDER OBJECTS
+    // ------------------------------------------------
+    for(Particle particle : particles)
+    {
+        particle.renderParticles(camera, scrwidth, scrheight, RenderParticle, window);
+    }
     for (Image& image : images)
     {
-      image.render(camera, scrwidth, scrheight);
+        image.render(camera, scrwidth, scrheight);
     }
     for (Cube& cube : cubes)
     {
-        cube.render(shader, camera, scrwidth, scrheight,
+        cube.render(camera, scrwidth, scrheight,
                     window, mouseX, mouseY, ishovering, isMoving);
     }
 

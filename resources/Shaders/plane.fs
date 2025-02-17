@@ -2,9 +2,12 @@
 in vec2 TexCoord;
 out vec4 FragColor;
 
-uniform sampler2D texture1; // Make sure the name matches setInt("texture1", 0)
+uniform sampler2D texture1; 
+uniform vec4 colorTint; // Define color tint (r, g, b, Alpha)
 
 void main()
 {
-    FragColor = texture(texture1, TexCoord);
+    vec4 tex = texture(texture1, TexCoord);
+    FragColor = tex * colorTint; 
 }
+

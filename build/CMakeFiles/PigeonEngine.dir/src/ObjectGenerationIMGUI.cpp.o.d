@@ -341,4 +341,5 @@ CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o: \
  /home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imstb_textedit.h \
  /home/lighht18/Template/Pigeon-Engine/include/ObjectRendererManager.h \
  /home/lighht18/Template/Pigeon-Engine/include/vao_manager.h \
- /home/lighht18/Template/Pigeon-Engine/include/tinyfiledialogs.h
+ /home/lighht18/Template/Pigeon-Engine/include/tinyfiledialogs.h \
+ /home/lighht18/Template/Pigeon-Engine/include/Shader.h
