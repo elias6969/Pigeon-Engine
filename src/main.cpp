@@ -163,7 +163,7 @@ int main()
     
     //initIMGUI(window);
 
-    particle.InitParticle();
+    //particle.InitParticle();
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -203,7 +203,7 @@ int main()
         grid.renderGrid(gridShader, camera, window);
         skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
         windowManager.render(camera, window);
-        particle.renderParticles(camera, SCR_WIDTH, SCR_HEIGHT, isRender, window);
+        //particle.renderParticles(camera, SCR_WIDTH, SCR_HEIGHT, isRender, window);
 
 	      #pragma region imgui
 		      ImGui::Render();

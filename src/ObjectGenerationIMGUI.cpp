@@ -63,6 +63,8 @@ char modelPath[256] = "";
 const char* filePath;
 
 float defaultPosition[3] = {0.0f,0.0f,0.0f};
+
+glm::vec3 ParticlePosition;
 // Simple color struct
 struct Color {
     float r, g, b;
@@ -84,6 +86,7 @@ struct ObjectConfig {
     int        physicsType;
     int        amount;
     float      height;
+    float      Speed;
     std::string modelPath;
     const char* filepath;
 };
@@ -266,10 +269,12 @@ void CreationManager(GLFWwindow* window,
     }
     if (selectedType == PARTICLE)
     {
+        ObjectConfig NewObj;
         ImGui::Text("Particle Values");
-        ImGui::SliderInt("##Amount", &amount, 0, 1000);
+        ImGui::InputInt("Particle Amount", &amount);
         ImGui::SliderFloat("Speed", &particleSpeed, 0.0f, 10.0f);
         ImGui::SliderFloat("height", &particleHeight, 0.0f, 100.0f);
+        ImGui::DragFloat3("Edit Position", NewObj.Position, 0.1f, -50.0f, 50.0f, "%.2f");
           
         ImGui::Text("Texture Path:");
         ImGui::InputText("##Texture Path", modelPath, IM_ARRAYSIZE(modelPath));
@@ -304,8 +309,9 @@ void CreationManager(GLFWwindow* window,
 
     // Separator before creation button
     ImGui::Separator();
-
-    // Create Object Button
+    //---------------------------------------------------------------
+    //---------------- CREATE BUTTON OBJECTS ------------------------
+    //---------------------------------------------------------------
     if (ImGui::Button("➕ Create Object", ImVec2(200, 40)))
     {
         // Build the base object configuration
@@ -358,7 +364,6 @@ void CreationManager(GLFWwindow* window,
             newImage.loadImage();
 
             images.push_back(newImage);
-
             newIndex = static_cast<int>(images.size()) - 1;
             std::cout << "DEBUG: images.size() now = " << images.size() << std::endl;
         }
@@ -369,8 +374,9 @@ void CreationManager(GLFWwindow* window,
           newParticle.texturePath = newObj.filepath;
           newParticle.Height = newObj.height;
           newParticle.ParticleAmount = newObj.amount;
-          //newParticle.Speed = newObj.Speed;
+          newParticle.Speed = newObj.Speed;
           newParticle.InitParticle();
+
           particles.push_back(newParticle);
           newIndex = static_cast<int>(particles.size()) - 1;
         }
@@ -438,6 +444,9 @@ void CreationManager(GLFWwindow* window,
         obj.color.g = tempColor[1];
         obj.color.b = tempColor[2];
 
+        ImGui::InputInt("Particle Amount", &obj.amount);
+        ImGui::SliderFloat("Speed", &obj.Speed, 0.0f, 10.0f);
+        ImGui::SliderFloat("height", &obj.height, 0.0f, 100.0f);
         // Transparency, shininess, etc.
         ImGui::SliderFloat("Edit Transparency", &obj.transparency, 0.0f, 1.0f, "%.2f");
         ImGui::SliderFloat("Edit Shininess", &obj.shininess, 1.0f, 128.0f, "%.1f");
@@ -466,6 +475,14 @@ void CreationManager(GLFWwindow* window,
             cubes[idx].Rotation = glm::vec3(obj.rotation[0], obj.rotation[1], obj.rotation[2]);
             cubes[idx].Position = glm::vec3(obj.Position[0], obj.Position[1], obj.Position[2]);
             cubes[idx].size  = glm::vec3(obj.size[0], obj.size[1], obj.size[2]);
+            // cubes[idx].texturePath = obj.filepath;
+        }
+        else if (obj.type == PARTICLE && idx >= 0 && idx < (int)particles.size())
+        {
+            particles[idx].Speed = obj.Speed;
+            particles[idx].Height = obj.height;
+            particles[idx].Position = glm::vec3(obj.Position[0], obj.Position[1], obj.Position[2]);
+            particles[idx].ParticleAmount = obj.amount;
             // cubes[idx].texturePath = obj.filepath;
         }
         // else if (obj.type == PARTICLE) ...

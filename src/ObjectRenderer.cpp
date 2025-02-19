@@ -159,14 +159,13 @@ void Particle::InitParticle()
     std::string fullPath;
     std::cout << "TEXTURE::PATH::" << texturePath << std::endl;
 
+
     if(texturePath == nullptr || strlen(texturePath) == 0) {
       std::cout << "TEXTURE::PATH::NULL OR EMPTY\n";
-      fullPath = Var::texturePath + "masuka.jpg";
-      texturePath = (Var::texturePath + "masuka.jpg").c_str();
+      texturePath = "/home/lighht18/Template/Pigeon-Engine/resources/Textures/masuka.jpg";
     }
-
-    texturePath = "/home/lighht18/Template/Pigeon-Engine/resources/Textures/masuka.jpg";
-    std::cout << "TEXTURE::PATH::" << texturePath << std::endl;
+    std::cout << (Var::texturePath + "Break.jpg").c_str() << std::endl;
+    std::cout << "PARTICLE::TEXTURE::PATH::" << texturePath << std::endl;
     unsigned char* data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
 
     // Check if the texture was successfully loaded.
@@ -188,14 +187,14 @@ void Particle::InitParticle()
     }
     else {
         // Handle texture loading failure.
-        //throw std::runtime_error("Failed to load texture: for particle");
+        throw std::runtime_error("Failed to load texture: for particle");
     }
 
     // Free the texture image memory after uploading it to the GPU.
     stbi_image_free(data);
 
     // Compile and link shaders for the particle system.
-    shader.LoadShaders((Var::shaderPath + "normalCube.vs").c_str(), (Var::resourcePath + "normalCube.fs").c_str());
+    shader.LoadShaders((Var::shaderPath + "particle.vs").c_str(), (Var::resourcePath + "particle.fs").c_str());
 
     // Activate the shader program and set the texture uniform.
     shader.use();
@@ -211,26 +210,26 @@ void UpdateParticleBuffers(std::vector<glm::vec3> particlePositions) {
 
 //RENDER PARTICLE
 void Particle::renderParticles(Camera &camera,
-        int screen_width, int screen_height, bool RenderParticle, GLFWwindow* windwow)
+        int screen_width, int screen_height, bool RenderParticle, GLFWwindow* window)
 {
-    if(!RenderParticle)
-      return ;
-    if(ParticleAmount < 0) ParticleAmount = 0;
+    if (!RenderParticle)
+        return;
 
-    static std::vector<glm::vec3> particlePositions; //Storing particle positions
-    static std::vector<glm::vec3> particleVelocities; //Storing Particle velocity 
-    static std::vector<glm::vec3> test;
+    if (ParticleAmount < 0) ParticleAmount = 0;
+    ParticleAmount = std::min(ParticleAmount, 1000); // Prevent excessive particle count
+
     static bool initialized = false;
-    //particlePositions.push_back(Position);
+    std::vector<glm::vec3> particlePositions;
+    particlePositions.push_back(Position);
+    std::vector<glm::vec3> particleVelocities;
 
-    if (!initialized) {
-        initialized = true;
+    // Resize vectors properly every frame if needed
     if (particlePositions.size() != static_cast<size_t>(ParticleAmount)) {
-        // Resize vectors to match the desired particle amount.
+        particlePositions.clear();
+        particleVelocities.clear();
         particlePositions.resize(ParticleAmount);
         particleVelocities.resize(ParticleAmount);
-        
-        // Initialize particles with random positions and velocities.
+
         for (int i = 0; i < ParticleAmount; ++i) {
             particlePositions[i] = glm::vec3(
                 (float(rand()) / float(RAND_MAX)) * 2.0f - 1.0f,  // Random X position
@@ -244,25 +243,24 @@ void Particle::renderParticles(Camera &camera,
                 (float(rand()) / float(RAND_MAX)) * 0.05f - 0.025f   // Z velocity
             );
         }
-      }
     }
 
     // Update particle positions
     for (int i = 0; i < ParticleAmount; ++i) {
-        particlePositions[i] += particleVelocities[i] * 0.01f; // Simulate time delta
+        particlePositions[i] += particleVelocities[i] * 0.01f;
 
         // Reset particles that fall below a threshold or exceed a height limit
         if (particlePositions[i].y < -0.5f || particlePositions[i].y > Height) {
             particlePositions[i] = glm::vec3(
-                (float(rand()) / float(RAND_MAX)) * 2.0f - 1.0f,  // Reset X position
-                (float(rand()) / float(RAND_MAX)) * 2.0f,         // Reset Y position
-                (float(rand()) / float(RAND_MAX)) * 2.0f - 1.0f   // Reset Z position
+                (float(rand()) / float(RAND_MAX)) * 2.0f - 1.0f,
+                (float(rand()) / float(RAND_MAX)) * 2.0f,
+                (float(rand()) / float(RAND_MAX)) * 2.0f - 1.0f
             );
 
             particleVelocities[i] = glm::vec3(
-                (float(rand()) / float(RAND_MAX)) * 0.05f - 0.025f,  // X velocity
-                (float(rand()) / float(RAND_MAX)) * 0.1f + 0.05f,    // Y velocity
-                (float(rand()) / float(RAND_MAX)) * 0.05f - 0.025f   // Z velocity
+                (float(rand()) / float(RAND_MAX)) * 0.05f - 0.025f,
+                (float(rand()) / float(RAND_MAX)) * 0.1f + 0.05f,
+                (float(rand()) / float(RAND_MAX)) * 0.05f - 0.025f
             );
         }
     }
@@ -272,51 +270,42 @@ void Particle::renderParticles(Camera &camera,
         throw std::runtime_error("Particle system is not properly initialized. Ensure InitParticle() is called first.");
     }
 
-    // Enable blending for rendering transparent particles
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // Activate the shader program
     shader.use();
-
-    // Bind the particle texture
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, Particletexture);
 
-    // Set view and projection matrices
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)screen_width / screen_height, 0.1f, 100.0f);
     glm::mat4 view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
 
     shader.setMat4("view", view);
     shader.setMat4("projection", projection);
-
-    // Bind the VAO for particles
     glBindVertexArray(ParticleVAO);
 
-    // Render each particle
     for (const auto& position : particlePositions) {
-        // Create a transformation matrix for each particle
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, position);
-        model = glm::scale(model, glm::vec3(0.8f)); // Adjust particle size
-        static float rotationAngle = 0.0f;
-        rotationAngle+=0.05f;
-        if(rotationAngle>=360.0f){
-          rotationAngle -=360.0f;
-        }
-        model = glm::rotate(model, glm::radians(rotationAngle), glm::vec3(0.01f, 0.01f, 0.01f)); 
-        shader.setMat4("model", model);
+        model = glm::scale(model, glm::vec3(0.8f));
 
-        // Render the particle quad
+        static float rotationAngle = 0.0f;
+        rotationAngle += 0.05f;
+        if (rotationAngle >= 360.0f) {
+            rotationAngle -= 360.0f;
+        }
+        //model = glm::rotate(model, glm::radians(rotationAngle), glm::vec3(0.01f, 0.01f, 0.01f));
+
+        shader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
-    // Cleanup: Unbind the VAO and disable blending
     glBindVertexArray(0);
     glDisable(GL_BLEND);
-    if(glfwWindowShouldClose(windwow)){
-      glDeleteVertexArrays(1, &ParticleVAO);
-      glDeleteBuffers(1, &ParticleVBO);
+
+    if (glfwWindowShouldClose(window)) {
+        glDeleteVertexArrays(1, &ParticleVAO);
+        glDeleteBuffers(1, &ParticleVBO);
     }
 }
 
