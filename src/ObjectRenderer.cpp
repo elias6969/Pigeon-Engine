@@ -1,5 +1,6 @@
 #include "ObjectRendererManager.h"
 #include <GL/gl.h>
+#include <cstdlib>
 #include <dirent.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -215,8 +216,10 @@ void Particle::renderParticles(Camera &camera,
     if (!RenderParticle)
         return;
 
-    if (ParticleAmount < 0) ParticleAmount = 0;
-    ParticleAmount = std::min(ParticleAmount, 1000); // Prevent excessive particle count
+
+    assert(ParticleAmount >= 0 && "ParticleAmount should not be negative!");
+    if(ParticleAmount >= 0)
+      ParticleAmount = std::rand() % 1000;
 
     static bool initialized = false;
     std::vector<glm::vec3> particlePositions;
