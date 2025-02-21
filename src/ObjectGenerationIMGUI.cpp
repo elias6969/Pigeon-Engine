@@ -269,12 +269,12 @@ void CreationManager(GLFWwindow* window,
     }
     if (selectedType == PARTICLE)
     {
-        ObjectConfig NewObj;
+        //ObjectConfig NewObj;
         ImGui::Text("Particle Values");
         ImGui::InputInt("Particle Amount", &amount);
         ImGui::SliderFloat("Speed", &particleSpeed, 0.0f, 10.0f);
         ImGui::SliderFloat("height", &particleHeight, 0.0f, 100.0f);
-        ImGui::DragFloat3("Edit Position", NewObj.Position, 0.1f, -50.0f, 50.0f, "%.2f");
+        //ImGui::DragFloat3("Edit Position", NewObj.Position, 0.1f, -50.0f, 50.0f, "%.2f");
           
         ImGui::Text("Texture Path:");
         ImGui::InputText("##Texture Path", modelPath, IM_ARRAYSIZE(modelPath));
@@ -373,7 +373,7 @@ void CreationManager(GLFWwindow* window,
           newParticle.Position = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
           newParticle.texturePath = newObj.filepath;
           newParticle.Height = newObj.height;
-          newParticle.ParticleAmount = newObj.amount;
+          newParticle.ParticleAmount = amount;
           newParticle.Speed = newObj.Speed;
           newParticle.InitParticle();
 
@@ -444,7 +444,7 @@ void CreationManager(GLFWwindow* window,
         obj.color.g = tempColor[1];
         obj.color.b = tempColor[2];
 
-        ImGui::InputInt("Particle Amount", &obj.amount);
+        ImGui::InputInt("Particle Amount", &amount);
         ImGui::SliderFloat("Speed", &obj.Speed, 0.0f, 10.0f);
         ImGui::SliderFloat("height", &obj.height, 0.0f, 100.0f);
         // Transparency, shininess, etc.
@@ -479,10 +479,10 @@ void CreationManager(GLFWwindow* window,
         }
         else if (obj.type == PARTICLE && idx >= 0 && idx < (int)particles.size())
         {
-            particles[idx].Speed = obj.Speed;
-            particles[idx].Height = obj.height;
-            particles[idx].Position = glm::vec3(obj.Position[0], obj.Position[1], obj.Position[2]);
-            particles[idx].ParticleAmount = obj.amount;
+            //particles[idx].Speed = obj.Speed;
+            //particles[idx].Height = obj.height;
+            //particles[idx].Position = glm::vec3(obj.Position[0], obj.Position[1], obj.Position[2]);
+            particles[idx].ParticleAmount = amount;
             // cubes[idx].texturePath = obj.filepath;
         }
         // else if (obj.type == PARTICLE) ...
@@ -498,21 +498,14 @@ void CreationManager(GLFWwindow* window,
 
             // Also remove from the specific vector
             if (obj.type == IMAGE && idx >= 0 && idx < (int)images.size())
-            {
-                images.erase(images.begin() + idx);
-                std::cout << "DELETED::IMAGE" << std::endl;
-            }
-            if (obj.type == IMAGE && idx >= 0 && idx < (int)images.size())
             { 
               images.erase(images.begin() + idx);
               std::cout << "DELETED::IMAGE" << std::endl;
 
-            for (auto &otherObj : createdObjects)
+            if (obj.type == PARTICLE && idx >= 0 && idx < (int)particles.size())
             {
-              if (otherObj.type == IMAGE && otherObj.vectorIndex > idx)
-              {
-                otherObj.vectorIndex--; // Shift index down
-              }
+              particles.erase(particles.begin() + idx);
+              std::cout << "DELETED::PARTICLE" << std::endl;
             }
 
             std::cout << "DEBUG: images.size() now = " << images.size() << std::endl;
