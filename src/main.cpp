@@ -33,8 +33,8 @@ void processInput(GLFWwindow *window, float deltaTime);
 void LoadAnimationInThread(Animation* animation, Animator* animator, const std::string& animationPath, Model* model);
 
 // settings
-const unsigned int SCR_WIDTH = 1200;
-const unsigned int SCR_HEIGHT = 1000;
+int SCR_WIDTH = 1200;
+int SCR_HEIGHT = 1000;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -70,7 +70,7 @@ int main()
 #endif
 
     // glfw window creation
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Pigeon Engine", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Pigeon Engine GAYYY", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -197,7 +197,7 @@ int main()
         // render
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        ScreenSize(SCR_WIDTH, SCR_HEIGHT);
         CreationManager(window, cubeShader, camera, SCR_WIDTH, SCR_HEIGHT, mouseX, mouseY, ishovering, isMoving);
 
         grid.renderGrid(gridShader, camera, window);
@@ -272,6 +272,10 @@ void processInput(GLFWwindow* window, float deltaTime) {
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+    if(height == 0) return;
+    float aspectRatio = (float)width / (float)height;
+    SCR_WIDTH = width;
+    SCR_HEIGHT = height;
 }
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
