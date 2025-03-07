@@ -8,15 +8,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/lighht18/Template/Pigeon-Engine/src/tinyfiledialogs.c" "CMakeFiles/tinyfiledialogs.dir/src/tinyfiledialogs.c.o" "gcc" "CMakeFiles/tinyfiledialogs.dir/src/tinyfiledialogs.c.o.d"
+  "/home/lighht19/Documents/Pigeon-Engine/src/tinyfiledialogs.c" "CMakeFiles/tinyfiledialogs.dir/src/tinyfiledialogs.c.o" "gcc" "CMakeFiles/tinyfiledialogs.dir/src/tinyfiledialogs.c.o.d"
   )
 
-# Targets to which this target links which contain Fortran sources.
-set(CMAKE_Fortran_TARGET_LINKED_INFO_FILES
-  )
-
-# Targets to which this target links which contain Fortran sources.
-set(CMAKE_Fortran_TARGET_FORWARD_LINKED_INFO_FILES
+# Targets to which this target links.
+set(CMAKE_TARGET_LINKED_INFO_FILES
   )
 
 # Fortran module output directory.

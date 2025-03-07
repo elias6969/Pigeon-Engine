@@ -1,104 +1,87 @@
 [
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/cc  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -o CMakeFiles/glad.dir/third_party/glad/src/glad.c.o -c /home/lighht18/Template/Pigeon-Engine/third_party/glad/src/glad.c",
-  "file": "/home/lighht18/Template/Pigeon-Engine/third_party/glad/src/glad.c",
-  "output": "CMakeFiles/glad.dir/third_party/glad/src/glad.c.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/cc  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -o CMakeFiles/glad.dir/third_party/glad/src/glad.c.o -c /home/lighht19/Documents/Pigeon-Engine/third_party/glad/src/glad.c",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/third_party/glad/src/glad.c"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/backends/imgui_impl_glfw.cpp.o -c /home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends/imgui_impl_glfw.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends/imgui_impl_glfw.cpp",
-  "output": "CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/backends/imgui_impl_glfw.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/backends/imgui_impl_glfw.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends/imgui_impl_glfw.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends/imgui_impl_glfw.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/backends/imgui_impl_opengl3.cpp.o -c /home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends/imgui_impl_opengl3.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends/imgui_impl_opengl3.cpp",
-  "output": "CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/backends/imgui_impl_opengl3.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/backends/imgui_impl_opengl3.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends/imgui_impl_opengl3.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends/imgui_impl_opengl3.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui.cpp.o -c /home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imgui.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imgui.cpp",
-  "output": "CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/imgui.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/imgui.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui_demo.cpp.o -c /home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_demo.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_demo.cpp",
-  "output": "CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui_demo.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui_demo.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_demo.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_demo.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui_draw.cpp.o -c /home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_draw.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_draw.cpp",
-  "output": "CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui_draw.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui_draw.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_draw.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_draw.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui_tables.cpp.o -c /home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_tables.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_tables.cpp",
-  "output": "CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui_tables.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui_tables.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_tables.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_tables.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui_widgets.cpp.o -c /home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_widgets.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_widgets.cpp",
-  "output": "CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui_widgets.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/imgui.dir/third_party/imgui-docking/imgui/imgui_widgets.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_widgets.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/imgui_widgets.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/cc  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -o CMakeFiles/tinyfiledialogs.dir/src/tinyfiledialogs.c.o -c /home/lighht18/Template/Pigeon-Engine/src/tinyfiledialogs.c",
-  "file": "/home/lighht18/Template/Pigeon-Engine/src/tinyfiledialogs.c",
-  "output": "CMakeFiles/tinyfiledialogs.dir/src/tinyfiledialogs.c.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/cc  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -o CMakeFiles/tinyfiledialogs.dir/src/tinyfiledialogs.c.o -c /home/lighht19/Documents/Pigeon-Engine/src/tinyfiledialogs.c",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/src/tinyfiledialogs.c"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o -c /home/lighht18/Template/Pigeon-Engine/src/BoundingBox.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/src/BoundingBox.cpp",
-  "output": "CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/BoundingBox.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/src/BoundingBox.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/src/BoundingBox.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o -c /home/lighht18/Template/Pigeon-Engine/src/ModelManager.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/src/ModelManager.cpp",
-  "output": "CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/ModelManager.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/src/ModelManager.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/src/ModelManager.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o -c /home/lighht18/Template/Pigeon-Engine/src/ObjectGenerationIMGUI.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/src/ObjectGenerationIMGUI.cpp",
-  "output": "CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/src/ObjectGenerationIMGUI.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/src/ObjectGenerationIMGUI.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o -c /home/lighht18/Template/Pigeon-Engine/src/ObjectRenderer.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/src/ObjectRenderer.cpp",
-  "output": "CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/src/ObjectRenderer.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/src/ObjectRenderer.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o -c /home/lighht18/Template/Pigeon-Engine/src/OpenGLerrorreporting.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/src/OpenGLerrorreporting.cpp",
-  "output": "CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/OpenGLerrorreporting.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/src/OpenGLerrorreporting.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/src/OpenGLerrorreporting.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o -c /home/lighht18/Template/Pigeon-Engine/src/ScreenEffect.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/src/ScreenEffect.cpp",
-  "output": "CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/ScreenEffect.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/src/ScreenEffect.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/src/ScreenEffect.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.o -c /home/lighht18/Template/Pigeon-Engine/src/filemanager.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/src/filemanager.cpp",
-  "output": "CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/filemanager.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/src/filemanager.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/src/filemanager.cpp"
 },
 {
-  "directory": "/home/lighht18/Template/Pigeon-Engine/build",
-  "command": "/usr/bin/c++  -I/home/lighht18/Template/Pigeon-Engine/include -I/home/lighht18/Template/Pigeon-Engine/third_party -I/home/lighht18/Template/Pigeon-Engine/third_party/glad/include -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht18/Template/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/main.cpp.o -c /home/lighht18/Template/Pigeon-Engine/src/main.cpp",
-  "file": "/home/lighht18/Template/Pigeon-Engine/src/main.cpp",
-  "output": "CMakeFiles/PigeonEngine.dir/src/main.cpp.o"
+  "directory": "/home/lighht19/Documents/Pigeon-Engine/build",
+  "command": "/usr/bin/c++  -I/home/lighht19/Documents/Pigeon-Engine/include -I/home/lighht19/Documents/Pigeon-Engine/third_party -I/home/lighht19/Documents/Pigeon-Engine/third_party/glad/include -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui -I/home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/backends -g -std=gnu++17 -o CMakeFiles/PigeonEngine.dir/src/main.cpp.o -c /home/lighht19/Documents/Pigeon-Engine/src/main.cpp",
+  "file": "/home/lighht19/Documents/Pigeon-Engine/src/main.cpp"
 }
 ]
