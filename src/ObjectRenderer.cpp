@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/quaternion_transform.hpp>
 #include <glm/fwd.hpp>
@@ -30,6 +31,7 @@
 ▐▙▄▄▀ ▐▙▄▄▖▝▚▄▄▖▐▙▄▄▖▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌ █  ▗▄█▄▖▝▚▄▞▘▐▌  ▐▌
 */
 unsigned int loadCubemap(std::vector<std::string> faces);
+
 
 unsigned int loadTexture(const char* filePath)
 {
@@ -76,6 +78,7 @@ namespace Var
     Particle particle;
     SkyBox skybox;
     
+    int SCR_WIDTH, SCR_HEIGHT;
     //Path to different folders
     VirtualFileSystem vfs("../resources");
     std::string resourcePath = vfs.getFullPath("Shaders/");
@@ -96,6 +99,11 @@ namespace Var
     unsigned int cubemapTexture = 0;
 };
 
+void ScreenSize(int &screenwidth, int &screenheight)
+{
+    Var::SCR_HEIGHT = screenheight;
+    Var::SCR_WIDTH = screenwidth;
+}
 bool CheckCollision(glm::vec3 &Position1, glm::vec3 &Position2, float size)
 {
   bool collisionX = Position1.x + size >= Position2.x && Position2.x + size >= Position1.x;
@@ -163,7 +171,7 @@ void Particle::InitParticle()
 
     if(texturePath == nullptr || strlen(texturePath) == 0) {
       std::cout << "TEXTURE::PATH::NULL OR EMPTY\n";
-      texturePath = "/home/lighht18/Template/Pigeon-Engine/resources/Textures/masuka.jpg";
+      texturePath = "/home/lighht19/Documents/Pigeon-Engine/resources/Textures/masuka.jpg";
     }
     std::cout << (Var::texturePath + "Break.jpg").c_str() << std::endl;
     std::cout << "PARTICLE::TEXTURE::PATH::" << texturePath << std::endl;
@@ -200,6 +208,12 @@ void Particle::InitParticle()
     // Activate the shader program and set the texture uniform.
     shader.use();
     shader.setInt("texture1", 0);
+    //assert(ParticleAmount >= 0 && "ParticleAmount should not be negative!");
+    const int min_particles = 10;
+    //FIXME
+    //if(ParticleAmount >= min_particles){
+      //ParticleAmount = min_particles;
+    //}
 }
 
 void UpdateParticleBuffers(std::vector<glm::vec3> particlePositions) {
@@ -210,17 +224,11 @@ void UpdateParticleBuffers(std::vector<glm::vec3> particlePositions) {
 }
 
 //RENDER PARTICLE
-void Particle::renderParticles(Camera &camera,
-        int screen_width, int screen_height, bool RenderParticle, GLFWwindow* window)
+void Particle::renderParticles(Camera &camera, bool RenderParticle, GLFWwindow* window)
 {
+    //OPTIMIZE
     if (!RenderParticle)
         return;
-
-
-    assert(ParticleAmount >= 0 && "ParticleAmount should not be negative!");
-    if(ParticleAmount >= 0)
-      ParticleAmount = std::rand() % 1000;
-
     static bool initialized = false;
     std::vector<glm::vec3> particlePositions;
     particlePositions.push_back(Position);
@@ -228,8 +236,8 @@ void Particle::renderParticles(Camera &camera,
 
     // Resize vectors properly every frame if needed
     if (particlePositions.size() != static_cast<size_t>(ParticleAmount)) {
-        particlePositions.clear();
-        particleVelocities.clear();
+        //particlePositions.clear();
+        //particleVelocities.clear();
         particlePositions.resize(ParticleAmount);
         particleVelocities.resize(ParticleAmount);
 
@@ -280,7 +288,7 @@ void Particle::renderParticles(Camera &camera,
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, Particletexture);
 
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)screen_width / screen_height, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)Var::SCR_WIDTH / (float)Var::SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
 
     shader.setMat4("view", view);
@@ -370,7 +378,7 @@ void Grid::renderGrid(Shader& shader, Camera& camera, GLFWwindow* window) {
     shader.use();
 
     glm::mat4 view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)Var::SCR_WIDTH/(float)Var::SCR_HEIGHT, 0.1f, 100.0f);
     // Set the model matrix (identity matrix for now)
     glm::mat4 model = glm::mat4(1.0f);
     shader.setMat4("model", model);
@@ -474,6 +482,10 @@ void Cube::loadCube() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     int width, height, nrChannels;
+    
+    if(!texturePath){
+        texturePath = "/home/lighht19/Documents/Pigeon-Engine/resources/Textures/masuka.jpg";
+    }
     texture = loadTexture(texturePath);
 
     // ================== Compile and Use Shader ==================
@@ -487,13 +499,11 @@ std::cout << "Loading texture for image: " << texturePath
     size = glm::vec3(1.0f);
     r = 0.0f; 
     g = 1.5f; 
-    b = 3.0f; // (If you're using these somewhere else)
+    b = 3.0f; 
 }
 
 
 void Cube::render(Camera& camera,
-                  int screenWidth,
-                  int screenHeight,
                   GLFWwindow* window,
                   double &mouseX,
                   double &mouseY,
@@ -530,7 +540,7 @@ void Cube::render(Camera& camera,
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 projection = glm::perspective(
         glm::radians(45.0f),
-        (float)screenWidth / (float)screenHeight,
+        (float)Var::SCR_WIDTH / (float)Var::SCR_HEIGHT,
         0.1f,
         100.0f
     );
@@ -568,8 +578,8 @@ void Cube::render(Camera& camera,
         glm::vec3 ndc = glm::vec3(clipSpace) / clipSpace.w;
 
         // Convert to screen coords
-        float screenX = (ndc.x * 0.5f + 0.5f) * screenWidth;
-        float screenY = (0.5f - ndc.y * 0.5f) * screenHeight;
+        float screenX = (ndc.x * 0.5f + 0.5f) * Var::SCR_WIDTH;
+        float screenY = (0.5f - ndc.y * 0.5f) * Var::SCR_HEIGHT;
 
         // Expand bounding rect
         minX = std::min(minX, screenX);
@@ -860,7 +870,7 @@ void Image::loadImage()
     std::cout << "LOADING::COMPLETE" << std::endl;
 }
 
-void Image::render(Camera &camera,  unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT) {
+void Image::render(Camera &camera) {
     shader.use();
 
     // Set up transformations
@@ -870,7 +880,7 @@ void Image::render(Camera &camera,  unsigned int SCR_WIDTH, unsigned int SCR_HEI
     model = glm::rotate(model, glm::radians(Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::rotate(model, glm::radians(Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     glm::mat4 view = camera.GetViewMatrix();
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)Var::SCR_WIDTH / (float)Var::SCR_HEIGHT, 0.1f, 100.0f);
     glm::vec4 colorTint = glm::vec4(r,b,g,Alpha);
     shader.setMat4("model", model);
     shader.setMat4("view", view);
@@ -986,10 +996,12 @@ void TransparentWindow::render(Camera& camera, GLFWwindow* window)
               [](auto &a, auto &b){ return a.first > b.first; });
 
     shader.use();
+    
+
 
     glm::mat4 projection = glm::perspective(
         glm::radians(camera.Zoom),
-        1200.0f / 1000.0f,
+        (float)Var::SCR_WIDTH / (float)Var::SCR_HEIGHT,
         0.1f,
         100.0f
     );

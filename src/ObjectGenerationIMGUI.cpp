@@ -15,6 +15,7 @@
 #include <thread>
 #include "imstb_textedit.h"
 #include "ObjectRendererManager.h"
+#include "modelLoader.h"
 #include "tinyfiledialogs.h"
 #include "Shader.h"
 
@@ -29,16 +30,18 @@ enum ObjectType {
     IMAGE
 };
 
+ModelRenderMode renderMode;
+
 // Selected Object Type (default to CUBE)
 ObjectType selectedType = CUBE;
 
 // Collision Box
 bool enableCollisionBox = false;
 bool RenderParticle = true;
-int amount;
+int amount = 0;
 float particleSpeed;
 float particleHeight;
-
+float modelSize = 0.0005f; 
 // Object Transform
 float objectSize[3]   = { 1.0f, 1.0f, 1.0f };
 float objectRotation[3] = { 0.0f, 0.0f, 0.0f };
@@ -94,6 +97,7 @@ struct ObjectConfig {
 std::vector<Cube> cubes;              // All cubes in the scene
 std::vector<Image> images; //images storage
 std::vector<Particle> particles; //Particle storage
+std::vector<CharacterModel> ModelManagers;
 std::vector<Shader> shaders;
 std::vector<ObjectConfig> createdObjects; // Stores all created object configs
 
@@ -242,9 +246,16 @@ void CreationManager(GLFWwindow* window,
           }
         }
     }
-    // Model Path Input (only if 3D Model is selected)
+/*   // Model Path Input (only if 3D Model is selected)
     if (selectedType == MODEL_OBJ)
     {
+        const char* modeNames[] = {"Normal", "Rainbow", "Light"};
+        int currentModeIndex = static_cast<int>(renderMode);
+
+        if (ImGui::Combo("Render Mode", &currentModeIndex, modeNames, IM_ARRAYSIZE(modeNames)))
+        {
+        renderMode = static_cast<ModelRenderMode>(currentModeIndex);
+        }
         ImGui::Text("Model Path:");
         ImGui::InputText("##Model Path", modelPath, IM_ARRAYSIZE(modelPath));
 
@@ -266,12 +277,50 @@ void CreationManager(GLFWwindow* window,
             strncpy(modelPath, filePath, IM_ARRAYSIZE(modelPath));
           }
         }
+    }*/
+    
+    if (selectedType == MODEL_OBJ)
+    {
+        const char* modeNames[] = {"Normal", "Rainbow", "Light"};
+        int currentModeIndex = static_cast<int>(renderMode);
+
+        if (ImGui::Combo("Render Mode", &currentModeIndex, modeNames, IM_ARRAYSIZE(modeNames)))
+        {
+            renderMode = static_cast<ModelRenderMode>(currentModeIndex);
+        }
+
+        ImGui::Text("Model Path:");
+        ImGui::InputText("##Model Path", modelPath, IM_ARRAYSIZE(modelPath));
+
+        ImGui::SameLine();
+        if (ImGui::Button("Browse"))
+        {
+            const char* filter[] = { "*.obj" };
+            filePath = tinyfd_openFileDialog(
+                "Select an OBJ Model",  // aTitle
+                "",                     // aDefaultPathAndFile
+                1,                      // aNumOfFilterPatterns
+                filter,                 // aFilterPatterns
+                "OBJ Files",            // aSingleFilterDescription
+                0                       // aAllowMultipleSelects (0 = single file)
+            );
+
+            if (filePath)
+            {
+                strncpy(modelPath, filePath, IM_ARRAYSIZE(modelPath));
+            }
+        }
     }
+
     if (selectedType == PARTICLE)
     {
         //ObjectConfig NewObj;
         ImGui::Text("Particle Values");
+       // ImGui::Text("Particle Amount");
+       // ImGui::DragInt("Particle Amount", &amount);
+
         ImGui::InputInt("Particle Amount", &amount);
+        //ImGui::SliderInt("Particle Amount", &amount, 0, 10000);
         ImGui::SliderFloat("Speed", &particleSpeed, 0.0f, 10.0f);
         ImGui::SliderFloat("height", &particleHeight, 0.0f, 100.0f);
         //ImGui::DragFloat3("Edit Position", NewObj.Position, 0.1f, -50.0f, 50.0f, "%.2f");
@@ -330,6 +379,7 @@ void CreationManager(GLFWwindow* window,
         newObj.physicsType     = selectedPhysicsType;
         newObj.modelPath       = modelPath;
         newObj.filepath        = filePath;
+        newObj.amount          = amount;
 
         int newIndex = -1;
 
@@ -382,7 +432,27 @@ void CreationManager(GLFWwindow* window,
         }
         else if (selectedType == MODEL_OBJ)
         {
-
+            CharacterModel newModel;
+            newModel.ModelPath = modelPath;
+            newModel.modelSize = modelSize;
+          //  newModel.ModelPosition = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
+            newModel.currentRenderMode = renderMode;
+            switch (renderMode) {
+                case ModelRenderMode::NORMAL:
+                    std::cout << "IMGUI::RENDER::MODE::NORMAL" << std::endl;
+            break;
+                case ModelRenderMode::RAINBOW:
+                    std::cout << "IMGUI::RENDER::MODE::RAINBOW" << std::endl;
+            break;
+                case ModelRenderMode::LIGHT:
+                    std::cout << "IMGUI::RENDER::MODE::LIGHT" << std::endl;
+            break;
+            }
+            std::cout <<"BeforeLoading\n";
+            newModel.IMGUIinitializeModelRenderingSystem();
+            std::cout <<"AfterLoading\n";
+            ModelManagers.push_back(newModel);
+            newIndex = static_cast<int>(ModelManagers.size()) - 1;
         }
 
         newObj.vectorIndex = newIndex;
@@ -452,6 +522,7 @@ void CreationManager(GLFWwindow* window,
         ImGui::SliderFloat("Edit Shininess", &obj.shininess, 1.0f, 128.0f, "%.1f");
         ImGui::SliderFloat("Edit Reflectivity", &obj.reflectivity, 0.0f, 1.0f, "%.2f");
         ImGui::SliderFloat("Edit Intensity", &obj.lightIntensity, 0.0f, 10.0f, "%.1f");
+        ImGui::SliderFloat("Edit Model Size", &modelSize, 0.00005f, 10.0f, "%.1f");
 
         // Update the matching object in images/cubes with these new values
         int idx = obj.vectorIndex;
@@ -465,6 +536,10 @@ void CreationManager(GLFWwindow* window,
             images[idx].Position = glm::vec3(obj.Position[0], obj.Position[1], obj.Position[2]);
             // If you want to allow changing the image path at runtime:
             // images[idx].imagePath = obj.filepath;
+        }
+        else if (obj.type == MODEL_OBJ && idx >= 0 && idx < (int)ModelManagers.size())
+        {
+            ModelManagers[idx].modelSize = modelSize;
         }
         else if (obj.type == CUBE && idx >= 0 && idx < (int)cubes.size())
         {
@@ -525,16 +600,19 @@ void CreationManager(GLFWwindow* window,
     // ------------------------------------------------
     for(Particle particle : particles)
     {
-        particle.renderParticles(camera, scrwidth, scrheight, RenderParticle, window);
+        particle.renderParticles(camera, RenderParticle, window);
     }
     for (Image& image : images)
     {
-        image.render(camera, scrwidth, scrheight);
+        image.render(camera);
     }
     for (Cube& cube : cubes)
     {
-        cube.render(camera, scrwidth, scrheight,
-                    window, mouseX, mouseY, ishovering, isMoving);
+        cube.render(camera, window, mouseX, mouseY, ishovering, isMoving);
+    }
+    for(CharacterModel& models : ModelManagers)
+    {
+       models.IMGUIRenderModel(camera, scrwidth, scrheight);
     }
 
     ImGui::End();

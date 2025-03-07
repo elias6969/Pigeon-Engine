@@ -72,13 +72,13 @@ void CharacterModel::RenderModel(Camera &camera, unsigned int SCR_WIDTH, unsigne
     SpiderModel.Draw(SpiderShader);
 }
 
-void CharacterModel::customModel(Shader &shader, Model &model, std::string modelname, std::string vertexname, std::string fragmentname)
+void CharacterModel::initializeModelRenderingSystem(Shader &shader, Model &model, std::string modelname, std::string vertexname, std::string fragmentname)
 {
   shader.LoadShaders((data::ShaderPath + vertexname).c_str(), (data::ShaderPath + fragmentname).c_str());
   model.loadModel((data::ModelPath + modelname).c_str());
 }
 
-void CharacterModel::customRenderModel(Animator &animator, Camera &camera, float modelsize, float height, glm::vec3 Position, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT, Model &threedmodel, Shader &shader)
+void CharacterModel::RenderAnimatedCharacterModel(Animator &animator, Camera &camera, float modelsize, float height, glm::vec3 Position, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT, Model &threedmodel, Shader &shader)
 {
     glm::mat4 projection = glm::perspective(
         glm::radians(45.0f),
@@ -105,4 +105,56 @@ void CharacterModel::customRenderModel(Animator &animator, Camera &camera, float
     model = glm::scale(model, glm::vec3(modelsize));
     shader.setMat4("model", model);
     threedmodel.Draw(shader);
+}
+
+void CharacterModel::IMGUIinitializeModelRenderingSystem()
+{
+    if (!ModelPath) {
+        std::cerr << "ERROR: ModelPath is null!" << std::endl;
+     return;
+    }
+    std::cout << "Model path: " << ModelPath << std::endl;
+    ModelPosition = glm::vec3(0.0f);
+    modelSize = 0.0005f;
+    switch (currentRenderMode) {
+    case ModelRenderMode::NORMAL:
+        std::cout << "MODELMANAGER::RENDER::MODE::NORMAL" << std::endl;
+        IMGUIShader.LoadShaders((data::ShaderPath + "").c_str(), (data::ShaderPath + "").c_str());
+    break;
+    case ModelRenderMode::RAINBOW:
+        std::cout << "MODELMANAGER::RENDER::MODE::RAINBOW" << std::endl;
+        IMGUIShader.LoadShaders((data::ShaderPath + "mountain.vs").c_str(), (data::ShaderPath + "mountain.fs").c_str());
+        //std::cout << "MODEL::PATH::" << TESTPATH << std::endl;
+    break;
+    case ModelRenderMode::LIGHT:
+        std::cout << "MODELMANAGER::RENDER::MODE::LIGHT" << std::endl;
+    break;
+    }
+    IMGUIModelManager.loadModel(ModelPath);
+}
+
+void CharacterModel::IMGUIRenderModel(Camera &camera, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT)
+{
+    glm::mat4 projection = glm::perspective(
+        glm::radians(45.0f),
+        static_cast<float>(SCR_WIDTH) / static_cast<float>(SCR_HEIGHT),
+        0.1f,
+        1000.0f
+    );
+    glm::mat4 view = camera.GetViewMatrix(); 
+
+    float currentime = glfwGetTime();
+    // Use the shader
+    IMGUIShader.use();
+    IMGUIShader.setMat4("projection", projection);
+    IMGUIShader.setMat4("view", view);
+    float height = 0.5f;
+    if(currentRenderMode == ModelRenderMode::RAINBOW){
+        IMGUIShader.setFloat("vHeight", height);
+    }
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, ModelPosition);
+    model = glm::scale(model, glm::vec3(modelSize));
+    IMGUIShader.setMat4("model", model);
+    IMGUIModelManager.Draw(IMGUIShader);
 }
