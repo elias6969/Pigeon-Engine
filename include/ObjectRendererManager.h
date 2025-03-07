@@ -13,6 +13,7 @@
 
 
 bool CheckCollision(glm::vec3 &Position1, glm::vec3 &Position2, float size);
+void ScreenSize(int &screenwidth, int &screenheight);
 
 class Grid {
 public:
@@ -36,8 +37,7 @@ public:
     float Speed;
     const char* texturePath;
     void InitParticle();
-    void renderParticles(Camera &camera,
-        int screen_width, int screen_height, bool RenderParticle, GLFWwindow* windwow);
+    void renderParticles(Camera &camera, bool RenderParticle, GLFWwindow* windwow);
 private:
     GLuint ParticleVAO, ParticleVBO, Particletexture;
     int x;
@@ -59,8 +59,6 @@ public:
 
     void loadCube();
     void render(Camera& camera,
-                int screenWidth,
-                int screenHeight,
                 GLFWwindow* window,
                 double &mouseX, double &mouseY,
                 bool &ishovering, bool &isMoving);
@@ -84,7 +82,7 @@ public:
     glm::vec3 size;
     Image();  // Constructor to load an image from a file
     void loadImage();                   // Load image data (texture)
-    void render(Camera &camera, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT);                // Render the image
+    void render(Camera &camera);                // Render the image
 
 private:
     GLuint textureID;                   

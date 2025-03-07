@@ -10,17 +10,37 @@
 #include "Model.h"
 #include "animator.h"
 
+enum class ModelRenderMode
+{
+    NORMAL = 0,
+    RAINBOW = 1,
+    LIGHT = 2,
+    COUNT
+};
+
 class CharacterModel
 {
 public:
-    void customModel(Shader &shader, Model &model, std::string modelname, std::string vertexname, std::string fragmentname );
+    ModelRenderMode currentRenderMode = ModelRenderMode::NORMAL;
+    glm::vec3 ModelPosition;
+    const char* ModelPath;
+    float modelSize;
+    //FUNCTIONS
+    void initializeModelRenderingSystem(Shader &shader, Model &model, std::string modelname, std::string vertexname, std::string fragmentname );
 
-    void customRenderModel(Animator &animator, Camera &camera, float modelsize, float height, glm::vec3 Position, const unsigned int SCR_WIDTH, const unsigned int SCR_HEIGHT, Model &threedmodel, Shader &shader);
+    void RenderAnimatedCharacterModel(Animator &animator, Camera &camera, float modelsize, float height, glm::vec3 Position, const unsigned int SCR_WIDTH, const unsigned int SCR_HEIGHT, Model &threedmodel, Shader &shader);
     void loadModel();
 
     void RenderModel(Camera &camera, const unsigned int SCR_WIDTH, const unsigned int SCR_HEIGHT);
     
+
+
+    void IMGUIinitializeModelRenderingSystem();
+    void IMGUIRenderModel(Camera &camera, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT);
 private:
+
+    Model IMGUIModelManager;
+    Shader IMGUIShader;
     Shader SpiderShader;
     Model SpiderModel;
 };
