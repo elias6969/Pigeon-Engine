@@ -1,11 +1,8 @@
 CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /home/lighht19/Documents/Pigeon-Engine/src/ObjectRenderer.cpp \
- /usr/include/stdc-predef.h \
- /home/lighht19/Documents/Pigeon-Engine/include/ObjectRendererManager.h \
- /home/lighht19/Documents/Pigeon-Engine/third_party/glad/include/glad/glad.h \
- /home/lighht19/Documents/Pigeon-Engine/third_party/glad/include/KHR/khrplatform.h \
- /usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h /usr/include/stdint.h \
- /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+ /usr/include/stdc-predef.h /usr/include/c++/12/cstdlib \
+ /usr/include/x86_64-linux-gnu/c++/12/bits/c++config.h \
+ /usr/include/x86_64-linux-gnu/c++/12/bits/os_defines.h \
  /usr/include/features.h /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/bits/timesize.h \
@@ -13,46 +10,25 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/long-double.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
- /usr/include/x86_64-linux-gnu/bits/types.h \
- /usr/include/x86_64-linux-gnu/bits/typesizes.h \
- /usr/include/x86_64-linux-gnu/bits/time64.h \
- /usr/include/x86_64-linux-gnu/bits/wchar.h \
- /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
- /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
- /usr/include/GLFW/glfw3.h \
- /usr/lib/gcc/x86_64-linux-gnu/12/include/stddef.h \
- /usr/include/glm/fwd.hpp /usr/include/glm/detail/qualifier.hpp \
- /usr/include/glm/detail/setup.hpp /usr/include/c++/12/cassert \
- /usr/include/x86_64-linux-gnu/c++/12/bits/c++config.h \
- /usr/include/x86_64-linux-gnu/c++/12/bits/os_defines.h \
  /usr/include/x86_64-linux-gnu/c++/12/bits/cpu_defines.h \
- /usr/include/c++/12/pstl/pstl_config.h /usr/include/assert.h \
- /usr/include/c++/12/cstddef /usr/include/glm/simd/platform.h \
- /usr/include/c++/12/cstdint /usr/include/c++/12/type_traits \
- /usr/include/glm/glm.hpp /usr/include/glm/detail/_fixes.hpp \
- /usr/include/c++/12/cmath /usr/include/c++/12/bits/cpp_type_traits.h \
- /usr/include/c++/12/ext/type_traits.h /usr/include/math.h \
- /usr/include/x86_64-linux-gnu/bits/math-vector.h \
- /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
- /usr/include/x86_64-linux-gnu/bits/floatn.h \
- /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
- /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
- /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
- /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
- /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
- /usr/include/c++/12/bits/std_abs.h /usr/include/stdlib.h \
+ /usr/include/c++/12/pstl/pstl_config.h /usr/include/stdlib.h \
+ /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stddef.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
+ /usr/include/x86_64-linux-gnu/bits/floatn.h \
+ /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/x86_64-linux-gnu/sys/types.h \
+ /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+ /usr/include/x86_64-linux-gnu/bits/time64.h \
  /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/timer_t.h /usr/include/endian.h \
+ /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
+ /usr/include/x86_64-linux-gnu/bits/stdint-intn.h /usr/include/endian.h \
  /usr/include/x86_64-linux-gnu/bits/endian.h \
  /usr/include/x86_64-linux-gnu/bits/endianness.h \
  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
@@ -70,6 +46,47 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
+ /usr/include/c++/12/bits/std_abs.h /usr/include/dirent.h \
+ /usr/include/x86_64-linux-gnu/bits/dirent.h \
+ /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/local_lim.h \
+ /usr/include/linux/limits.h \
+ /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
+ /usr/include/x86_64-linux-gnu/bits/dirent_ext.h \
+ /home/lighht19/Documents/Pigeon-Engine/third_party/glad/include/glad/glad.h \
+ /home/lighht19/Documents/Pigeon-Engine/third_party/glad/include/KHR/khrplatform.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h /usr/include/stdint.h \
+ /usr/include/x86_64-linux-gnu/bits/wchar.h \
+ /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
+ /usr/include/GLFW/glfw3.h /usr/include/glm/ext/matrix_clip_space.hpp \
+ /usr/include/glm/ext/scalar_constants.hpp \
+ /usr/include/glm/detail/setup.hpp /usr/include/c++/12/cassert \
+ /usr/include/assert.h /usr/include/c++/12/cstddef \
+ /usr/include/glm/simd/platform.h /usr/include/c++/12/cstdint \
+ /usr/include/c++/12/type_traits \
+ /usr/include/glm/ext/scalar_constants.inl /usr/include/c++/12/limits \
+ /usr/include/glm/geometric.hpp /usr/include/glm/detail/type_vec3.hpp \
+ /usr/include/glm/detail/qualifier.hpp /usr/include/glm/detail/setup.hpp \
+ /usr/include/glm/detail/type_vec3.inl \
+ /usr/include/glm/detail/compute_vector_relational.hpp \
+ /usr/include/glm/detail/func_geometric.inl \
+ /usr/include/glm/exponential.hpp /usr/include/glm/detail/type_vec1.hpp \
+ /usr/include/glm/detail/type_vec1.inl \
+ /usr/include/glm/detail/type_vec2.hpp \
+ /usr/include/glm/detail/type_vec2.inl \
+ /usr/include/glm/detail/type_vec4.hpp \
+ /usr/include/glm/detail/type_vec4.inl /usr/include/c++/12/cmath \
+ /usr/include/c++/12/bits/cpp_type_traits.h \
+ /usr/include/c++/12/ext/type_traits.h /usr/include/math.h \
+ /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+ /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
+ /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
+ /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
+ /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
+ /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
  /usr/include/c++/12/bits/specfun.h \
  /usr/include/c++/12/bits/stl_algobase.h \
  /usr/include/c++/12/bits/functexcept.h \
@@ -83,7 +100,7 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/c++/12/debug/assertions.h \
  /usr/include/c++/12/bits/stl_iterator.h \
  /usr/include/c++/12/bits/ptr_traits.h /usr/include/c++/12/debug/debug.h \
- /usr/include/c++/12/bits/predefined_ops.h /usr/include/c++/12/limits \
+ /usr/include/c++/12/bits/predefined_ops.h \
  /usr/include/c++/12/tr1/gamma.tcc \
  /usr/include/c++/12/tr1/special_function_util.h \
  /usr/include/c++/12/tr1/bessel_function.tcc \
@@ -96,21 +113,20 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/c++/12/tr1/poly_hermite.tcc \
  /usr/include/c++/12/tr1/poly_laguerre.tcc \
  /usr/include/c++/12/tr1/riemann_zeta.tcc \
- /usr/include/glm/detail/setup.hpp /usr/include/c++/12/climits \
- /usr/lib/gcc/x86_64-linux-gnu/12/include/limits.h \
- /usr/lib/gcc/x86_64-linux-gnu/12/include/syslimits.h \
- /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
- /usr/include/x86_64-linux-gnu/bits/local_lim.h \
- /usr/include/linux/limits.h \
- /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
- /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
- /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
- /usr/include/x86_64-linux-gnu/bits/uio_lim.h /usr/include/c++/12/cfloat \
- /usr/lib/gcc/x86_64-linux-gnu/12/include/float.h \
- /usr/include/glm/vec2.hpp /usr/include/glm/ext/vector_bool2.hpp \
- /usr/include/glm/detail/type_vec2.hpp \
- /usr/include/glm/detail/type_vec2.inl \
- /usr/include/glm/detail/compute_vector_relational.hpp \
+ /usr/include/glm/detail/func_exponential.inl \
+ /usr/include/glm/vector_relational.hpp /usr/include/glm/detail/setup.hpp \
+ /usr/include/glm/detail/func_vector_relational.inl \
+ /usr/include/glm/detail/_vectorize.hpp /usr/include/glm/common.hpp \
+ /usr/include/glm/detail/_fixes.hpp \
+ /usr/include/glm/detail/func_common.inl \
+ /usr/include/glm/detail/compute_common.hpp \
+ /usr/include/glm/trigonometric.hpp \
+ /usr/include/glm/detail/func_trigonometric.inl \
+ /usr/include/glm/ext/matrix_clip_space.inl \
+ /usr/include/glm/ext/matrix_transform.hpp \
+ /usr/include/glm/gtc/constants.hpp /usr/include/glm/gtc/constants.inl \
+ /usr/include/glm/matrix.hpp /usr/include/glm/vec2.hpp \
+ /usr/include/glm/ext/vector_bool2.hpp \
  /usr/include/glm/ext/vector_bool2_precision.hpp \
  /usr/include/glm/ext/vector_float2.hpp \
  /usr/include/glm/ext/vector_float2_precision.hpp \
@@ -119,12 +135,10 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/glm/ext/vector_int2.hpp \
  /usr/include/glm/ext/vector_int2_sized.hpp \
  /usr/include/glm/ext/scalar_int_sized.hpp \
- /usr/include/glm/detail/setup.hpp /usr/include/glm/ext/vector_uint2.hpp \
+ /usr/include/glm/ext/vector_uint2.hpp \
  /usr/include/glm/ext/vector_uint2_sized.hpp \
  /usr/include/glm/ext/scalar_uint_sized.hpp /usr/include/glm/vec3.hpp \
  /usr/include/glm/ext/vector_bool3.hpp \
- /usr/include/glm/detail/type_vec3.hpp \
- /usr/include/glm/detail/type_vec3.inl \
  /usr/include/glm/ext/vector_bool3_precision.hpp \
  /usr/include/glm/ext/vector_float3.hpp \
  /usr/include/glm/ext/vector_float3_precision.hpp \
@@ -135,8 +149,6 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/glm/ext/vector_uint3.hpp \
  /usr/include/glm/ext/vector_uint3_sized.hpp /usr/include/glm/vec4.hpp \
  /usr/include/glm/ext/vector_bool4.hpp \
- /usr/include/glm/detail/type_vec4.hpp \
- /usr/include/glm/detail/type_vec4.inl \
  /usr/include/glm/ext/vector_bool4_precision.hpp \
  /usr/include/glm/ext/vector_float4.hpp \
  /usr/include/glm/ext/vector_float4_precision.hpp \
@@ -148,7 +160,10 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/glm/ext/vector_uint4_sized.hpp /usr/include/glm/mat2x2.hpp \
  /usr/include/glm/ext/matrix_double2x2.hpp \
  /usr/include/glm/detail/type_mat2x2.hpp \
- /usr/include/glm/detail/type_mat2x2.inl /usr/include/glm/matrix.hpp \
+ /usr/include/glm/detail/type_mat2x2.inl \
+ /usr/include/glm/ext/matrix_double2x2_precision.hpp \
+ /usr/include/glm/ext/matrix_float2x2.hpp \
+ /usr/include/glm/ext/matrix_float2x2_precision.hpp \
  /usr/include/glm/mat2x3.hpp /usr/include/glm/ext/matrix_double2x3.hpp \
  /usr/include/glm/detail/type_mat2x3.hpp \
  /usr/include/glm/detail/type_mat2x3.inl \
@@ -197,43 +212,21 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/glm/ext/matrix_double4x4_precision.hpp \
  /usr/include/glm/ext/matrix_float4x4.hpp \
  /usr/include/glm/ext/matrix_float4x4_precision.hpp \
- /usr/include/glm/detail/func_matrix.inl /usr/include/glm/geometric.hpp \
- /usr/include/glm/detail/func_geometric.inl \
- /usr/include/glm/exponential.hpp /usr/include/glm/detail/type_vec1.hpp \
- /usr/include/glm/detail/type_vec1.inl \
- /usr/include/glm/detail/func_exponential.inl \
- /usr/include/glm/vector_relational.hpp \
- /usr/include/glm/detail/func_vector_relational.inl \
- /usr/include/glm/detail/_vectorize.hpp /usr/include/glm/common.hpp \
- /usr/include/glm/detail/func_common.inl \
- /usr/include/glm/detail/compute_common.hpp \
- /usr/include/glm/ext/matrix_double2x2_precision.hpp \
- /usr/include/glm/ext/matrix_float2x2.hpp \
- /usr/include/glm/ext/matrix_float2x2_precision.hpp \
- /usr/include/glm/trigonometric.hpp \
- /usr/include/glm/detail/func_trigonometric.inl \
- /usr/include/glm/packing.hpp /usr/include/glm/detail/func_packing.inl \
- /usr/include/glm/detail/type_half.hpp \
- /usr/include/glm/detail/type_half.inl /usr/include/glm/integer.hpp \
- /usr/include/glm/detail/func_integer.inl \
- /home/lighht19/Documents/Pigeon-Engine/third_party/stb_image.h \
- /usr/include/stdio.h /usr/lib/gcc/x86_64-linux-gnu/12/include/stdarg.h \
- /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
- /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
- /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
- /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
- /usr/include/c++/12/stdlib.h /usr/include/c++/12/cstdlib \
+ /usr/include/glm/detail/func_matrix.inl \
+ /usr/include/glm/ext/matrix_transform.inl \
+ /usr/include/glm/ext/quaternion_transform.hpp \
+ /usr/include/glm/ext/quaternion_transform.inl /usr/include/glm/fwd.hpp \
  /usr/include/c++/12/iostream /usr/include/c++/12/ostream \
  /usr/include/c++/12/ios /usr/include/c++/12/iosfwd \
  /usr/include/c++/12/bits/stringfwd.h \
  /usr/include/c++/12/bits/memoryfwd.h /usr/include/c++/12/bits/postypes.h \
  /usr/include/c++/12/cwchar /usr/include/wchar.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
+ /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
  /usr/include/c++/12/exception /usr/include/c++/12/bits/exception.h \
  /usr/include/c++/12/bits/exception_ptr.h \
  /usr/include/c++/12/bits/cxxabi_init_exception.h \
@@ -278,6 +271,11 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/c++/12/bits/functional_hash.h \
  /usr/include/c++/12/bits/string_view.tcc \
  /usr/include/c++/12/ext/string_conversions.h /usr/include/c++/12/cstdio \
+ /usr/include/stdio.h /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
+ /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/c++/12/cerrno /usr/include/errno.h \
  /usr/include/x86_64-linux-gnu/bits/errno.h /usr/include/linux/errno.h \
  /usr/include/x86_64-linux-gnu/asm/errno.h \
@@ -299,38 +297,16 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/c++/12/bits/locale_facets.tcc \
  /usr/include/c++/12/bits/basic_ios.tcc \
  /usr/include/c++/12/bits/ostream.tcc /usr/include/c++/12/istream \
- /usr/include/c++/12/bits/istream.tcc /usr/include/c++/12/vector \
- /usr/include/c++/12/bits/stl_uninitialized.h \
- /usr/include/c++/12/bits/stl_vector.h \
- /usr/include/c++/12/bits/stl_bvector.h \
- /usr/include/c++/12/bits/vector.tcc \
- /home/lighht19/Documents/Pigeon-Engine/include/Shader.h \
- /usr/include/c++/12/fstream /usr/include/c++/12/bits/codecvt.h \
- /usr/include/x86_64-linux-gnu/c++/12/bits/basic_file.h \
- /usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h \
- /usr/include/c++/12/bits/fstream.tcc /usr/include/c++/12/sstream \
- /usr/include/c++/12/bits/sstream.tcc \
- /home/lighht19/Documents/Pigeon-Engine/include/Camera.h \
- /usr/include/glm/gtc/matrix_transform.hpp \
- /usr/include/glm/ext/matrix_projection.hpp \
- /usr/include/glm/gtc/constants.hpp \
- /usr/include/glm/ext/scalar_constants.hpp \
- /usr/include/glm/ext/scalar_constants.inl \
- /usr/include/glm/gtc/constants.inl \
- /usr/include/glm/ext/matrix_projection.inl \
- /usr/include/glm/ext/matrix_clip_space.hpp \
- /usr/include/glm/ext/matrix_clip_space.inl \
- /usr/include/glm/ext/matrix_transform.hpp \
- /usr/include/glm/ext/matrix_transform.inl \
- /usr/include/glm/gtc/matrix_transform.inl \
- /home/lighht19/Documents/Pigeon-Engine/include/vao_manager.h \
- /usr/include/GL/gl.h /usr/include/dirent.h \
- /usr/include/x86_64-linux-gnu/bits/dirent.h \
- /usr/include/x86_64-linux-gnu/bits/dirent_ext.h \
- /usr/include/glm/ext/quaternion_transform.hpp \
- /usr/include/glm/ext/quaternion_transform.inl \
+ /usr/include/c++/12/bits/istream.tcc \
  /usr/include/x86_64-linux-gnu/c++/12/bits/stdc++.h \
- /usr/include/c++/12/ciso646 /usr/include/c++/12/csetjmp \
+ /usr/include/c++/12/cfloat \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/float.h \
+ /usr/include/c++/12/ciso646 /usr/include/c++/12/climits \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/limits.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/syslimits.h \
+ /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/uio_lim.h /usr/include/c++/12/csetjmp \
  /usr/include/setjmp.h /usr/include/c++/12/csignal /usr/include/signal.h \
  /usr/include/x86_64-linux-gnu/bits/signum-generic.h \
  /usr/include/x86_64-linux-gnu/bits/signum-arch.h \
@@ -363,6 +339,7 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/c++/12/cstdarg /usr/include/c++/12/cstring \
  /usr/include/string.h /usr/include/strings.h /usr/include/c++/12/ctime \
  /usr/include/c++/12/ccomplex /usr/include/c++/12/complex \
+ /usr/include/c++/12/sstream /usr/include/c++/12/bits/sstream.tcc \
  /usr/include/c++/12/cfenv /usr/include/c++/12/fenv.h /usr/include/fenv.h \
  /usr/include/x86_64-linux-gnu/bits/fenv.h /usr/include/c++/12/cinttypes \
  /usr/include/inttypes.h /usr/include/c++/12/cstdalign \
@@ -378,8 +355,12 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/c++/12/bits/uniform_int_dist.h \
  /usr/include/c++/12/pstl/glue_algorithm_defs.h \
  /usr/include/c++/12/pstl/execution_defs.h /usr/include/c++/12/bitset \
- /usr/include/c++/12/deque /usr/include/c++/12/bits/stl_deque.h \
- /usr/include/c++/12/bits/deque.tcc /usr/include/c++/12/functional \
+ /usr/include/c++/12/deque /usr/include/c++/12/bits/stl_uninitialized.h \
+ /usr/include/c++/12/bits/stl_deque.h /usr/include/c++/12/bits/deque.tcc \
+ /usr/include/c++/12/fstream /usr/include/c++/12/bits/codecvt.h \
+ /usr/include/x86_64-linux-gnu/c++/12/bits/basic_file.h \
+ /usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h \
+ /usr/include/c++/12/bits/fstream.tcc /usr/include/c++/12/functional \
  /usr/include/c++/12/tuple /usr/include/c++/12/bits/uses_allocator.h \
  /usr/include/c++/12/bits/std_function.h \
  /usr/include/c++/12/unordered_map \
@@ -389,7 +370,10 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/c++/12/bits/enable_special_members.h \
  /usr/include/c++/12/bits/node_handle.h \
  /usr/include/c++/12/bits/unordered_map.h \
- /usr/include/c++/12/bits/erase_if.h /usr/include/c++/12/array \
+ /usr/include/c++/12/bits/erase_if.h /usr/include/c++/12/vector \
+ /usr/include/c++/12/bits/stl_vector.h \
+ /usr/include/c++/12/bits/stl_bvector.h \
+ /usr/include/c++/12/bits/vector.tcc /usr/include/c++/12/array \
  /usr/include/c++/12/compare /usr/include/c++/12/iomanip \
  /usr/include/c++/12/locale \
  /usr/include/c++/12/bits/locale_facets_nonio.h \
@@ -466,20 +450,33 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/include/c++/12/bits/uses_allocator_args.h \
  /usr/include/c++/12/variant \
  /home/lighht19/Documents/Pigeon-Engine/include/Shader.h \
+ /usr/include/glm/glm.hpp /usr/include/glm/packing.hpp \
+ /usr/include/glm/detail/func_packing.inl \
+ /usr/include/glm/detail/type_half.hpp \
+ /usr/include/glm/detail/type_half.inl /usr/include/glm/integer.hpp \
+ /usr/include/glm/detail/func_integer.inl \
  /home/lighht19/Documents/Pigeon-Engine/include/Camera.h \
+ /usr/include/glm/gtc/matrix_transform.hpp \
+ /usr/include/glm/ext/matrix_projection.hpp \
+ /usr/include/glm/ext/matrix_projection.inl \
+ /usr/include/glm/gtc/matrix_transform.inl \
  /home/lighht19/Documents/Pigeon-Engine/include/filemanager.h \
  /home/lighht19/Documents/Pigeon-Engine/include/modelLoader.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/Shader.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/Camera.h \
  /home/lighht19/Documents/Pigeon-Engine/include/Model.h \
- /usr/include/assimp/Importer.hpp /usr/include/assimp/types.h \
- /usr/include/assimp/defs.h /usr/include/assimp/config.h \
- /usr/include/assimp/vector2.h /usr/include/assimp/vector3.h \
- /usr/include/assimp/color4.h /usr/include/assimp/matrix3x3.h \
- /usr/include/assimp/matrix4x4.h /usr/include/assimp/quaternion.h \
- /usr/include/assimp/vector2.inl /usr/include/assimp/vector3.inl \
- /usr/include/assimp/color4.inl /usr/include/assimp/matrix3x3.inl \
- /usr/include/assimp/matrix4x4.inl /usr/include/assimp/MathFunctions.h \
- /usr/include/assimp/quaternion.inl /usr/include/assimp/scene.h \
- /usr/include/assimp/texture.h /usr/include/assimp/Compiler/pushpack1.h \
+ /home/lighht19/Documents/Pigeon-Engine/third_party/stb_image.h \
+ /usr/include/c++/12/stdlib.h /usr/include/assimp/Importer.hpp \
+ /usr/include/assimp/types.h /usr/include/assimp/defs.h \
+ /usr/include/assimp/config.h /usr/include/assimp/vector2.h \
+ /usr/include/assimp/vector3.h /usr/include/assimp/color4.h \
+ /usr/include/assimp/matrix3x3.h /usr/include/assimp/matrix4x4.h \
+ /usr/include/assimp/quaternion.h /usr/include/assimp/vector2.inl \
+ /usr/include/assimp/vector3.inl /usr/include/assimp/color4.inl \
+ /usr/include/assimp/matrix3x3.inl /usr/include/assimp/matrix4x4.inl \
+ /usr/include/assimp/MathFunctions.h /usr/include/assimp/quaternion.inl \
+ /usr/include/assimp/scene.h /usr/include/assimp/texture.h \
+ /usr/include/assimp/Compiler/pushpack1.h \
  /usr/include/assimp/Compiler/poppack1.h /usr/include/assimp/mesh.h \
  /usr/include/assimp/aabb.h /usr/include/assimp/light.h \
  /usr/include/assimp/camera.h /usr/include/assimp/material.h \
@@ -523,4 +520,12 @@ CMakeFiles/PigeonEngine.dir/src/ObjectRenderer.cpp.o: \
  /usr/lib/gcc/x86_64-linux-gnu/12/include/emmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/12/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/12/include/mmintrin.h \
- /usr/lib/gcc/x86_64-linux-gnu/12/include/mm_malloc.h
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/mm_malloc.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/Cube.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/Particle.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/SkyBox.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/WindowModule.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/vao_manager.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/Grid.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/Image.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/Utils.h
