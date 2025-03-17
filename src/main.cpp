@@ -1,31 +1,46 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/ext/matrix_float4x4.hpp>
-#include <glm/fwd.hpp>
-#include <iostream>
-#include <imgui.h>
-#include <backends/imgui_impl_glfw.h>
-#include <backends/imgui_impl_opengl3.h>
-#include <imguiThemes.h>
+// OpenGL and GLFW
+#include <glad/glad.h>          // OpenGL function loader
+#include <GLFW/glfw3.h>         // GLFW window and input handling
 
-#include <glm/glm.hpp>
-#include <glm/vec3.hpp>
-#include <glm/mat4x4.hpp>
-#include <stb_image.h>
-#include <string>
-#include <stb_image.h>
-#include <chrono>
-#include <thread>
+// GLM - Mathematics for 3D Graphics
+#include <glm/glm.hpp>          // Core GLM functionality
+#include <glm/vec3.hpp>         // Vector operations
+#include <glm/mat4x4.hpp>       // Matrix operations
+#include <glm/ext/matrix_float4x4.hpp> // Extended matrix operations
+#include <glm/fwd.hpp>          // Forward declarations
 
-#include "Shader.h"
-#include "Camera.h"
-#include "ObjectRendererManager.h"
-#include "filemanager.h"
-#include "modelLoader.h"
-#include "Model.h"
-#include "animator.h"
-#include "BoundingBox.h"
-#include "IMGUIManager.h"
+// IMGUI - GUI Library
+#include <imgui.h>              // Core IMGUI functionality
+#include <backends/imgui_impl_glfw.h>   // GLFW bindings for IMGUI
+#include <backends/imgui_impl_opengl3.h> // OpenGL bindings for IMGUI
+#include <imguiThemes.h>        // Custom themes for IMGUI
+
+// Image Loading
+#include <stb_image.h>          // STB Image for texture loading (included twice, removing redundancy)
+
+// Standard Libraries
+#include <iostream>             // Standard input/output stream
+#include <string>               // String manipulation
+#include <chrono>               // Time utilities
+#include <thread>               // Multithreading utilities
+
+// Custom Modules
+#include "Shader.h"             // Shader management
+#include "Camera.h"             // Camera system
+#include "Cube.h"               // Cube rendering system
+#include "Particle.h"           // Particle system
+#include "SkyBox.h"             // Skybox rendering
+#include "WindowModule.h"       // Window management module
+#include "Grid.h"               // Grid rendering
+#include "Image.h"              // Image rendering system
+#include "Utils.h"              // Utility functions and global helpers
+#include "filemanager.h"        // File management system
+#include "modelLoader.h"        // 3D model loader
+#include "Model.h"              // 3D model representation
+#include "animator.h"           // Animation management
+#include "BoundingBox.h"        // Bounding box collision detection
+#include "IMGUIManager.h"       // IMGUI manager for UI handling
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -70,7 +85,7 @@ int main()
 #endif
 
     // glfw window creation
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Pigeon Engine GAYYY", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Pigeon Engine", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -87,7 +102,7 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-
+    
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
 
@@ -108,14 +123,17 @@ int main()
 
     //Shaders declarations
     Shader cubeShader;
-    Shader gridShader;
     Shader skyboxshader;
     Shader particleShader;
     Shader PlayerShader;
     Shader boxShader;
     //Inilialization
     windowManager.init();
-    grid.setupGrid(gridShader, 10.0f, 0.5f);
+    //grid.size = 10.0f, grid.spacing = 0.5f;
+    grid.setupGrid();
+    //grid.size = 5.0f;
+    //grid.spacing = 2.5f;
+    //grid.setupGridWater();
     skybox.texturebufferLoading(skyboxshader);
 
 
@@ -160,10 +178,6 @@ int main()
 
     int counter = 0;
 
-    
-    //initIMGUI(window);
-
-    //particle.InitParticle();
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -193,14 +207,19 @@ int main()
         ImGui::Checkbox("Out Camera Mode", &isOutcamera);
         ImGui::Checkbox("Moving", &isMoving);
         ImGui::Checkbox("Collided with Cube", &Collided);
+        ImGui::SliderFloat("Amplitude", &grid.amplitude, 0.0f, 10.0f);
+        ImGui::SliderFloat("speed", &grid.speed, 0.0f, 10.0f);
+        ImGui::SliderFloat("frequency", &grid.frequency, 0.0f, 10.0f);
+        ImGui::SliderFloat("size", &grid.size, 0.0f, 10.0f);
+        ImGui::SliderFloat("spacing", &grid.spacing, 0.0f, 10.0f);
         ImGui::End();
         // render
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         ScreenSize(SCR_WIDTH, SCR_HEIGHT);
         CreationManager(window, cubeShader, camera, SCR_WIDTH, SCR_HEIGHT, mouseX, mouseY, ishovering, isMoving);
-
-        grid.renderGrid(gridShader, camera, window);
+        //grid.renderGridWater(camera, window);
+        grid.renderGrid(camera, window);
         skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
         windowManager.render(camera, window);
         //particle.renderParticles(camera, SCR_WIDTH, SCR_HEIGHT, isRender, window);

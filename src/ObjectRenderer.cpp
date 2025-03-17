@@ -1,5 +1,3 @@
-#include "ObjectRendererManager.h"
-#include <GL/gl.h>
 #include <cstdlib>
 #include <dirent.h>
 #include <glad/glad.h>
@@ -23,6 +21,13 @@
 #include <stdexcept>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#include "Cube.h"
+#include "Particle.h"
+#include "SkyBox.h"
+#include "WindowModule.h"
+#include "Grid.h"
+#include "Image.h"
+#include "Utils.h"
 
 /*
 ▗▄▄▄  ▗▄▄▄▖ ▗▄▄▖▗▖    ▗▄▖ ▗▄▄▖  ▗▄▖▗▄▄▄▖▗▄▄▄▖ ▗▄▖ ▗▖  ▗▖
@@ -153,8 +158,8 @@ void Particle::InitParticle()
     glBindVertexArray(0);
 
     // Generate a texture for the particle and bind it.
-    glGenTextures(1, &Particletexture);
-    glBindTexture(GL_TEXTURE_2D, Particletexture);
+    glGenTextures(1, &ParticleTexture);
+    glBindTexture(GL_TEXTURE_2D, ParticleTexture);
 
     // Set texture wrapping and filtering parameters.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -277,7 +282,7 @@ void Particle::renderParticles(Camera &camera, bool RenderParticle, GLFWwindow* 
     }
 
     // Check if the VAO and texture are initialized
-    if (ParticleVAO == 0 || Particletexture == 0) {
+    if (ParticleVAO == 0 || ParticleTexture == 0) {
         throw std::runtime_error("Particle system is not properly initialized. Ensure InitParticle() is called first.");
     }
 
@@ -286,7 +291,7 @@ void Particle::renderParticles(Camera &camera, bool RenderParticle, GLFWwindow* 
 
     shader.use();
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, Particletexture);
+    glBindTexture(GL_TEXTURE_2D, ParticleTexture);
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)Var::SCR_WIDTH / (float)Var::SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
@@ -326,32 +331,151 @@ void Particle::renderParticles(Camera &camera, bool RenderParticle, GLFWwindow* 
 ▐▌▝▜▌▐▛▀▚▖  █  ▐▌  █ 
 ▝▚▄▞▘▐▌ ▐▌▗▄█▄▖▐▙▄▄▀ 
 */
-std::vector<float> Grid::generateGrid(float size, float spacing) 
-{
-    std::vector<float> vertices;
 
-    for (float x = -size; x <= size; x += spacing) {
-        vertices.push_back(x); vertices.push_back(0.0f); vertices.push_back(-size); // Start
-        vertices.push_back(x); vertices.push_back(0.0f); vertices.push_back(size);  // End
+std::vector<float> Grid::generateGridWater(float size, float spacing) {
+    std::vector<float> vertices;
+    std::vector<unsigned int> indices;
+
+    int numVerts = static_cast<int>(size / spacing) + 1;
+
+    // Generate vertices for the water grid.
+    for (int z = 0; z < numVerts; ++z) {
+        for (int x = 0; x < numVerts; ++x) {
+            float xPos = -size / 2.0f + x * spacing;
+            float zPos = -size / 2.0f + z * spacing;
+            vertices.push_back(xPos);
+            vertices.push_back(0.0f);  // Y position (will be modified for wave effects)
+            vertices.push_back(zPos);
+        }
     }
 
-    // Lines parallel to X-axis
+    // Generate indices for the water grid triangles.
+    for (int z = 0; z < numVerts - 1; ++z) {
+        for (int x = 0; x < numVerts - 1; ++x) {
+            int start = z * numVerts + x;
+            // First triangle.
+            indices.push_back(start);
+            indices.push_back(start + numVerts);
+            indices.push_back(start + 1);
+            // Second triangle.
+            indices.push_back(start + 1);
+            indices.push_back(start + numVerts);
+            indices.push_back(start + numVerts + 1);
+        }
+    }
+
+    // Store indices in the waterIndices member.
+    waterIndices = indices;
+    return vertices;
+}
+
+void Grid::setupGridWater() {
+    // Clean up existing buffers if they exist.
+    if (waterVAO != 0) {
+        glDeleteVertexArrays(1, &waterVAO);
+        glDeleteBuffers(1, &waterVBO);
+        glDeleteBuffers(1, &waterEBO);
+    }
+
+    // Generate the water grid vertices and indices.
+    waterVertices = generateGridWater(size, spacing);
+
+    // Create VAO, VBO, and EBO for water grid.
+    glGenVertexArrays(1, &waterVAO);
+    glGenBuffers(1, &waterVBO);
+    glGenBuffers(1, &waterEBO);
+
+    glBindVertexArray(waterVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, waterVBO);
+    glBufferData(GL_ARRAY_BUFFER, waterVertices.size() * sizeof(float), waterVertices.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, waterEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, waterIndices.size() * sizeof(unsigned int), waterIndices.data(), GL_STATIC_DRAW);
+
+    // Define vertex attributes.
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    // Load water shader.
+    waterShader.LoadShaders((Var::shaderPath + "gridWater.vs").c_str(), (Var::shaderPath + "gridWater.fs").c_str());
+}
+
+void Grid::renderGridWater(Camera& camera, GLFWwindow* window) {
+    if (waterVAO == 0) {
+        std::cerr << "Water grid VAO is not initialized! Call setupGridWater() first.\n";
+        return;
+    }
+
+    waterShader.use();
+    std::cout << "Size: " << size << std::endl;
+    std::cout << "Spacing " << spacing << std::endl;
+    std::cout << "frequency " << frequency << std::endl;
+    std::cout << "amplitude " << amplitude << std::endl;
+    std::cout << "speed " << speed << std::endl;
+    // Set transformation matrices.
+    glm::mat4 view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f),
+                                            static_cast<float>(Var::SCR_WIDTH) / Var::SCR_HEIGHT,
+                                            0.1f, 100.0f);
+    glm::mat4 model = glm::mat4(1.0f);
+    waterShader.setMat4("model", model);
+    waterShader.setMat4("view", view);
+    waterShader.setMat4("projection", projection);
+
+    // Set shader uniforms for water movement.
+    float time = static_cast<float>(glfwGetTime());
+    waterShader.setFloat("frequency", frequency);
+    waterShader.setFloat("speed", speed);
+    waterShader.setFloat("amplitude", amplitude);
+    waterShader.setFloat("time", time);
+
+    glBindVertexArray(waterVAO);
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(waterIndices.size()), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+
+    // Optionally, clean up buffers if the window is closing.
+    if (glfwWindowShouldClose(window)) {
+        glDeleteVertexArrays(1, &waterVAO);
+        glDeleteBuffers(1, &waterVBO);
+        glDeleteBuffers(1, &waterEBO);
+    }
+}
+
+std::vector<float> Grid::generateGrid(float size, float spacing) {
+    std::vector<float> vertices;
+
+    // Lines parallel to the Z-axis (vertical lines).
+    for (float x = -size; x <= size; x += spacing) {
+        vertices.push_back(x);  vertices.push_back(0.0f);  vertices.push_back(-size);
+        vertices.push_back(x);  vertices.push_back(0.0f);  vertices.push_back(size);
+    }
+
+    // Lines parallel to the X-axis (horizontal lines).
     for (float z = -size; z <= size; z += spacing) {
-        vertices.push_back(-size); vertices.push_back(0.0f); vertices.push_back(z); // Start
-        vertices.push_back(size); vertices.push_back(0.0f); vertices.push_back(z);  // End
+        vertices.push_back(-size);  vertices.push_back(0.0f);  vertices.push_back(z);
+        vertices.push_back(size);   vertices.push_back(0.0f);  vertices.push_back(z);
     }
 
     return vertices;
 }
 
-void Grid::setupGrid(Shader &shader, float size, float spacing) {
+void Grid::setupGrid() {
+    // Clean up existing grid buffers.
     if (gridVAO != 0) {
         glDeleteVertexArrays(1, &gridVAO);
         glDeleteBuffers(1, &gridVBO);
     }
 
+    // Initialize grid parameters.
+    size = 10.0f;
+    spacing = 1.0f;
     gridVertices = generateGrid(size, spacing);
 
+    // Create VAO and VBO for the regular grid.
     glGenVertexArrays(1, &gridVAO);
     glGenBuffers(1, &gridVBO);
 
@@ -360,37 +484,46 @@ void Grid::setupGrid(Shader &shader, float size, float spacing) {
     glBindBuffer(GL_ARRAY_BUFFER, gridVBO);
     glBufferData(GL_ARRAY_BUFFER, gridVertices.size() * sizeof(float), gridVertices.data(), GL_STATIC_DRAW);
 
+    // Define vertex attributes.
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    shader.LoadShaders((Var::shaderPath + "grid.vs").c_str(), (Var::shaderPath + "grid.fs").c_str());
+    // Load grid shader.
+    gridShader.LoadShaders((Var::shaderPath + "grid.vs").c_str(), (Var::shaderPath + "grid.fs").c_str());
 }
 
-void Grid::renderGrid(Shader& shader, Camera& camera, GLFWwindow* window) {
+void Grid::renderGrid(Camera& camera, GLFWwindow* window) {
     if (gridVAO == 0) {
         std::cerr << "Grid VAO is not initialized! Call setupGrid() first.\n";
         return;
     }
 
-    shader.use();
+    gridShader.use();
 
+    // Set transformation matrices.
     glm::mat4 view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)Var::SCR_WIDTH/(float)Var::SCR_HEIGHT, 0.1f, 100.0f);
-    // Set the model matrix (identity matrix for now)
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f),
+                                            static_cast<float>(Var::SCR_WIDTH) / Var::SCR_HEIGHT,
+                                            0.1f, 100.0f);
     glm::mat4 model = glm::mat4(1.0f);
-    shader.setMat4("model", model);
-    shader.setMat4("view", view);
-    shader.setMat4("projection", projection);
+    gridShader.setMat4("model", model);
+    gridShader.setMat4("view", view);
+    gridShader.setMat4("projection", projection);
+
+    // Optionally, pass time for any animations.
+    float time = static_cast<float>(glfwGetTime());
+    gridShader.setFloat("time", time);
 
     glBindVertexArray(gridVAO);
     glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(gridVertices.size() / 3));
     glBindVertexArray(0);
-    if(glfwWindowShouldClose(window)){
-      glDeleteVertexArrays(1, &gridVAO);
-      glDeleteBuffers(1, &gridVBO);
+
+    if (glfwWindowShouldClose(window)) {
+        glDeleteVertexArrays(1, &gridVAO);
+        glDeleteBuffers(1, &gridVBO);
     }
 }
 
@@ -401,12 +534,23 @@ void Grid::renderGrid(Shader& shader, Camera& camera, GLFWwindow* window) {
 ▝▚▄▄▖▝▚▄▞▘▐▙▄▞▘▐▙▄▄▖
 */
 
+void Cube::Checker()
+{
+    switch (RenderMode) {
+    case cubeRenderMode::NORMAL:
+        std::cout << "CUBE::RENDER::MODE::NORMAL" << std::endl;
+        loadCube();
+    break;
+    case cubeRenderMode::WATER:
+        std::cout << "CUBE::RENDER::MODE::WATER" << std::endl;
+        loadWaterCube();
+    break;
+    }
+
+}
+
 void Cube::loadCube() {
     float vertices[] = {
-        // 36 vertices, each with:
-        //   3 floats for position (x, y, z)
-        //   2 floats for texture coords (u, v)
-        // => 5 floats per vertex
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
          0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
          0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -502,6 +646,102 @@ std::cout << "Loading texture for image: " << texturePath
     b = 3.0f; 
 }
 
+void Cube::loadWaterCube() {
+    float vertices[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
+
+    // Generate and bind VAO/VBO
+    glGenVertexArrays(1, &Var::cube.VAO);
+    glGenBuffers(1, &Var::cube.VBO);
+
+    glBindVertexArray(Var::cube.VAO);
+
+    // Make sure you bind Var::cube.VBO, not just VBO
+    glBindBuffer(GL_ARRAY_BUFFER, Var::cube.VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // Position attribute: layout(location = 0)
+    // Each vertex is 5 floats (3 pos + 2 tex coords)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // Texture coordinates attribute: layout(location = 1)
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    // (No color attribute pointer here, since we only have 3 + 2 = 5 floats)
+
+    // ================== Generate and Load Texture ==================
+    glGenTextures(1, &Var::cube.texture);
+    glBindTexture(GL_TEXTURE_2D, Var::cube.texture);
+
+    // Texture parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    int width, height, nrChannels;
+    
+    if(!texturePath){
+        texturePath = "/home/lighht19/Documents/Pigeon-Engine/resources/Textures/water.jpg";
+    }
+    texture = loadTexture(texturePath);
+    waveHeight = 2.0f, waveFrequency = 1.0f, waveSpeed = 2.0f, time = 5.0f;
+    // ================== Compile and Use Shader ==================
+    shader.LoadShaders((Var::shaderPath + "gridWater.vs").c_str(),
+                       (Var::shaderPath + "grid.fs").c_str());
+    shader.use();
+    shader.setInt("texture1", 0);
+std::cout << "Loading texture for image: " << texturePath 
+          << " | Assigned textureID: " << texture << std::endl;
+    // Optional: set default transforms, color values, etc.
+    size = glm::vec3(1.0f);
+    r = 0.0f; 
+    g = 1.5f; 
+    b = 3.0f; 
+}
 
 void Cube::render(Camera& camera,
                   GLFWwindow* window,
@@ -545,7 +785,15 @@ void Cube::render(Camera& camera,
         100.0f
     );
 
-    // Send matrices to shader
+    
+    //FIXME this part of the code needs to be fixed later on 
+    float times = static_cast<float>(glfwGetTime());   
+    shader.setFloat("time", times);
+    //shader.setInt("numWaves", numWaves);
+    //shader.setFloatArray("amplitude", amplitude, numWaves);
+    //shader.setFloatArray("wavelength", wavelength, numWaves);
+    //shader.setFloatArray("speed", speed, numWaves);
+    //shader.setVec2Array("direction", direction, numWaves);
     shader.setMat4("model", model);
     shader.setMat4("view", view);
     shader.setMat4("projection", projection);
@@ -644,6 +892,15 @@ void Cube::render(Camera& camera,
     // ------------------------------------------
     // Render the cube
     // ------------------------------------------
+    if(RenderMode == cubeRenderMode::WATER)
+    {
+        if(time <= 50)
+        {
+            time += 1.0f;
+        }else {
+        time = 0.0f;
+        }
+    }
     glBindVertexArray(Var::cube.VAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 

@@ -14,23 +14,30 @@
 #include <chrono>
 #include <thread>
 #include "imstb_textedit.h"
-#include "ObjectRendererManager.h"
 #include "modelLoader.h"
 #include "tinyfiledialogs.h"
 #include "Shader.h"
+#include "Cube.h"
+#include "Particle.h"
+#include "SkyBox.h"
+#include "WindowModule.h"
+#include "Grid.h"
+#include "Image.h"
+#include "Utils.h"
 
-// Forward declarations (if needed)
-void addCube(GLFWwindow* window);
 
 // Enum for Object Types
 enum ObjectType {
     PARTICLE,
     CUBE,
     MODEL_OBJ,
-    IMAGE
+    IMAGE,
+    WATER_GRID
 };
 
+//Enum Modes
 ModelRenderMode renderMode;
+cubeRenderMode cuberendermode;
 
 // Selected Object Type (default to CUBE)
 ObjectType selectedType = CUBE;
@@ -42,6 +49,9 @@ int amount = 0;
 float particleSpeed;
 float particleHeight;
 float modelSize = 0.0005f; 
+float modelShaderHeight = 0.0f;
+float modelMaxheight, modelminHeight;
+
 // Object Transform
 float objectSize[3]   = { 1.0f, 1.0f, 1.0f };
 float objectRotation[3] = { 0.0f, 0.0f, 0.0f };
@@ -73,6 +83,15 @@ struct Color {
     float r, g, b;
 };
 
+// Configuration for the water Grid
+float amplitude;
+float speedGrid;
+float frequency;
+float sizeGrid;
+float spacing;
+
+LOD lod;
+
 // Configuration to store newly created objects
 struct ObjectConfig {
     ObjectType type;
@@ -92,15 +111,21 @@ struct ObjectConfig {
     float      Speed;
     std::string modelPath;
     const char* filepath;
+    float Gridamplitude;
+    float Gridspeed;
+    float Gridfrequency;
+    float Gridsize;
+    float Gridspacing;
 };
 
 std::vector<Cube> cubes;              // All cubes in the scene
 std::vector<Image> images; //images storage
 std::vector<Particle> particles; //Particle storage
 std::vector<CharacterModel> ModelManagers;
+std::vector<Grid> grids;
 std::vector<Shader> shaders;
 std::vector<ObjectConfig> createdObjects; // Stores all created object configs
-
+                                          
 // --------------------------------------------------------------------------
 // Initializes ImGui (call once in your main initialization)
 void initIMGUI(GLFWwindow* window)
@@ -164,7 +189,7 @@ void CreationManager(GLFWwindow* window,
 
     // Object Type Selection
     ImGui::Text("Select Object Type:");
-    const char* objectTypes[] = { "Particle", "Cube", "3D Model (OBJ)", "Image" };
+    const char* objectTypes[] = { "Particle", "Cube", "3D Model (OBJ)", "Image", "Water" };
     int currentItem = static_cast<int>(selectedType);
     if (ImGui::Combo("##ObjectType", &currentItem, objectTypes, IM_ARRAYSIZE(objectTypes)))
     {
@@ -224,6 +249,13 @@ void CreationManager(GLFWwindow* window,
     }
     if (selectedType == CUBE)
     {
+        ImGui::Text("Render type:");
+        const char* modeNames[] = {"Normal", "Water"};
+        int currentModeIndex = static_cast<int>(cuberendermode);
+        if(ImGui::Combo("Render Mode", &currentModeIndex, modeNames, IM_ARRAYSIZE(modeNames)))
+        {
+            cuberendermode = static_cast<cubeRenderMode>(currentModeIndex);
+        }
         ImGui::Text("Texture Path:");
         ImGui::InputText("##TexturePath", modelPath, IM_ARRAYSIZE(modelPath));
 
@@ -246,38 +278,6 @@ void CreationManager(GLFWwindow* window,
           }
         }
     }
-/*   // Model Path Input (only if 3D Model is selected)
-    if (selectedType == MODEL_OBJ)
-    {
-        const char* modeNames[] = {"Normal", "Rainbow", "Light"};
-        int currentModeIndex = static_cast<int>(renderMode);
-
-        if (ImGui::Combo("Render Mode", &currentModeIndex, modeNames, IM_ARRAYSIZE(modeNames)))
-        {
-        renderMode = static_cast<ModelRenderMode>(currentModeIndex);
-        }
-        ImGui::Text("Model Path:");
-        ImGui::InputText("##Model Path", modelPath, IM_ARRAYSIZE(modelPath));
-
-        ImGui::SameLine();
-        if (ImGui::Button("Browse"))
-        {
-          const char* filter[] = { "*.png", "*.jpg", "*.jpeg", "*.bmp" };
-          filePath = tinyfd_openFileDialog(
-            "Select an Image",     // aTitle
-            "",                    // aDefaultPathAndFile
-            4,                     // aNumOfFilterPatterns
-            filter,                // aFilterPatterns
-            "Image Files",         // aSingleFilterDescription
-            0                      // aAllowMultipleSelects (0 = single file)
-);
-
-          if (filePath)
-          {
-            strncpy(modelPath, filePath, IM_ARRAYSIZE(modelPath));
-          }
-        }
-    }*/
     
     if (selectedType == MODEL_OBJ)
     {
@@ -288,20 +288,21 @@ void CreationManager(GLFWwindow* window,
         {
             renderMode = static_cast<ModelRenderMode>(currentModeIndex);
         }
-
+        ImGui::InputFloat("Shader Height max height", &modelMaxheight);
+        ImGui::InputFloat("Shader height min height", &modelminHeight);
         ImGui::Text("Model Path:");
         ImGui::InputText("##Model Path", modelPath, IM_ARRAYSIZE(modelPath));
 
         ImGui::SameLine();
         if (ImGui::Button("Browse"))
         {
-            const char* filter[] = { "*.obj" };
+            const char* filter[] = { "*.obj", "*.glb" };
             filePath = tinyfd_openFileDialog(
-                "Select an OBJ Model",  // aTitle
+                "Select an OBJ/GLB Model",  // aTitle
                 "",                     // aDefaultPathAndFile
-                1,                      // aNumOfFilterPatterns
+                2,                      // aNumOfFilterPatterns
                 filter,                 // aFilterPatterns
-                "OBJ Files",            // aSingleFilterDescription
+                "OBJ/GLB Files",            // aSingleFilterDescription
                 0                       // aAllowMultipleSelects (0 = single file)
             );
 
@@ -347,6 +348,22 @@ void CreationManager(GLFWwindow* window,
           }
         }
     }
+
+    if(selectedType == WATER_GRID)
+    {
+        ImGui::Text("Render type:");
+        const char* modeNames[] = {"Basic", "Medium", "Detailed"};
+        int currentModeIndex = static_cast<int>(lod);
+        if(ImGui::Combo("Render Mode", &currentModeIndex, modeNames, IM_ARRAYSIZE(modeNames)))
+        {
+            lod = static_cast<LOD>(currentModeIndex);
+        }
+        ImGui::SliderFloat("Amplitude", &amplitude, 0.0f, 10.0f);
+        ImGui::SliderFloat("speed", &speedGrid, 0.0f, 10.0f);
+        ImGui::SliderFloat("frequency", &frequency, 0.0f, 10.0f);
+        ImGui::SliderFloat("size", &sizeGrid, 0.0f, 10.0f);
+        ImGui::SliderFloat("spacing", &spacing, 0.0f, 10.0f);
+    }
     // Material Settings
     ImGui::Text("🛠 Material Properties:");
     ImGui::SliderFloat("Shininess", &objectShininess, 1.0f, 128.0f, "%.1f");
@@ -370,7 +387,6 @@ void CreationManager(GLFWwindow* window,
         memcpy(newObj.size,      objectSize,     sizeof(objectSize));
         memcpy(newObj.rotation,  objectRotation, sizeof(objectRotation));
         memcpy(newObj.Position,  defaultPosition, sizeof(newObj.Position)); 
-           // If you want the created object at a specific position, set it here, or from the UI
         newObj.color           = { objectColor[0], objectColor[1], objectColor[2] };
         newObj.transparency    = objectTransparency;
         newObj.shininess       = objectShininess;
@@ -380,12 +396,19 @@ void CreationManager(GLFWwindow* window,
         newObj.modelPath       = modelPath;
         newObj.filepath        = filePath;
         newObj.amount          = amount;
-
+        //Grid water values
+        newObj.Gridamplitude = amplitude;
+        newObj.Gridfrequency = frequency;
+        newObj.Gridsize = sizeGrid;
+        newObj.Gridspacing = spacing;
+        newObj.Gridspeed= speedGrid;
+        
         int newIndex = -1;
 
         if (selectedType == CUBE)
         {
             Cube newCube;
+            newCube.RenderMode = cuberendermode;
             newCube.r        = newObj.color.r;
             newCube.g        = newObj.color.g;
             newCube.b        = newObj.color.b;
@@ -394,13 +417,13 @@ void CreationManager(GLFWwindow* window,
             newCube.Position = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
             newCube.size     = glm::vec3(objectSize[0], objectSize[1], objectSize[2]);
             newCube.texturePath = newObj.filepath;
-
+    
             std::cout << "Cube created at: "
                       << newCube.Position.x << ", "
                       << newCube.Position.y << ", "
                       << newCube.Position.z << std::endl;
 
-            newCube.loadCube();
+            newCube.Checker();
             cubes.push_back(newCube);
 
             newIndex = static_cast<int>(cubes.size()) - 1;
@@ -435,6 +458,7 @@ void CreationManager(GLFWwindow* window,
             CharacterModel newModel;
             newModel.ModelPath = modelPath;
             newModel.modelSize = modelSize;
+            newModel.vHeight = modelShaderHeight;
           //  newModel.ModelPosition = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
             newModel.currentRenderMode = renderMode;
             switch (renderMode) {
@@ -448,11 +472,24 @@ void CreationManager(GLFWwindow* window,
                     std::cout << "IMGUI::RENDER::MODE::LIGHT" << std::endl;
             break;
             }
-            std::cout <<"BeforeLoading\n";
             newModel.IMGUIinitializeModelRenderingSystem();
-            std::cout <<"AfterLoading\n";
             ModelManagers.push_back(newModel);
             newIndex = static_cast<int>(ModelManagers.size()) - 1;
+        }else if(selectedType == WATER_GRID)
+        {
+            Grid newGrid;
+            newGrid.spacing = spacing;
+            newGrid.size = sizeGrid;
+            newGrid.frequency = frequency;
+            newGrid.amplitude = amplitude;
+            newGrid.speed = speedGrid;
+
+            if(lod == LOD::BASIC)
+            {
+                newGrid.setupGridWater();
+            }
+            grids.push_back(newGrid);
+            newIndex = static_cast<int>(grids.size()) - 1;
         }
 
         newObj.vectorIndex = newIndex;
@@ -522,8 +559,19 @@ void CreationManager(GLFWwindow* window,
         ImGui::SliderFloat("Edit Shininess", &obj.shininess, 1.0f, 128.0f, "%.1f");
         ImGui::SliderFloat("Edit Reflectivity", &obj.reflectivity, 0.0f, 1.0f, "%.2f");
         ImGui::SliderFloat("Edit Intensity", &obj.lightIntensity, 0.0f, 10.0f, "%.1f");
-        ImGui::SliderFloat("Edit Model Size", &modelSize, 0.00005f, 10.0f, "%.1f");
-
+        if(obj.type == MODEL_OBJ){
+            ImGui::InputFloat("Edit Model Size", &modelSize);
+            ImGui::InputFloat("Shader Height max height", &modelMaxheight);
+            ImGui::InputFloat("Shader height min height", &modelminHeight);
+        }
+        if(obj.type == WATER_GRID)
+        {
+            ImGui::SliderFloat("Amplitude", &obj.Gridamplitude, 0.0f, 10.0f);
+            ImGui::SliderFloat("speed", &obj.Gridspeed, 0.0f, 10.0f);
+            ImGui::SliderFloat("frequency", &obj.Gridfrequency, 0.0f, 10.0f);
+            ImGui::SliderFloat("size", &obj.Gridsize, 0.0f, 10.0f);
+            ImGui::SliderFloat("spacing", &obj.Gridspacing, 0.0f, 10.0f);
+        }
         // Update the matching object in images/cubes with these new values
         int idx = obj.vectorIndex;
         if (obj.type == IMAGE && idx >= 0 && idx < (int)images.size())
@@ -539,7 +587,9 @@ void CreationManager(GLFWwindow* window,
         }
         else if (obj.type == MODEL_OBJ && idx >= 0 && idx < (int)ModelManagers.size())
         {
+            ModelManagers[idx].ModelPosition = glm::vec3(obj.Position[0], obj.Position[1], obj.Position[2]);        
             ModelManagers[idx].modelSize = modelSize;
+            ModelManagers[idx].maxHeight = modelMaxheight;
         }
         else if (obj.type == CUBE && idx >= 0 && idx < (int)cubes.size())
         {
@@ -559,6 +609,12 @@ void CreationManager(GLFWwindow* window,
             //particles[idx].Position = glm::vec3(obj.Position[0], obj.Position[1], obj.Position[2]);
             particles[idx].ParticleAmount = amount;
             // cubes[idx].texturePath = obj.filepath;
+        }else if(obj.type == WATER_GRID && idx >= 0 && idx < (int)particles.size()){
+            grids[idx].frequency = obj.Gridfrequency;
+            grids[idx].amplitude = obj.Gridamplitude;
+            grids[idx].speed = obj.Gridspeed;
+            grids[idx].spacing = obj.Gridspacing;
+            grids[idx].size = obj.Gridsize;
         }
         // else if (obj.type == PARTICLE) ...
         // else if (obj.type == MODEL_OBJ) ...
@@ -576,22 +632,24 @@ void CreationManager(GLFWwindow* window,
             { 
               images.erase(images.begin() + idx);
               std::cout << "DELETED::IMAGE" << std::endl;
-
+              std::cout << "DEBUG: images.size() now = " << images.size() << std::endl;
+            }
             if (obj.type == PARTICLE && idx >= 0 && idx < (int)particles.size())
             {
               particles.erase(particles.begin() + idx);
               std::cout << "DELETED::PARTICLE" << std::endl;
             }
-
-            std::cout << "DEBUG: images.size() now = " << images.size() << std::endl;
+            if (obj.type == MODEL_OBJ && idx >= 0 && idx < (int)ModelManagers.size())
+            {
+              ModelManagers.erase(ModelManagers.begin() + idx);
+              std::cout << "DELETED::MODEL" << std::endl;
             }
-            
+
             if (obj.type == CUBE && idx >= 0 && idx < (int)cubes.size())
             {
                 cubes.erase(cubes.begin() + idx);
             }
             selectedObjectIndex = -1;
-            std::cout << "DEBUG: images.size() now = " << images.size() << std::endl;
         }
     }
 
@@ -613,6 +671,10 @@ void CreationManager(GLFWwindow* window,
     for(CharacterModel& models : ModelManagers)
     {
        models.IMGUIRenderModel(camera, scrwidth, scrheight);
+    }
+    for(Grid& gridsWat : grids)
+    {
+        gridsWat.renderGridWater(camera, window);
     }
 
     ImGui::End();

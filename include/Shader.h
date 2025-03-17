@@ -9,6 +9,7 @@
 #include <sstream>
 #include <iostream>
 
+
 class Shader
 {
 public:
@@ -16,6 +17,29 @@ public:
     // constructor generates the shader on the fly
     // ------------------------------------------------------------------------
     Shader () {};
+
+    void CheckShaderCompilation(GLuint shader, const std::string& type) {
+        GLint success;
+        GLchar infoLog[1024];
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        if (!success) {
+        glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+        std::cerr << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n"
+                  << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+        }
+    }
+
+    void CheckProgramLinking(GLuint program) {
+        GLint success;
+        GLchar infoLog[1024];
+        glGetProgramiv(program, GL_LINK_STATUS, &success);
+        if (!success) {
+            glGetProgramInfoLog(program, 1024, NULL, infoLog);
+            std::cerr << "ERROR::PROGRAM_LINKING_ERROR\n"
+                  << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+        }
+    }
+
     void LoadShaders(const char* vertexPath, const char* fragmentPath)
     {
         // 1. retrieve the vertex/fragment source code from filePath
@@ -55,17 +79,20 @@ public:
         glShaderSource(vertex, 1, &vShaderCode, NULL);
         glCompileShader(vertex);
         checkCompileErrors(vertex, "VERTEX");
+        CheckProgramLinking(vertex);
         // fragment Shader
         fragment = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragment, 1, &fShaderCode, NULL);
         glCompileShader(fragment);
         checkCompileErrors(fragment, "FRAGMENT");
+        CheckProgramLinking(fragment);
         // shader Program
         ID = glCreateProgram();
         glAttachShader(ID, vertex);
         glAttachShader(ID, fragment);
         glLinkProgram(ID);
         checkCompileErrors(ID, "PROGRAM");
+
         // delete the shaders as they're linked into our program now and no longer necessary
         glDeleteShader(vertex);
         glDeleteShader(fragment);
