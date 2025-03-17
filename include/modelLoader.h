@@ -23,7 +23,11 @@ class CharacterModel
 public:
     ModelRenderMode currentRenderMode = ModelRenderMode::NORMAL;
     glm::vec3 ModelPosition;
+    glm::vec3 Rotation;
     const char* ModelPath;
+    float vHeight;
+    float maxHeight;
+    float minHeight;
     float modelSize;
     //FUNCTIONS
     void initializeModelRenderingSystem(Shader &shader, Model &model, std::string modelname, std::string vertexname, std::string fragmentname );
