@@ -334,8 +334,6 @@ CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o: \
  /usr/include/c++/12/bits/unique_ptr.h \
  /usr/include/c++/12/bits/this_thread_sleep.h \
  /home/lighht19/Documents/Pigeon-Engine/third_party/imgui-docking/imgui/imstb_textedit.h \
- /home/lighht19/Documents/Pigeon-Engine/include/ObjectRendererManager.h \
- /home/lighht19/Documents/Pigeon-Engine/include/vao_manager.h \
  /home/lighht19/Documents/Pigeon-Engine/include/modelLoader.h \
  /home/lighht19/Documents/Pigeon-Engine/include/Model.h \
  /usr/include/assimp/Importer.hpp /usr/include/assimp/types.h \
@@ -411,4 +409,12 @@ CMakeFiles/PigeonEngine.dir/src/ObjectGenerationIMGUI.cpp.o: \
  /usr/include/c++/12/bits/unordered_map.h /usr/include/c++/12/array \
  /usr/include/c++/12/compare \
  /home/lighht19/Documents/Pigeon-Engine/include/tinyfiledialogs.h \
- /home/lighht19/Documents/Pigeon-Engine/include/Shader.h
+ /home/lighht19/Documents/Pigeon-Engine/include/Shader.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/Cube.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/Particle.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/SkyBox.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/WindowModule.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/vao_manager.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/Grid.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/Image.h \
+ /home/lighht19/Documents/Pigeon-Engine/include/Utils.h

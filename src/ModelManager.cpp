@@ -119,7 +119,7 @@ void CharacterModel::IMGUIinitializeModelRenderingSystem()
     switch (currentRenderMode) {
     case ModelRenderMode::NORMAL:
         std::cout << "MODELMANAGER::RENDER::MODE::NORMAL" << std::endl;
-        IMGUIShader.LoadShaders((data::ShaderPath + "").c_str(), (data::ShaderPath + "").c_str());
+        IMGUIShader.LoadShaders((data::ShaderPath + "normalModel.vs").c_str(), (data::ShaderPath + "normalModel.fs").c_str());
     break;
     case ModelRenderMode::RAINBOW:
         std::cout << "MODELMANAGER::RENDER::MODE::RAINBOW" << std::endl;
@@ -148,9 +148,10 @@ void CharacterModel::IMGUIRenderModel(Camera &camera, unsigned int SCR_WIDTH, un
     IMGUIShader.use();
     IMGUIShader.setMat4("projection", projection);
     IMGUIShader.setMat4("view", view);
-    float height = 0.5f;
     if(currentRenderMode == ModelRenderMode::RAINBOW){
-        IMGUIShader.setFloat("vHeight", height);
+        //IMGUIShader.setFloat("vHeight", vHeight);
+        IMGUIShader.setFloat("minHeight", minHeight);
+        IMGUIShader.setFloat("maxHeight", maxHeight); 
     }
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, ModelPosition);
