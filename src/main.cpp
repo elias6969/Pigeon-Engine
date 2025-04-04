@@ -40,7 +40,7 @@
 #include "animator.h"           // Animation management
 #include "BoundingBox.h"        // Bounding box collision detection
 #include "IMGUIManager.h"       // IMGUI manager for UI handling
-
+#include "GeoManager.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -76,8 +76,8 @@ int main()
 {
     // glfw: initialize and configure
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef __APPLE__
@@ -117,6 +117,7 @@ int main()
     TransparentWindow windowManager;  
     CharacterModel playerManager;
     Image imageManager;
+    geoData geometryManager;
 
     //Models
     Model playerModel;
@@ -136,6 +137,7 @@ int main()
     //grid.setupGridWater();
     skybox.texturebufferLoading(skyboxshader);
 
+    //geometryManager.initGeometry();
 
 #pragma region imgui
 #if REMOVE_IMGUI == 0
@@ -217,6 +219,7 @@ int main()
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         ScreenSize(SCR_WIDTH, SCR_HEIGHT);
+        geometryManager.RenderGeo();
         CreationManager(window, cubeShader, camera, SCR_WIDTH, SCR_HEIGHT, mouseX, mouseY, ishovering, isMoving);
         //grid.renderGridWater(camera, window);
         grid.renderGrid(camera, window);

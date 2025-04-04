@@ -1,4 +1,4 @@
-#version 330 core
+#version 410 core
 
 out vec4 FragColor;  // Final color output
 in vec2 TexCoords;   // Texture coordinates from vertex shader
