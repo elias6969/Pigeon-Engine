@@ -36,7 +36,7 @@ public:
                 bool &ishovering, bool &isMoving);
 
 private:
-    GLuint VAO, VBO, texture;
+    GLuint VAO, VBO, texture, texture1;
 };
 
 #endif // CUBE_H

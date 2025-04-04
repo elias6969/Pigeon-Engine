@@ -543,7 +543,6 @@ void Cube::Checker()
     break;
     case cubeRenderMode::WATER:
         std::cout << "CUBE::RENDER::MODE::WATER" << std::endl;
-        loadWaterCube();
     break;
     }
 
@@ -595,13 +594,13 @@ void Cube::loadCube() {
     };
 
     // Generate and bind VAO/VBO
-    glGenVertexArrays(1, &Var::cube.VAO);
-    glGenBuffers(1, &Var::cube.VBO);
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
 
-    glBindVertexArray(Var::cube.VAO);
+    glBindVertexArray(VAO);
 
     // Make sure you bind Var::cube.VBO, not just VBO
-    glBindBuffer(GL_ARRAY_BUFFER, Var::cube.VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // Position attribute: layout(location = 0)
@@ -616,8 +615,8 @@ void Cube::loadCube() {
     // (No color attribute pointer here, since we only have 3 + 2 = 5 floats)
 
     // ================== Generate and Load Texture ==================
-    glGenTextures(1, &Var::cube.texture);
-    glBindTexture(GL_TEXTURE_2D, Var::cube.texture);
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
 
     // Texture parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -646,103 +645,6 @@ std::cout << "Loading texture for image: " << texturePath
     b = 3.0f; 
 }
 
-void Cube::loadWaterCube() {
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
-
-    // Generate and bind VAO/VBO
-    glGenVertexArrays(1, &Var::cube.VAO);
-    glGenBuffers(1, &Var::cube.VBO);
-
-    glBindVertexArray(Var::cube.VAO);
-
-    // Make sure you bind Var::cube.VBO, not just VBO
-    glBindBuffer(GL_ARRAY_BUFFER, Var::cube.VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // Position attribute: layout(location = 0)
-    // Each vertex is 5 floats (3 pos + 2 tex coords)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // Texture coordinates attribute: layout(location = 1)
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    // (No color attribute pointer here, since we only have 3 + 2 = 5 floats)
-
-    // ================== Generate and Load Texture ==================
-    glGenTextures(1, &Var::cube.texture);
-    glBindTexture(GL_TEXTURE_2D, Var::cube.texture);
-
-    // Texture parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    int width, height, nrChannels;
-    
-    if(!texturePath){
-        texturePath = "/home/lighht19/Documents/Pigeon-Engine/resources/Textures/water.jpg";
-    }
-    texture = loadTexture(texturePath);
-    waveHeight = 2.0f, waveFrequency = 1.0f, waveSpeed = 2.0f, time = 5.0f;
-    // ================== Compile and Use Shader ==================
-    shader.LoadShaders((Var::shaderPath + "gridWater.vs").c_str(),
-                       (Var::shaderPath + "grid.fs").c_str());
-    shader.use();
-    shader.setInt("texture1", 0);
-std::cout << "Loading texture for image: " << texturePath 
-          << " | Assigned textureID: " << texture << std::endl;
-    // Optional: set default transforms, color values, etc.
-    size = glm::vec3(1.0f);
-    r = 0.0f; 
-    g = 1.5f; 
-    b = 3.0f; 
-}
-
 void Cube::render(Camera& camera,
                   GLFWwindow* window,
                   double &mouseX,
@@ -755,6 +657,7 @@ void Cube::render(Camera& camera,
     // Bind texture to texture unit 0
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
+    //glUniform1i(glGetUniformLocation(shader.ID, "Basetexture"), 0);
 
     // Use our shader
     shader.use();
@@ -789,11 +692,6 @@ void Cube::render(Camera& camera,
     //FIXME this part of the code needs to be fixed later on 
     float times = static_cast<float>(glfwGetTime());   
     shader.setFloat("time", times);
-    //shader.setInt("numWaves", numWaves);
-    //shader.setFloatArray("amplitude", amplitude, numWaves);
-    //shader.setFloatArray("wavelength", wavelength, numWaves);
-    //shader.setFloatArray("speed", speed, numWaves);
-    //shader.setVec2Array("direction", direction, numWaves);
     shader.setMat4("model", model);
     shader.setMat4("view", view);
     shader.setMat4("projection", projection);
@@ -901,7 +799,7 @@ void Cube::render(Camera& camera,
         time = 0.0f;
         }
     }
-    glBindVertexArray(Var::cube.VAO);
+    glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
     // Cleanup if the window is closing

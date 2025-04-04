@@ -39,6 +39,87 @@ public:
                   << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
         }
     }
+    void LoadAdvShaders(const char* vertexPath, const char* fragmentPath, const char* geopath = nullptr)
+    {
+        std::string vertexCode;
+        std::string GeoCode;
+        std::string fragmentCode;
+        std::ifstream vShaderFile;
+        std::ifstream gShaderFile;
+        std::ifstream fShaderFile;
+        // ensure ifstream objects can throw exceptions:
+        vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        gShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        try
+        {
+            // open files
+            vShaderFile.open(vertexPath);
+            fShaderFile.open(fragmentPath);
+            if(geopath != nullptr)
+                gShaderFile.open(geopath);
+            std::stringstream vShaderStream, fShaderStream, gShaderStream;
+
+            vShaderStream << vShaderFile.rdbuf();
+            fShaderStream << fShaderFile.rdbuf();
+            gShaderStream << gShaderFile.rdbuf();
+
+            vShaderFile.close();
+            fShaderFile.close();
+            gShaderFile.close();
+
+            vertexCode = vShaderStream.str();
+            fragmentCode = fShaderStream.str();
+            GeoCode = gShaderStream.str();
+        }
+        catch (std::ifstream::failure& e)
+        {
+            std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
+        }
+        const char* vShaderCode = vertexCode.c_str();
+        const char* fShaderCode = fragmentCode.c_str();
+
+        unsigned int vertex, fragment, geo;
+       
+        vertex = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertex, 1, &vShaderCode, NULL);
+        glCompileShader(vertex);
+        checkCompileErrors(vertex, "VERTEX");
+        CheckProgramLinking(vertex);
+        // fragment Shader
+        fragment = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragment, 1, &fShaderCode, NULL);
+        glCompileShader(fragment);
+        checkCompileErrors(fragment, "FRAGMENT");
+        CheckProgramLinking(fragment);
+
+        if(geopath != nullptr)
+        {
+            const char* gShaderCode = GeoCode.c_str();
+            geo = glCreateShader(GL_GEOMETRY_SHADER);
+            glShaderSource(geo, 1, &gShaderCode, NULL);
+            glCompileShader(geo);
+            checkCompileErrors(geo, "GEOMETRY");
+        }
+        // shader Program
+        ID = glCreateProgram();
+        glAttachShader(ID, vertex);
+        glAttachShader(ID, fragment);
+        if(geopath != nullptr)
+        {
+            glAttachShader(ID, geo);
+        }
+        glLinkProgram(ID);
+        checkCompileErrors(ID, "PROGRAM");
+
+        // delete the shaders as they're linked into our program now and no longer necessary
+        glDeleteShader(vertex);
+        glDeleteShader(fragment);
+        if(geopath != nullptr)
+            glDeleteShader(geo);
+        std::cout << "SUCCESS::SHADER::PROGRAM::SHADERS_SUCCESSFULLY_LOADED \n" << "SUCESS::PATH::VERTEX::" << vertexPath << 
+                      "\nSUCCESS::FRAGMENT::" << fragmentPath << std::endl;
+    }
 
     void LoadShaders(const char* vertexPath, const char* fragmentPath)
     {

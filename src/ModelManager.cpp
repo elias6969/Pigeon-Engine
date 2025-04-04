@@ -18,7 +18,8 @@
 #include "filemanager.h"
 #include "modelLoader.h"
 #include "vao_manager.h"
-#include "animator.h"
+//#include "animator.h"
+#include "firstModel.h"
 
 namespace data
 {
@@ -78,6 +79,7 @@ void CharacterModel::initializeModelRenderingSystem(Shader &shader, Model &model
   model.loadModel((data::ModelPath + modelname).c_str());
 }
 
+/* 
 void CharacterModel::RenderAnimatedCharacterModel(Animator &animator, Camera &camera, float modelsize, float height, glm::vec3 Position, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT, Model &threedmodel, Shader &shader)
 {
     glm::mat4 projection = glm::perspective(
@@ -106,6 +108,7 @@ void CharacterModel::RenderAnimatedCharacterModel(Animator &animator, Camera &ca
     shader.setMat4("model", model);
     threedmodel.Draw(shader);
 }
+*/
 
 void CharacterModel::IMGUIinitializeModelRenderingSystem()
 {
