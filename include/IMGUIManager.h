@@ -7,7 +7,15 @@
 #include "iostream"
 
 void initIMGUI(GLFWwindow* window);
+
 void CreationManager(GLFWwindow* window, Shader &shader, Camera &camera, int scrwidth, int scrheight, double &mouseX, double &mouseY, bool &ishovering, bool &isMoving);
 
 void AddEmojiRanges(ImVector<ImWchar>& ranges);
+struct OpenGLState {
+    float clearColor[4];
+    bool depthTestEnabled;
+};
+
+void stateGame(OpenGLState &opengl);
+
 #endif

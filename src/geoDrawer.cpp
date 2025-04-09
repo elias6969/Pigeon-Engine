@@ -13,7 +13,7 @@ void geoData::initGeometry()
          0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // bottom-right
         -0.5f, -0.5f, 1.0f, 1.0f, 0.0f  // bottom-left
     };
-    VirtualFileSystem vfs("../resources/");
+    VirtualFileSystem vfs("../assets/");
     std::string shaderPath = vfs.getFullPath("Shaders/");
     shader.LoadAdvShaders((shaderPath + "GeoShader.vs").c_str(), (shaderPath + "GeoShader.fs").c_str(), (shaderPath + "GeoShader.gs").c_str());
     glGenBuffers(1, &VBO);

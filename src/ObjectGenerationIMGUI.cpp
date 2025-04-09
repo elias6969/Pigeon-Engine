@@ -1,4 +1,6 @@
 #include <cstddef>
+#include <filesystem>
+#include <fstream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "IMGUIManager.h"
@@ -8,11 +10,15 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+#include <nlohmann/json_fwd.hpp>
 #include <stb_image.h>
 #include <string>
 #include <vector>
 #include <chrono>
 #include <thread>
+#include <nlohmann/json.hpp>
+
+
 #include "imstb_textedit.h"
 #include "modelLoader.h"
 #include "tinyfiledialogs.h"
@@ -91,6 +97,7 @@ float sizeGrid;
 float spacing;
 
 LOD lod;
+
 
 // Configuration to store newly created objects
 struct ObjectConfig {
@@ -678,4 +685,19 @@ void CreationManager(GLFWwindow* window,
     }
 
     ImGui::End();
+}
+
+void stateGame(OpenGLState &opengl)
+{
+
+    
+    nlohmann::json j;
+   // if(std::filesystem::exists(path)
+    j["clearColor"] = {opengl.clearColor[0], opengl.clearColor[1], opengl.clearColor[2], opengl.clearColor[3], opengl.clearColor[4]};
+    j["DepthTest"] = opengl.depthTestEnabled;
+    std::ofstream outFile("opengl_state.json");
+    outFile << j.dump(4);
+    outFile.close();
+
+    std::cout << "STATE::SAVED:SUCCESSFULLY" << std::endl;
 }

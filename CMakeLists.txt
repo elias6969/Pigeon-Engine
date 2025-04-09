@@ -13,19 +13,19 @@ file(GLOB_RECURSE SRC_FILES
 
 # Include directories
 include_directories(${CMAKE_SOURCE_DIR}/include)
-include_directories(${CMAKE_SOURCE_DIR}/third_party)
-include_directories(${CMAKE_SOURCE_DIR}/third_party/glad/include)
-include_directories(${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui)
-include_directories(${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui/backends)
+include_directories(${CMAKE_SOURCE_DIR}/external)
+include_directories(${CMAKE_SOURCE_DIR}/external/glad/include)
+include_directories(${CMAKE_SOURCE_DIR}/external/imgui-docking/imgui)
+include_directories(${CMAKE_SOURCE_DIR}/external/imgui-docking/imgui/backends)
 
 # GLAD library
-add_library(glad STATIC ${CMAKE_SOURCE_DIR}/third_party/glad/src/glad.c)
+add_library(glad STATIC ${CMAKE_SOURCE_DIR}/external/glad/src/glad.c)
 
 # ImGui library
 file(GLOB IMGUI_SOURCES
-    ${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui/*.cpp
-    ${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui/backends/imgui_impl_glfw.cpp
-    ${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui/backends/imgui_impl_opengl3.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui-docking/imgui/*.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui-docking/imgui/backends/imgui_impl_glfw.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui-docking/imgui/backends/imgui_impl_opengl3.cpp
 )
 add_library(imgui STATIC ${IMGUI_SOURCES})
 
@@ -38,7 +38,7 @@ if(NOT glfw3_FOUND)
     set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/glfw)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/glfw)
     set(GLFW_LIB glfw)
 else()
     set(GLFW_LIB glfw)
@@ -63,8 +63,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/include
-    ${CMAKE_SOURCE_DIR}/third_party/glad/include
-    ${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui
-    ${CMAKE_SOURCE_DIR}/third_party/imgui-docking/imgui/backends
+    ${CMAKE_SOURCE_DIR}/external/glad/include
+    ${CMAKE_SOURCE_DIR}/external/imgui-docking/imgui
+    ${CMAKE_SOURCE_DIR}/external/imgui-docking/imgui/backends
     ${ASSIMP_INCLUDE_DIRS}
 )

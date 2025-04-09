@@ -19,12 +19,12 @@
 #include "modelLoader.h"
 #include "vao_manager.h"
 //#include "animator.h"
-#include "firstModel.h"
+#include "Model.h"
 
 namespace data
 {
     // Adjust these paths to your liking
-    VirtualFileSystem resource("../resources/");
+    VirtualFileSystem resource("../assets/");
     std::string ShaderPath = resource.getFullPath("Shaders/");
     std::string ModelPath  = resource.getFullPath("models/");
 };

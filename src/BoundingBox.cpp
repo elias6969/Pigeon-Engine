@@ -4,7 +4,7 @@
 
 BoundingBox::BoundingBox(glm::vec3 min, glm::vec3 max) : min(min), max(max), VAO(0), VBO(0) {
     setupBuffers();
-    VirtualFileSystem resources("../resources/");
+    VirtualFileSystem resources("../assets/");
     std::string shaderPath = resources.getFullPath("Shaders/");
     shader.LoadShaders((shaderPath + "grid.vs").c_str(), (shaderPath + "grid.fs").c_str());
 }
