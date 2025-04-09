@@ -1,0 +1,8 @@
+Model Information:
+* title:	Dance Male Flossing (40 frames loop)
+* source:	https://sketchfab.com/3d-models/dance-male-flossing-40-frames-loop-2ff187f386b04ba4ba391cb425ae04b8
+* author:	Denys Almaral (https://sketchfab.com/denysalmaral)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

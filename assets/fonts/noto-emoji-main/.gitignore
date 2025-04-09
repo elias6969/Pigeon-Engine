@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+waveflag
+build/
+venv/
+emojicompat/

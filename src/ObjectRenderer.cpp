@@ -85,7 +85,7 @@ namespace Var
     
     int SCR_WIDTH, SCR_HEIGHT;
     //Path to different folders
-    VirtualFileSystem vfs("../resources");
+    VirtualFileSystem vfs("../assets/");
     std::string resourcePath = vfs.getFullPath("Shaders/");
     std::string texturePath = vfs.getFullPath("Textures/");
     std::string shaderPath = vfs.getFullPath("Shaders/");
@@ -176,7 +176,7 @@ void Particle::InitParticle()
 
     if(texturePath == nullptr || strlen(texturePath) == 0) {
       std::cout << "TEXTURE::PATH::NULL OR EMPTY\n";
-      texturePath = "/home/lighht19/Documents/Pigeon-Engine/resources/Textures/masuka.jpg";
+      texturePath = "/home/lighht19/Documents/Pigeon-Engine/assets/Textures/masuka.jpg";
     }
     std::cout << (Var::texturePath + "Break.jpg").c_str() << std::endl;
     std::cout << "PARTICLE::TEXTURE::PATH::" << texturePath << std::endl;
@@ -627,7 +627,7 @@ void Cube::loadCube() {
     int width, height, nrChannels;
     
     if(!texturePath){
-        texturePath = "/home/lighht19/Documents/Pigeon-Engine/resources/Textures/masuka.jpg";
+        texturePath = "/home/lighht19/Documents/Pigeon-Engine/assets/Textures/masuka.jpg";
     }
     texture = loadTexture(texturePath);
 
@@ -1070,6 +1070,7 @@ namespace windowsHolder
     glm::vec3( 0.5f, 0.0f, -0.6f) 
   };
 };
+
 
 void TransparentWindow::init()
 {
