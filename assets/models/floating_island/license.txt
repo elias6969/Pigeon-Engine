@@ -1,0 +1,8 @@
+Model Information:
+* title:	Floating Island
+* source:	https://sketchfab.com/3d-models/floating-island-492f4a73ddb34d78b39fb4c9a00318c1
+* author:	ppirraa (https://sketchfab.com/ghaisanids)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
