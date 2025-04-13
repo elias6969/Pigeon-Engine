@@ -133,7 +133,7 @@ void CharacterModel::IMGUIinitializeModelRenderingSystem()
         std::cout << "MODELMANAGER::RENDER::MODE::LIGHT" << std::endl;
     break;
     }
-    IMGUIModelManager.loadModel(ModelPath);
+    IMGUIModelManager.loadModel(ModelPath, true, false);
 }
 
 void CharacterModel::IMGUIRenderModel(Camera &camera, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT)

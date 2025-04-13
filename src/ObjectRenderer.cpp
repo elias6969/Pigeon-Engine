@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
+#include "Variables.h"
 #include "filemanager.h"
 #include "modelLoader.h"
 #include "vao_manager.h"
@@ -83,12 +84,8 @@ namespace Var
     Particle particle;
     SkyBox skybox;
     
-    int SCR_WIDTH, SCR_HEIGHT;
     //Path to different folders
     VirtualFileSystem vfs("../assets/");
-    std::string resourcePath = vfs.getFullPath("Shaders/");
-    std::string texturePath = vfs.getFullPath("Textures/");
-    std::string shaderPath = vfs.getFullPath("Shaders/");
     std::string cubemappath = vfs.getFullPath("cubemap/");
     
     std::vector<std::string> faces
@@ -104,11 +101,6 @@ namespace Var
     unsigned int cubemapTexture = 0;
 };
 
-void ScreenSize(int &screenwidth, int &screenheight)
-{
-    Var::SCR_HEIGHT = screenheight;
-    Var::SCR_WIDTH = screenwidth;
-}
 bool CheckCollision(glm::vec3 &Position1, glm::vec3 &Position2, float size)
 {
   bool collisionX = Position1.x + size >= Position2.x && Position2.x + size >= Position1.x;
@@ -178,7 +170,7 @@ void Particle::InitParticle()
       std::cout << "TEXTURE::PATH::NULL OR EMPTY\n";
       texturePath = "/home/lighht19/Documents/Pigeon-Engine/assets/Textures/masuka.jpg";
     }
-    std::cout << (Var::texturePath + "Break.jpg").c_str() << std::endl;
+    std::cout << (PathManager::texturePath + "Break.jpg").c_str() << std::endl;
     std::cout << "PARTICLE::TEXTURE::PATH::" << texturePath << std::endl;
     unsigned char* data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
 
@@ -208,7 +200,7 @@ void Particle::InitParticle()
     stbi_image_free(data);
 
     // Compile and link shaders for the particle system.
-    shader.LoadShaders((Var::shaderPath + "particle.vs").c_str(), (Var::resourcePath + "particle.fs").c_str());
+    shader.LoadShaders((PathManager::shaderPath + "particle.vs").c_str(), (PathManager::shaderPath + "particle.fs").c_str());
 
     // Activate the shader program and set the texture uniform.
     shader.use();
@@ -293,7 +285,7 @@ void Particle::renderParticles(Camera &camera, bool RenderParticle, GLFWwindow* 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, ParticleTexture);
 
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)Var::SCR_WIDTH / (float)Var::SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)PathManager::SCR_WIDTH / (float)PathManager::SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
 
     shader.setMat4("view", view);
@@ -401,7 +393,7 @@ void Grid::setupGridWater() {
     glBindVertexArray(0);
 
     // Load water shader.
-    waterShader.LoadShaders((Var::shaderPath + "gridWater.vs").c_str(), (Var::shaderPath + "gridWater.fs").c_str());
+    waterShader.LoadShaders((PathManager::shaderPath + "gridWater.vs").c_str(), (PathManager::shaderPath + "gridWater.fs").c_str());
 }
 
 void Grid::renderGridWater(Camera& camera, GLFWwindow* window) {
@@ -419,7 +411,7 @@ void Grid::renderGridWater(Camera& camera, GLFWwindow* window) {
     // Set transformation matrices.
     glm::mat4 view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
     glm::mat4 projection = glm::perspective(glm::radians(45.0f),
-                                            static_cast<float>(Var::SCR_WIDTH) / Var::SCR_HEIGHT,
+                                            static_cast<float>(PathManager::SCR_WIDTH) / PathManager::SCR_HEIGHT,
                                             0.1f, 100.0f);
     glm::mat4 model = glm::mat4(1.0f);
     waterShader.setMat4("model", model);
@@ -492,7 +484,7 @@ void Grid::setupGrid() {
     glBindVertexArray(0);
 
     // Load grid shader.
-    gridShader.LoadShaders((Var::shaderPath + "grid.vs").c_str(), (Var::shaderPath + "grid.fs").c_str());
+    gridShader.LoadShaders((PathManager::shaderPath + "grid.vs").c_str(), (PathManager::shaderPath + "grid.fs").c_str());
 }
 
 void Grid::renderGrid(Camera& camera, GLFWwindow* window) {
@@ -506,7 +498,7 @@ void Grid::renderGrid(Camera& camera, GLFWwindow* window) {
     // Set transformation matrices.
     glm::mat4 view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
     glm::mat4 projection = glm::perspective(glm::radians(45.0f),
-                                            static_cast<float>(Var::SCR_WIDTH) / Var::SCR_HEIGHT,
+                                            static_cast<float>(PathManager::SCR_WIDTH) / PathManager::SCR_HEIGHT,
                                             0.1f, 100.0f);
     glm::mat4 model = glm::mat4(1.0f);
     gridShader.setMat4("model", model);
@@ -632,8 +624,8 @@ void Cube::loadCube() {
     texture = loadTexture(texturePath);
 
     // ================== Compile and Use Shader ==================
-    shader.LoadShaders((Var::shaderPath + "normalCube.vs").c_str(),
-                       (Var::shaderPath + "normalCube.fs").c_str());
+    shader.LoadShaders((PathManager::shaderPath + "normalCube.vs").c_str(),
+                       (PathManager::shaderPath + "normalCube.fs").c_str());
     shader.use();
     shader.setInt("texture1", 0);
 std::cout << "Loading texture for image: " << texturePath 
@@ -683,7 +675,7 @@ void Cube::render(Camera& camera,
     glm::mat4 view = camera.GetViewMatrix();
     glm::mat4 projection = glm::perspective(
         glm::radians(45.0f),
-        (float)Var::SCR_WIDTH / (float)Var::SCR_HEIGHT,
+        (float)PathManager::SCR_WIDTH / (float)PathManager::SCR_HEIGHT,
         0.1f,
         100.0f
     );
@@ -724,8 +716,8 @@ void Cube::render(Camera& camera,
         glm::vec3 ndc = glm::vec3(clipSpace) / clipSpace.w;
 
         // Convert to screen coords
-        float screenX = (ndc.x * 0.5f + 0.5f) * Var::SCR_WIDTH;
-        float screenY = (0.5f - ndc.y * 0.5f) * Var::SCR_HEIGHT;
+        float screenX = (ndc.x * 0.5f + 0.5f) * PathManager::SCR_WIDTH;
+        float screenY = (0.5f - ndc.y * 0.5f) * PathManager::SCR_HEIGHT;
 
         // Expand bounding rect
         minX = std::min(minX, screenX);
@@ -916,7 +908,7 @@ void SkyBox::texturebufferLoading(Shader& shader) {
     static bool isShaderLoaded = false;  // Flag to check if shaders have been loaded
     if (!isShaderLoaded) {
         // Load shaders only once
-        shader.LoadShaders((Var::resourcePath + "skybox.vs").c_str(), (Var::resourcePath + "skybox.fs").c_str());
+        shader.LoadShaders((PathManager::shaderPath + "skybox.vs").c_str(), (PathManager::shaderPath + "skybox.fs").c_str());
         isShaderLoaded = true;  // Mark shaders as loaded
     }
     stbi_set_flip_vertically_on_load(false);
@@ -1021,7 +1013,7 @@ void Image::loadImage()
     }else{
       textureID = loadTexture(imagePath);
     }
-    shader.LoadShaders((Var::shaderPath + "plane.vs").c_str(), (Var::shaderPath + "plane.fs").c_str());
+    shader.LoadShaders((PathManager::shaderPath + "plane.vs").c_str(), (PathManager::shaderPath + "plane.fs").c_str());
     std::cout << "LOADING::COMPLETE" << std::endl;
 }
 
@@ -1035,7 +1027,7 @@ void Image::render(Camera &camera) {
     model = glm::rotate(model, glm::radians(Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::rotate(model, glm::radians(Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     glm::mat4 view = camera.GetViewMatrix();
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)Var::SCR_WIDTH / (float)Var::SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)PathManager::SCR_WIDTH / (float)PathManager::SCR_HEIGHT, 0.1f, 100.0f);
     glm::vec4 colorTint = glm::vec4(r,b,g,Alpha);
     shader.setMat4("model", model);
     shader.setMat4("view", view);
@@ -1093,8 +1085,8 @@ void TransparentWindow::init()
     };
 
     // Load and compile our window shaders
-    shader.LoadShaders((Var::shaderPath + "window.vs").c_str(),
-                       (Var::shaderPath + "window.fs").c_str());
+    shader.LoadShaders((PathManager::shaderPath + "window.vs").c_str(),
+                       (PathManager::shaderPath + "window.fs").c_str());
 
     // Generate buffers and arrays
     glGenVertexArrays(1, &VAO);
@@ -1130,7 +1122,7 @@ void TransparentWindow::init()
     );
     glBindVertexArray(0); // Unbind for safety
     // Load texture
-    texture = loadTexture((Var::texturePath + "window.png").c_str());
+    texture = loadTexture((PathManager::texturePath + "window.png").c_str());
     glDisable(GL_BLEND);
 }
 
@@ -1157,7 +1149,7 @@ void TransparentWindow::render(Camera& camera, GLFWwindow* window)
 
     glm::mat4 projection = glm::perspective(
         glm::radians(camera.Zoom),
-        (float)Var::SCR_WIDTH / (float)Var::SCR_HEIGHT,
+        (float)PathManager::SCR_WIDTH / (float)PathManager::SCR_HEIGHT,
         0.1f,
         100.0f
     );

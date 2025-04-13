@@ -34,6 +34,7 @@
 #include "Cube.h"               // Cube rendering system
 #include "Particle.h"           // Particle system
 #include "SkyBox.h"             // Skybox rendering
+#include "Variables.h"
 #include "WindowModule.h"       // Window management module
 #include "Grid.h"               // Grid rendering
 #include "Image.h"              // Image rendering system
@@ -45,6 +46,7 @@
 #include "BoundingBox.h"        // Bounding box collision detection
 #include "IMGUIManager.h"       // IMGUI manager for UI handling
 #include "GeoManager.h"
+#include "ParticleManager.h"
 
 // ================================
 // Function Declarations
@@ -121,6 +123,7 @@ int main()
     // ---------------------------
     // Initialize Resources and Custom Modules
     // ---------------------------
+    PathManager pathmanagerctr;
     VirtualFileSystem vfs("../assets/");
     std::string resources = vfs.getFullPath("models/");
 
@@ -134,6 +137,8 @@ int main()
     Image imageManager;
     geoData geometryManager;
     Model playerModel;
+    MesmerizingParticleSystem newParticleSystem(5000);
+    MultiEffectParticleSystem multiParticles(5000);
 
     // Shader declarations
     Shader cubeShader;
@@ -149,6 +154,8 @@ int main()
     // Initialize modules
     windowManager.init();
     grid.setupGrid();
+    //newParticleSystem.init();
+    multiParticles.init(ParticleEffectMode::NOISE_DISTORTION);
     skybox.texturebufferLoading(skyboxshader);
     
     // ---------------------------
@@ -220,29 +227,21 @@ int main()
         // ---------------------------
         // Render Scene
         // ---------------------------
+        //newParticleSystem.update(deltaTime);
+        multiParticles.update(deltaTime);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        ScreenSize(SCR_WIDTH, SCR_HEIGHT);
+        ScreenSizeConfiguration(window, SCR_WIDTH, SCR_HEIGHT);
+        //ScreenSize(SCR_WIDTH, SCR_HEIGHT);
         geometryManager.RenderGeo();
+        //newParticleSystem.render(camera);
+        multiParticles.render(camera);
         CreationManager(window, cubeShader, camera, SCR_WIDTH, SCR_HEIGHT, mouseX, mouseY, ishovering, isMoving);
         grid.renderGrid(camera, window);
         skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
         windowManager.render(camera, window);
-stateGame(opengl);
-        if(opengl.depthTestEnabled)
-        {
-            std::cout << "ENABLED" << std::endl;
-        }else{
-            std::cout << "DISABLED" << std::endl;
-        }
-        if(glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
-        {
-            opengl.depthTestEnabled = false;
-        }else if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
-        {
-            opengl.depthTestEnabled = true;
-        }
+        stateGame(opengl);
+
         // ---------------------------
         // Render ImGui on Top (if enabled)
         // ---------------------------

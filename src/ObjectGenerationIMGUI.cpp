@@ -698,6 +698,4 @@ void stateGame(OpenGLState &opengl)
     std::ofstream outFile("opengl_state.json");
     outFile << j.dump(4);
     outFile.close();
-
-    std::cout << "STATE::SAVED:SUCCESSFULLY" << std::endl;
 }

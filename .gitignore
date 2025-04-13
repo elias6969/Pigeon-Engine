@@ -25,3 +25,5 @@ compile_commands.json
 *.dll
 *.lib
 *.pdb
+.cache/
+build/
