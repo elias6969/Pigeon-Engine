@@ -23,6 +23,7 @@ class CharacterModel
 public:
     ModelRenderMode currentRenderMode = ModelRenderMode::NORMAL;
     glm::vec3 ModelPosition;
+    glm::vec3 ModelRotation;
     glm::vec3 Rotation;
     const char* ModelPath;
     float vHeight;
@@ -40,7 +41,7 @@ public:
 
 
     void IMGUIinitializeModelRenderingSystem();
-    void IMGUIRenderModel(Camera &camera, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT);
+    void IMGUIRenderModel(Camera &camera, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT, glm::vec3 CubePosition);
 private:
 
     Model IMGUIModelManager;

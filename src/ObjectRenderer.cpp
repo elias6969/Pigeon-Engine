@@ -87,16 +87,25 @@ namespace Var
     //Path to different folders
     VirtualFileSystem vfs("../assets/");
     std::string cubemappath = vfs.getFullPath("cubemap/");
-    
-    std::vector<std::string> faces
-    {
-        cubemappath + "right.jpg",
-        cubemappath + "left.jpg",
-        cubemappath + "up.jpg",
-        cubemappath + "down.jpg",
-        cubemappath + "front.jpg",
-        cubemappath + "back.jpg"
-    };
+
+
+    PathManager pathmanagerpOOP;
+
+
+
+std::vector<std::string> faces = {
+    "/home/lighht19/Documents/Pigeon-Engine/assets/cubemap/test/yellowcloud_rt.jpg", // right
+    "/home/lighht19/Documents/Pigeon-Engine/assets/cubemap/test/yellowcloud_lf.jpg", // left
+    "/home/lighht19/Documents/Pigeon-Engine/assets/cubemap/test/yellowcloud_dn.jpg", // bottom
+    "/home/lighht19/Documents/Pigeon-Engine/assets/cubemap/test/up.jpg",             // top
+    "/home/lighht19/Documents/Pigeon-Engine/assets/cubemap/test/yellowcloud_ft.jpg", // front
+    "/home/lighht19/Documents/Pigeon-Engine/assets/cubemap/test/yellowcloud_up.jpg"  // back
+};
+
+
+
+
+
 
     unsigned int cubemapTexture = 0;
 };
@@ -403,11 +412,7 @@ void Grid::renderGridWater(Camera& camera, GLFWwindow* window) {
     }
 
     waterShader.use();
-    std::cout << "Size: " << size << std::endl;
-    std::cout << "Spacing " << spacing << std::endl;
-    std::cout << "frequency " << frequency << std::endl;
-    std::cout << "amplitude " << amplitude << std::endl;
-    std::cout << "speed " << speed << std::endl;
+        
     // Set transformation matrices.
     glm::mat4 view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
     glm::mat4 projection = glm::perspective(glm::radians(45.0f),
@@ -526,20 +531,6 @@ void Grid::renderGrid(Camera& camera, GLFWwindow* window) {
 ▝▚▄▄▖▝▚▄▞▘▐▙▄▞▘▐▙▄▄▖
 */
 
-void Cube::Checker()
-{
-    switch (RenderMode) {
-    case cubeRenderMode::NORMAL:
-        std::cout << "CUBE::RENDER::MODE::NORMAL" << std::endl;
-        loadCube();
-    break;
-    case cubeRenderMode::WATER:
-        std::cout << "CUBE::RENDER::MODE::WATER" << std::endl;
-    break;
-    }
-
-}
-
 void Cube::loadCube() {
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -624,8 +615,19 @@ void Cube::loadCube() {
     texture = loadTexture(texturePath);
 
     // ================== Compile and Use Shader ==================
-    shader.LoadShaders((PathManager::shaderPath + "normalCube.vs").c_str(),
+    switch (RenderMode) {
+    case cubeRenderMode::NORMAL:
+        std::cout << "CUBE::RENDER::MODE::NORMAL" << std::endl;
+        shader.LoadShaders((PathManager::shaderPath + "normalCube.vs").c_str(),
                        (PathManager::shaderPath + "normalCube.fs").c_str());
+    break;
+    case cubeRenderMode::WATER:
+        std::cout << "CUBE::RENDER::MODE::WATER" << std::endl;
+        shader.LoadShaders((PathManager::shaderPath + "light_cube.vs").c_str(),
+                       (PathManager::shaderPath + "light_cube.fs").c_str());
+    break;
+    }
+
     shader.use();
     shader.setInt("texture1", 0);
 std::cout << "Loading texture for image: " << texturePath 
@@ -927,6 +929,8 @@ void SkyBox::texturebufferLoading(Shader& shader) {
     glBindTexture(GL_TEXTURE_CUBE_MAP, Var::cubemapTexture);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 0);
+
+    std::cout << "Cubemap path: " << PathManager::cubemappath << std::endl;
 }
 
 void SkyBox::renderSkybox(Shader& shader, int screenWidth, int screenHeight, GLFWwindow* window, Camera& camera) {
@@ -935,7 +939,7 @@ void SkyBox::renderSkybox(Shader& shader, int screenWidth, int screenHeight, GLF
 
     // Remove translation from the view matrix
     glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)PathManager::SCR_WIDTH / (float)PathManager::SCR_HEIGHT, 0.1f, 100.0f);
 
     // Pass matrices to the shader
     shader.setMat4("view", view);
@@ -945,7 +949,7 @@ void SkyBox::renderSkybox(Shader& shader, int screenWidth, int screenHeight, GLF
     
     // Bind the skybox VAO and texture
     glBindVertexArray(vao);
-    glActiveTexture(GL_TEXTURE1);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, Var::cubemapTexture);
 
     // Draw the skybox (36 vertices: 6 faces, 2 triangles per face, 3 vertices per triangle)

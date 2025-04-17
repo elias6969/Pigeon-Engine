@@ -54,7 +54,6 @@ bool RenderParticle = true;
 int amount = 0;
 float particleSpeed;
 float particleHeight;
-float modelSize = 0.0005f; 
 float modelShaderHeight = 0.0f;
 float modelMaxheight, modelminHeight;
 
@@ -82,6 +81,7 @@ char modelPath[256] = "";
 const char* filePath;
 
 float defaultPosition[3] = {0.0f,0.0f,0.0f};
+glm::vec3 LightPosition = glm::vec3(1.0f);
 
 glm::vec3 ParticlePosition;
 // Simple color struct
@@ -123,6 +123,7 @@ struct ObjectConfig {
     float Gridfrequency;
     float Gridsize;
     float Gridspacing;
+    float modelSize;
 };
 
 std::vector<Cube> cubes;              // All cubes in the scene
@@ -257,14 +258,16 @@ void CreationManager(GLFWwindow* window,
     if (selectedType == CUBE)
     {
         ImGui::Text("Render type:");
-        const char* modeNames[] = {"Normal", "Water"};
+        const char* modeNames[] = {"Normal", "light"};
         int currentModeIndex = static_cast<int>(cuberendermode);
         if(ImGui::Combo("Render Mode", &currentModeIndex, modeNames, IM_ARRAYSIZE(modeNames)))
         {
             cuberendermode = static_cast<cubeRenderMode>(currentModeIndex);
         }
-        ImGui::Text("Texture Path:");
-        ImGui::InputText("##TexturePath", modelPath, IM_ARRAYSIZE(modelPath));
+        if(cubeRenderMode::NORMAL)  {
+            ImGui::Text("Texture Path:");
+            ImGui::InputText("##TexturePath", modelPath, IM_ARRAYSIZE(modelPath));
+        }
 
         ImGui::SameLine();
         if (ImGui::Button("Browse"))
@@ -303,13 +306,13 @@ void CreationManager(GLFWwindow* window,
         ImGui::SameLine();
         if (ImGui::Button("Browse"))
         {
-            const char* filter[] = { "*.obj", "*.glb" };
+            const char* filter[] = { "*.obj", "*.glb", "*.gltf" };
             filePath = tinyfd_openFileDialog(
                 "Select an OBJ/GLB Model",  // aTitle
                 "",                     // aDefaultPathAndFile
-                2,                      // aNumOfFilterPatterns
+                3,                      // aNumOfFilterPatterns
                 filter,                 // aFilterPatterns
-                "OBJ/GLB Files",            // aSingleFilterDescription
+                "OBJ/GLB/GLTF Files",            // aSingleFilterDescription
                 0                       // aAllowMultipleSelects (0 = single file)
             );
 
@@ -430,9 +433,8 @@ void CreationManager(GLFWwindow* window,
                       << newCube.Position.y << ", "
                       << newCube.Position.z << std::endl;
 
-            newCube.Checker();
+            newCube.loadCube();
             cubes.push_back(newCube);
-
             newIndex = static_cast<int>(cubes.size()) - 1;
         }
         else if (selectedType == IMAGE)
@@ -464,7 +466,7 @@ void CreationManager(GLFWwindow* window,
         {
             CharacterModel newModel;
             newModel.ModelPath = modelPath;
-            newModel.modelSize = modelSize;
+            newModel.modelSize = newObj.modelSize;
             newModel.vHeight = modelShaderHeight;
           //  newModel.ModelPosition = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
             newModel.currentRenderMode = renderMode;
@@ -567,7 +569,7 @@ void CreationManager(GLFWwindow* window,
         ImGui::SliderFloat("Edit Reflectivity", &obj.reflectivity, 0.0f, 1.0f, "%.2f");
         ImGui::SliderFloat("Edit Intensity", &obj.lightIntensity, 0.0f, 10.0f, "%.1f");
         if(obj.type == MODEL_OBJ){
-            ImGui::InputFloat("Edit Model Size", &modelSize);
+            ImGui::InputFloat("Edit Model Size", &obj.modelSize);
             ImGui::InputFloat("Shader Height max height", &modelMaxheight);
             ImGui::InputFloat("Shader height min height", &modelminHeight);
         }
@@ -592,10 +594,11 @@ void CreationManager(GLFWwindow* window,
             // If you want to allow changing the image path at runtime:
             // images[idx].imagePath = obj.filepath;
         }
-        else if (obj.type == MODEL_OBJ && idx >= 0 && idx < (int)ModelManagers.size())
+       else if (obj.type == MODEL_OBJ && idx >= 0 && idx < (int)ModelManagers.size())
         {
             ModelManagers[idx].ModelPosition = glm::vec3(obj.Position[0], obj.Position[1], obj.Position[2]);        
-            ModelManagers[idx].modelSize = modelSize;
+            ModelManagers[idx].ModelRotation = glm::vec3(obj.rotation[0], obj.rotation[1], obj.rotation[2]);
+            ModelManagers[idx].modelSize = obj.modelSize;
             ModelManagers[idx].maxHeight = modelMaxheight;
         }
         else if (obj.type == CUBE && idx >= 0 && idx < (int)cubes.size())
@@ -606,6 +609,10 @@ void CreationManager(GLFWwindow* window,
             cubes[idx].Alpha = obj.transparency;
             cubes[idx].Rotation = glm::vec3(obj.rotation[0], obj.rotation[1], obj.rotation[2]);
             cubes[idx].Position = glm::vec3(obj.Position[0], obj.Position[1], obj.Position[2]);
+            if(cubes[idx].RenderMode == NORMAL)
+            {
+                LightPosition = cubes[idx].Position;
+            }
             cubes[idx].size  = glm::vec3(obj.size[0], obj.size[1], obj.size[2]);
             // cubes[idx].texturePath = obj.filepath;
         }
@@ -677,7 +684,7 @@ void CreationManager(GLFWwindow* window,
     }
     for(CharacterModel& models : ModelManagers)
     {
-       models.IMGUIRenderModel(camera, scrwidth, scrheight);
+       models.IMGUIRenderModel(camera, scrwidth, scrheight, LightPosition);
     }
     for(Grid& gridsWat : grids)
     {

@@ -8,6 +8,7 @@ VirtualFileSystem vfs("../assets");
 std::string PathManager::texturePath = vfs.getFullPath("Textures/");
 std::string PathManager::shaderPath = vfs.getFullPath("Shaders/");
 std::string PathManager::cubemappath   = vfs.getFullPath("cubemap/");
+std::string PathManager::cubemappathtest   = vfs.getFullPath("cubemap/test/");
 std::string PathManager::fontpath      = vfs.getFullPath("fonts/");
 std::string PathManager::modelPath      = vfs.getFullPath("models/");
 unsigned int PathManager::SCR_HEIGHT             = 600;
