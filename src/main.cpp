@@ -124,8 +124,6 @@ int main()
     // Initialize Resources and Custom Modules
     // ---------------------------
     PathManager pathmanagerctr;
-    VirtualFileSystem vfs("../assets/");
-    std::string resources = vfs.getFullPath("models/");
 
     // Instantiate custom classes
     Cube cube;
@@ -153,7 +151,10 @@ int main()
     };
     // Initialize modules
     windowManager.init();
-    grid.setupGrid();
+    //grid.setupGrid();
+    grid.size = 500.0f;
+    grid.spacing = 10.0f;
+    grid.setupGridWater();
     //newParticleSystem.init();
     multiParticles.init(ParticleEffectMode::NOISE_DISTORTION);
     skybox.texturebufferLoading(skyboxshader);
@@ -210,6 +211,7 @@ int main()
             ImGuiIO &io = ImGui::GetIO();
             ImGui::Begin("Pigeon Engine Debug");
             ImGui::Text("FPS: %.1f", io.Framerate);
+            ImGui::Text("Screen Dimension: (%u, %u)", PathManager::SCR_WIDTH, PathManager::SCR_HEIGHT);
             ImGui::Text("Mouse Position: (%.2f, %.2f)", mouseX, mouseY);
             ImGui::Checkbox("Hovering Cube", &ishovering);
             ImGui::Checkbox("Out Camera Mode", &isOutcamera);
@@ -228,20 +230,17 @@ int main()
         // Render Scene
         // ---------------------------
         //newParticleSystem.update(deltaTime);
-        multiParticles.update(deltaTime);
+        //multiParticles.update(deltaTime);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         ScreenSizeConfiguration(window, SCR_WIDTH, SCR_HEIGHT);
-        //ScreenSize(SCR_WIDTH, SCR_HEIGHT);
-        geometryManager.RenderGeo();
-        //newParticleSystem.render(camera);
-        multiParticles.render(camera);
+        //geometryManager.RenderGeo();
         CreationManager(window, cubeShader, camera, SCR_WIDTH, SCR_HEIGHT, mouseX, mouseY, ishovering, isMoving);
-        grid.renderGrid(camera, window);
-        skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
-        windowManager.render(camera, window);
+        //grid.renderGrid(camera, window);
+        grid.renderGridWater(camera, window);
+        //windowManager.render(camera, window);
         stateGame(opengl);
-
+        skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
         // ---------------------------
         // Render ImGui on Top (if enabled)
         // ---------------------------

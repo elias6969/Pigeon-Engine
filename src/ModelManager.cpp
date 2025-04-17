@@ -1,3 +1,4 @@
+#include "Cube.h"
 #include "animator.h"
 #include "modelLoader.h"
 #include <cstdlib>
@@ -136,7 +137,7 @@ void CharacterModel::IMGUIinitializeModelRenderingSystem()
     IMGUIModelManager.loadModel(ModelPath, true, false);
 }
 
-void CharacterModel::IMGUIRenderModel(Camera &camera, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT)
+void CharacterModel::IMGUIRenderModel(Camera &camera, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT, glm::vec3 CubePosition)
 {
     glm::mat4 projection = glm::perspective(
         glm::radians(45.0f),
@@ -149,6 +150,11 @@ void CharacterModel::IMGUIRenderModel(Camera &camera, unsigned int SCR_WIDTH, un
     float currentime = glfwGetTime();
     // Use the shader
     IMGUIShader.use();
+    glm::vec3 lightPos = CubePosition;
+    IMGUIShader.setVec3("lightPos", lightPos);
+    IMGUIShader.setVec3("lightColor", glm::vec3(1.0f, 0.55f, 0.2f));    // white light
+    IMGUIShader.setVec3("viewPos", camera.Position);
+    IMGUIShader.setFloat("shininess", 32.0f);
     IMGUIShader.setMat4("projection", projection);
     IMGUIShader.setMat4("view", view);
     if(currentRenderMode == ModelRenderMode::RAINBOW){
@@ -159,6 +165,11 @@ void CharacterModel::IMGUIRenderModel(Camera &camera, unsigned int SCR_WIDTH, un
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, ModelPosition);
     model = glm::scale(model, glm::vec3(modelSize));
+
+    model = glm::rotate(model, glm::radians(ModelRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(ModelRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(ModelRotation.z), glm::vec3(1.0f, 0.0f, 1.0f));
+
     IMGUIShader.setMat4("model", model);
     IMGUIModelManager.Draw(IMGUIShader);
 }

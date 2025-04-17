@@ -11,13 +11,16 @@ VirtualFileSystem::VirtualFileSystem(const std::string& basePath) : baseDir(base
     std::cout << "BASE-DIRECTORY-FOUND::" << fs::absolute(baseDir) << std::endl;
 }
 
+
 std::string VirtualFileSystem::getFullPath(const std::string& relativePath) const {
     fs::path fullPath = fs::path(baseDir) / relativePath;
     if (!fs::exists(fullPath)) {
         throw std::runtime_error("File not found: " + fullPath.string());
     }
-    return fullPath.string();
+    // Return the absolute path instead of a relative one.
+    return fs::absolute(fullPath).string();
 }
+
 
 std::string VirtualFileSystem::readFile(const std::string& relativePath) {
     std::string fullPath = getFullPath(relativePath);
