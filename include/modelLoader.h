@@ -1,5 +1,6 @@
 #ifndef MODELLOADER_H
 #define MODELLOADER_H
+#define GLFW_INCLUDE_NONE
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/fwd.hpp>
@@ -30,6 +31,7 @@ public:
     float maxHeight;
     float minHeight;
     float modelSize;
+    bool isWire;
     //FUNCTIONS
     void initializeModelRenderingSystem(Shader &shader, Model &model, std::string modelname, std::string vertexname, std::string fragmentname );
 
@@ -41,7 +43,7 @@ public:
 
 
     void IMGUIinitializeModelRenderingSystem();
-    void IMGUIRenderModel(Camera &camera, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT, glm::vec3 CubePosition);
+    void IMGUIRenderModel(Camera &camera, GLFWwindow* window, unsigned int SCR_WIDTH, unsigned int SCR_HEIGHT, glm::vec3 CubePosition);
 private:
 
     Model IMGUIModelManager;

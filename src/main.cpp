@@ -1,6 +1,7 @@
 // ================================
 // System and Library Includes
 // ================================
+#define GLFW_INCLUDE_NONE
 #include <glad/glad.h>          // OpenGL function loader
 #include <GLFW/glfw3.h>         // GLFW window and input handling
 
@@ -151,7 +152,7 @@ int main()
     };
     // Initialize modules
     windowManager.init();
-    //grid.setupGrid();
+    grid.setupGrid();
     grid.size = 500.0f;
     grid.spacing = 10.0f;
     grid.setupGridWater();
@@ -236,11 +237,12 @@ int main()
         ScreenSizeConfiguration(window, SCR_WIDTH, SCR_HEIGHT);
         //geometryManager.RenderGeo();
         CreationManager(window, cubeShader, camera, SCR_WIDTH, SCR_HEIGHT, mouseX, mouseY, ishovering, isMoving);
-        //grid.renderGrid(camera, window);
-        grid.renderGridWater(camera, window);
+        grid.renderGrid(camera, window);
+        //grid.renderGridWater(camera, window);
         //windowManager.render(camera, window);
         stateGame(opengl);
         skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
+
         // ---------------------------
         // Render ImGui on Top (if enabled)
         // ---------------------------

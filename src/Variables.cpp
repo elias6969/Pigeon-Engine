@@ -15,6 +15,8 @@ unsigned int PathManager::SCR_HEIGHT             = 600;
 unsigned int PathManager::SCR_WIDTH              = 800;
 
 
+
+
 void ScreenSizeConfiguration(GLFWwindow* window, int &width, int &height) {
     glfwGetFramebufferSize(window, &width, &height);
     PathManager::SCR_WIDTH = width;
