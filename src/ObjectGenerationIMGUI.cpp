@@ -37,7 +37,6 @@ enum ObjectType { PARTICLE, CUBE, MODEL_OBJ, IMAGE, WATER_GRID };
 
 // Enum Modes
 ModelRenderMode renderMode;
-cubeRenderMode cuberendermode;
 
 // Selected Object Type (default to CUBE)
 ObjectType selectedType = CUBE;
@@ -250,16 +249,8 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
   if (selectedType == CUBE) {
     ImGui::Text("Render type:");
     const char *modeNames[] = {"Normal", "light"};
-    int currentModeIndex = static_cast<int>(cuberendermode);
-    if (ImGui::Combo("Render Mode", &currentModeIndex, modeNames,
-                     IM_ARRAYSIZE(modeNames))) {
-      cuberendermode = static_cast<cubeRenderMode>(currentModeIndex);
-    }
-    if (cubeRenderMode::NORMAL) {
-      ImGui::Text("Texture Path:");
-      ImGui::InputText("##TexturePath", modelPath, IM_ARRAYSIZE(modelPath));
-    }
-
+    ImGui::Text("Texture Path:");
+    ImGui::InputText("##TexturePath", modelPath, IM_ARRAYSIZE(modelPath));
     ImGui::SameLine();
     if (ImGui::Button("Browse")) {
       const char *filter[] = {"*.png", "*.jpg", "*.jpeg", "*.bmp"};
@@ -399,7 +390,6 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
 
     if (selectedType == CUBE) {
       Cube newCube;
-      newCube.RenderMode = cuberendermode;
       newCube.r = newObj.color.r;
       newCube.g = newObj.color.g;
       newCube.b = newObj.color.b;
@@ -613,9 +603,7 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
           glm::vec3(obj.rotation[0], obj.rotation[1], obj.rotation[2]);
       cubes[idx].Position =
           glm::vec3(obj.Position[0], obj.Position[1], obj.Position[2]);
-      if (cubes[idx].RenderMode == NORMAL) {
-        LightPosition = cubes[idx].Position;
-      }
+      LightPosition = cubes[idx].Position;
       cubes[idx].size = glm::vec3(obj.size[0], obj.size[1], obj.size[2]);
     } else if (obj.type == PARTICLE && idx >= 0 &&
                idx < (int)particles.size()) {
@@ -659,7 +647,7 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
         cubes.erase(cubes.begin() + idx);
       }
 
-      if(obj.type == WATER_GRID && idx >= 0 && idx < (int)grids.size()) {
+      if (obj.type == WATER_GRID && idx >= 0 && idx < (int)grids.size()) {
         grids.erase(grids.begin() + idx);
       }
       selectedObjectIndex = -1;

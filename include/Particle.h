@@ -22,7 +22,7 @@ public:
 
 private:
     GLuint ParticleVAO, ParticleVBO, ParticleTexture;
-    int x; // Could be used as an index or counter.
+    int x; 
 };
 
 #endif // PARTICLE_H

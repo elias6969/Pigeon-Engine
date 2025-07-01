@@ -29,6 +29,8 @@
 #include "Utils.h"
 #include "WindowModule.h"
 #include <stb_image.h>
+Shader Cube::shader;
+Shader Image::shader;
 
 /*
 ▗▄▄▄  ▗▄▄▄▖ ▗▄▄▖▗▖    ▗▄▖ ▗▄▄▖  ▗▄▖▗▄▄▄▖▗▄▄▄▖ ▗▄▖ ▗▖  ▗▖
@@ -344,6 +346,8 @@ void Particle::renderParticles(Camera &camera, bool RenderParticle,
 ▝▚▄▞▘▐▌ ▐▌▗▄█▄▖▐▙▄▄▀
 */
 
+Shader Grid::gridShader;
+Shader Grid::waterShader;
 
 std::vector<float> Grid::generateGridWater(float size, float spacing) {
     int numVerts = static_cast<int>(size / spacing) + 1;
@@ -423,6 +427,7 @@ void Grid::setupGridWater() {
   glBindVertexArray(0);
 
   // Load water shader.
+
   waterShader.LoadShaders((PathManager::shaderPath + "gridWater.vs").c_str(),
                           (PathManager::shaderPath + "gridWater.fs").c_str());
 }
@@ -637,19 +642,8 @@ void Cube::loadCube() {
   texture = loadTexture(texturePath);
 
   // ================== Compile and Use Shader ==================
-  switch (RenderMode) {
-  case cubeRenderMode::NORMAL:
-    std::cout << "CUBE::RENDER::MODE::NORMAL" << std::endl;
     shader.LoadShaders((PathManager::shaderPath + "normalCube.vs").c_str(),
                        (PathManager::shaderPath + "normalCube.fs").c_str());
-    break;
-  case cubeRenderMode::WATER:
-    std::cout << "CUBE::RENDER::MODE::WATER" << std::endl;
-    shader.LoadShaders((PathManager::shaderPath + "light_cube.vs").c_str(),
-                       (PathManager::shaderPath + "light_cube.fs").c_str());
-    break;
-  }
-
   shader.use();
   shader.setInt("texture1", 0);
   std::cout << "Loading texture for image: " << texturePath
@@ -705,6 +699,7 @@ void Cube::render(Camera &camera, GLFWwindow *window, double &mouseX,
   shader.setFloat("time", times);
   shader.setMat4("model", model);
   shader.setMat4("view", view);
+  shader.setFloat("time", glfwGetTime());
   shader.setMat4("projection", projection);
 
   // ---------------------------------------------------------------
@@ -790,13 +785,6 @@ void Cube::render(Camera &camera, GLFWwindow *window, double &mouseX,
   // ------------------------------------------
   // Render the cube
   // ------------------------------------------
-  if (RenderMode == cubeRenderMode::WATER) {
-    if (time <= 50) {
-      time += 1.0f;
-    } else {
-      time = 0.0f;
-    }
-  }
   glBindVertexArray(VAO);
   glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -955,9 +943,6 @@ void SkyBox::renderSkybox(Shader &shader, int screenWidth, int screenHeight,
   }
 }
 
-// Image class definition
-Image::Image() { std::cout << "LOADING::IMAGE" << std::endl; }
-
 void Image::loadImage() {
   float planeVertices[] = {
       // Positions          // Texture Coords
@@ -999,14 +984,14 @@ void Image::loadImage() {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 
-  if (imagePath == NULL) {
+  if (imagePath == nullptr) {
     textureID = loadTexture("example");
     std::cout << "ERROR::NO-IMAGE-PATH-WAS-ASSIGNED" << std::endl;
   } else {
     textureID = loadTexture(imagePath);
   }
-  shader.LoadShaders((PathManager::shaderPath + "plane.vs").c_str(),
-                     (PathManager::shaderPath + "plane.fs").c_str());
+  shader.LoadShaders((PathManager::shaderPath + "test.vs").c_str(),
+                     (PathManager::shaderPath + "test.fs").c_str());
   std::cout << "LOADING::COMPLETE" << std::endl;
 }
 
@@ -1032,6 +1017,7 @@ void Image::render(Camera &camera) {
   shader.setMat4("view", view);
   shader.setMat4("projection", projection);
   shader.setVec4("colorTint", colorTint);
+  shader.setFloat("time", glfwGetTime());
 
   // Bind texture
   glActiveTexture(GL_TEXTURE0);

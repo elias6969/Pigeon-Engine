@@ -153,8 +153,6 @@ int main()
     // Initialize modules
     windowManager.init();
     grid.setupGrid();
-    grid.size = 500.0f;
-    grid.spacing = 10.0f;
     grid.setupGridWater();
     //newParticleSystem.init();
     multiParticles.init(ParticleEffectMode::NOISE_DISTORTION);
@@ -218,11 +216,6 @@ int main()
             ImGui::Checkbox("Out Camera Mode", &isOutcamera);
             ImGui::Checkbox("Moving", &isMoving);
             ImGui::Checkbox("Collided with Cube", &Collided);
-            ImGui::SliderFloat("Amplitude", &grid.amplitude, 0.0f, 10.0f);
-            ImGui::SliderFloat("Speed", &grid.speed, 0.0f, 10.0f);
-            ImGui::SliderFloat("Frequency", &grid.frequency, 0.0f, 10.0f);
-            ImGui::SliderFloat("Size", &grid.size, 0.0f, 10.0f);
-            ImGui::SliderFloat("Spacing", &grid.spacing, 0.0f, 10.0f);
             ImGui::End();
         }
 #endif
@@ -230,16 +223,12 @@ int main()
         // ---------------------------
         // Render Scene
         // ---------------------------
-        //newParticleSystem.update(deltaTime);
-        //multiParticles.update(deltaTime);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         ScreenSizeConfiguration(window, SCR_WIDTH, SCR_HEIGHT);
-        //geometryManager.RenderGeo();
         CreationManager(window, cubeShader, camera, SCR_WIDTH, SCR_HEIGHT, mouseX, mouseY, ishovering, isMoving);
         grid.renderGrid(camera, window);
-        //grid.renderGridWater(camera, window);
-        //windowManager.render(camera, window);
+        windowManager.render(camera, window);
         stateGame(opengl);
         skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
 

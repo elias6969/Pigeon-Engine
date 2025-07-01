@@ -133,6 +133,8 @@ void CharacterModel::IMGUIinitializeModelRenderingSystem() {
     break;
   case ModelRenderMode::LIGHT:
     std::cout << "MODELMANAGER::RENDER::MODE::LIGHT" << std::endl;
+    IMGUIShader.LoadShaders((data::ShaderPath + "wave.vs").c_str(),
+                            (data::ShaderPath + "lava.fs").c_str());
     break;
   }
   IMGUIModelManager.loadModel(ModelPath, true, false);
@@ -159,6 +161,11 @@ void CharacterModel::IMGUIRenderModel(Camera &camera, GLFWwindow *window,
   IMGUIShader.setFloat("shininess", 32.0f);
   IMGUIShader.setMat4("projection", projection);
   IMGUIShader.setMat4("view", view);
+  if(currentRenderMode == ModelRenderMode::LIGHT){
+    float time = glfwGetTime();
+    IMGUIShader.setFloat("time", time);
+  }
+  
   if (currentRenderMode == ModelRenderMode::RAINBOW) {
     // IMGUIShader.setFloat("vHeight", vHeight);
     IMGUIShader.setFloat("minHeight", minHeight);

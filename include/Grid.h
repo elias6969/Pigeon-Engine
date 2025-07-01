@@ -3,8 +3,8 @@
 
 #include <vector>
 #include <glad/glad.h>
-#include "Shader.h"    // Your custom Shader class.
-#include "Camera.h"    // Your custom Camera class.
+#include "Shader.h"
+#include "Camera.h"
 #include <GLFW/glfw3.h>
 
 class Grid {
@@ -24,7 +24,7 @@ public:
 
 private:
     // Shaders for each grid.
-    Shader waterShader, gridShader;
+    static Shader waterShader, gridShader;
 
     // Water grid buffers and data.
     GLuint waterVAO = 0, waterVBO = 0, waterEBO = 0;
