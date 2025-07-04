@@ -1,8 +1,0 @@
-Model Information:
-* title:	Voxel Tutorial - Scene 1
-* source:	https://sketchfab.com/3d-models/voxel-tutorial-scene-1-6f0b5af35c21418593b4fad78ca12e62
-* author:	Phil_XG (https://sketchfab.com/phil_xg)
-
-Model License:
-* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
-* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

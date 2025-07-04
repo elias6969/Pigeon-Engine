@@ -1,8 +1,0 @@
-Model Information:
-* title:	Marine plant
-* source:	https://sketchfab.com/3d-models/marine-plant-08e8617db78c457f8b218971e6055e99
-* author:	assetfactory (https://sketchfab.com/assetfactory)
-
-Model License:
-* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
-* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
