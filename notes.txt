@@ -2,3 +2,6 @@ TODO
 Big update rehaul of code
 change objectRenderer
 change 90% of everything
+
+doing
+- fixing json in objectrendererimgui

@@ -1,5 +1,6 @@
 #ifndef IMGUIMANAGER_H
 #define IMGUIMANAGER_H
+#include <glm/fwd.hpp>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <imgui.h>
@@ -19,5 +20,10 @@ struct OpenGLState {
 };
 
 void stateGame(OpenGLState &opengl);
+
+void loadScene();
+void saveScene();
+void savePosition(const glm::vec3 &position);
+glm::vec3 loadPosition();
 
 #endif

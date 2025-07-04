@@ -93,6 +93,8 @@ float spacing;
 
 LOD lod;
 
+bool isSaveScene = false;
+
 // Configuration to store newly created objects
 struct ObjectConfig {
   ObjectType type;
@@ -167,11 +169,14 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
   if (ImGui::Button("Save")) {
     // TODO: Implement a Save Scene function (serialize objects to a file).
     std::cout << "Saving scene named: " << sceneName << std::endl;
+    //isSaveScene = true;
+    saveScene();
   }
   ImGui::SameLine();
   if (ImGui::Button("Load")) {
     // TODO: Implement a Load Scene function (deserialize from a file).
     std::cout << "Loading scene into: " << sceneName << std::endl;
+    loadScene();
   }
 
   ImGui::Separator();
@@ -519,6 +524,9 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
   if (selectedObjectIndex >= 0 &&
       selectedObjectIndex < (int)createdObjects.size()) {
     ObjectConfig &obj = createdObjects[selectedObjectIndex];
+    if(isSaveScene) {
+      //saveScene();
+    }
     ImGui::Separator();
     ImGui::Text("Editing Object: %d", selectedObjectIndex);
 
@@ -528,6 +536,13 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
       ImGui::DragFloat3("Rotation", obj.rotation, 0.1f, -360.0f, 360.0f,
                         "%.1f");
       ImGui::DragFloat3("Scale", obj.size, 0.1f, 0.1f, 50.0f, "%.2f");
+      if (ImGui::Button("Save Position")) {
+        glm::vec3 newPos(obj.Position[0], obj.Position[1], obj.Position[2]);
+        savePosition(newPos);
+      }
+      if(ImGui::Button("Load Position")) {
+        loadPosition();
+      }
     }
     ImGui::Spacing();
 
@@ -687,4 +702,261 @@ void stateGame(OpenGLState &opengl) {
   std::ofstream outFile("opengl_state.json");
   outFile << j.dump(4);
   outFile.close();
+}
+
+
+
+void saveScene() {
+  std::filesystem::create_directory("Scenes"); 
+
+  const char *savePath = tinyfd_saveFileDialog(
+      "Save Scene As",
+      "Scenes/scene.json",
+      1,
+      (const char *[]){"*.json"},
+      "Scene Files");
+
+  if (!savePath) {
+    std::cout << "Save cancelled.\n";
+    return;
+  }
+
+  nlohmann::json sceneJson;
+  sceneJson["sceneName"] = sceneName;
+
+  for (const auto &obj : createdObjects) {
+    nlohmann::json objJson;
+    objJson["type"] = obj.type;
+    objJson["vectorIndex"] = obj.vectorIndex;
+    objJson["hasCollisionBox"] = obj.hasCollisionBox;
+    objJson["size"] = {obj.size[0], obj.size[1], obj.size[2]};
+    objJson["position"] = {obj.Position[0], obj.Position[1], obj.Position[2]};
+    objJson["rotation"] = {obj.rotation[0], obj.rotation[1], obj.rotation[2]};
+    objJson["color"] = {obj.color.r, obj.color.g, obj.color.b};
+    objJson["transparency"] = obj.transparency;
+    objJson["shininess"] = obj.shininess;
+    objJson["reflectivity"] = obj.reflectivity;
+    objJson["lightIntensity"] = obj.lightIntensity;
+    objJson["physicsType"] = obj.physicsType;
+    objJson["amount"] = obj.amount;
+    objJson["height"] = obj.height;
+    objJson["Speed"] = obj.Speed;
+    objJson["modelPath"] = obj.modelPath;
+    objJson["Gridamplitude"] = obj.Gridamplitude;
+    objJson["Gridspeed"] = obj.Gridspeed;
+    objJson["Gridfrequency"] = obj.Gridfrequency;
+    objJson["Gridsize"] = obj.Gridsize;
+    objJson["Gridspacing"] = obj.Gridspacing;
+    objJson["modelSize"] = obj.modelSize;
+    objJson["isWireFrame"] = obj.isWireFrame;
+
+    sceneJson["objects"].push_back(objJson);
+  }
+
+  std::ofstream outFile(savePath);
+  if (outFile.is_open()) {
+    outFile << sceneJson.dump(4);
+    outFile.close();
+    std::cout << "Scene saved to: " << savePath << std::endl;
+  } else {
+    std::cerr << "Failed to save scene.\n";
+  }
+}
+
+
+
+void loadScene() {
+  const char *filter[] = {"*.json"};
+  const char *filePath = tinyfd_openFileDialog(
+      "Load Scene",
+      "Scenes/",
+      1,
+      filter,
+      "Scene Files",
+      0); // 0 = single select
+
+  if (!filePath) {
+    std::cout << "Load cancelled.\n";
+    return;
+  }
+
+  std::ifstream inFile(filePath);
+  if (!inFile.is_open()) {
+    std::cerr << "Failed to open file: " << filePath << std::endl;
+    return;
+  }
+
+  nlohmann::json sceneJson;
+  inFile >> sceneJson;
+  inFile.close();
+
+  if (sceneJson.contains("sceneName")) {
+    strncpy(sceneName, sceneJson["sceneName"].get<std::string>().c_str(), sizeof(sceneName));
+  }
+
+  // Clear current scene data
+  createdObjects.clear();
+  cubes.clear();
+  images.clear();
+  particles.clear();
+  ModelManagers.clear();
+  grids.clear();
+
+  // Rebuild each object
+  for (const auto &objJson : sceneJson["objects"]) {
+    ObjectConfig newObj;
+
+    newObj.type = static_cast<ObjectType>(objJson["type"].get<int>());
+    newObj.vectorIndex = objJson["vectorIndex"];
+    newObj.hasCollisionBox = objJson["hasCollisionBox"];
+
+    for (int i = 0; i < 3; ++i) {
+      newObj.size[i] = objJson["size"][i];
+      newObj.Position[i] = objJson["position"][i];
+      newObj.rotation[i] = objJson["rotation"][i];
+    }
+
+    newObj.color = {
+      objJson["color"][0],
+      objJson["color"][1],
+      objJson["color"][2]
+    };
+
+    newObj.transparency = objJson["transparency"];
+    newObj.shininess = objJson["shininess"];
+    newObj.reflectivity = objJson["reflectivity"];
+    newObj.lightIntensity = objJson["lightIntensity"];
+    newObj.physicsType = objJson["physicsType"];
+    newObj.amount = objJson["amount"];
+    newObj.height = objJson["height"];
+    newObj.Speed = objJson["Speed"];
+    newObj.modelPath = objJson["modelPath"];
+    newObj.filepath = newObj.modelPath.c_str(); // pointer for legacy compatibility
+    newObj.Gridamplitude = objJson["Gridamplitude"];
+    newObj.Gridspeed = objJson["Gridspeed"];
+    newObj.Gridfrequency = objJson["Gridfrequency"];
+    newObj.Gridsize = objJson["Gridsize"];
+    newObj.Gridspacing = objJson["Gridspacing"];
+    newObj.modelSize = objJson["modelSize"];
+    newObj.isWireFrame = objJson["isWireFrame"];
+
+    int newIndex = -1;
+
+    // Object reconstruction logic
+    switch (newObj.type) {
+      case CUBE: {
+        Cube cube;
+        cube.r = newObj.color.r;
+        cube.g = newObj.color.g;
+        cube.b = newObj.color.b;
+        cube.Alpha = newObj.transparency;
+        cube.Position = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
+        cube.Rotation = glm::vec3(newObj.rotation[0], newObj.rotation[1], newObj.rotation[2]);
+        cube.size = glm::vec3(newObj.size[0], newObj.size[1], newObj.size[2]);
+        cube.texturePath = newObj.filepath;
+        cube.loadCube();
+
+        cubes.push_back(cube);
+        newIndex = (int)cubes.size() - 1;
+        break;
+      }
+
+      case IMAGE: {
+        Image image;
+        image.imagePath = newObj.filepath;
+        image.Position = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
+        image.Rotation = glm::vec3(newObj.rotation[0], newObj.rotation[1], newObj.rotation[2]);
+        image.loadImage();
+
+        images.push_back(image);
+        newIndex = (int)images.size() - 1;
+        break;
+      }
+
+      case PARTICLE: {
+        Particle particle;
+        particle.Position = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
+        particle.texturePath = newObj.filepath;
+        particle.Height = newObj.height;
+        particle.ParticleAmount = newObj.amount;
+        particle.Speed = newObj.Speed;
+        particle.InitParticle();
+
+        particles.push_back(particle);
+        newIndex = (int)particles.size() - 1;
+        break;
+      }
+
+      case MODEL_OBJ: {
+        CharacterModel model;
+        model.ModelPath = newObj.modelPath.c_str();
+        model.modelSize = newObj.modelSize;
+        model.vHeight = modelShaderHeight;
+        model.isWire = newObj.isWireFrame;
+        model.ModelPosition = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
+        model.ModelRotation = glm::vec3(newObj.rotation[0], newObj.rotation[1], newObj.rotation[2]);
+        model.currentRenderMode = renderMode; // You could load from JSON if needed
+
+        model.IMGUIinitializeModelRenderingSystem();
+
+        ModelManagers.push_back(model);
+        newIndex = (int)ModelManagers.size() - 1;
+        break;
+      }
+
+      case WATER_GRID: {
+        Grid grid;
+        grid.amplitude = newObj.Gridamplitude;
+        grid.speed = newObj.Gridspeed;
+        grid.frequency = newObj.Gridfrequency;
+        grid.size = newObj.Gridsize;
+        grid.spacing = newObj.Gridspacing;
+
+        if (lod == LOD::BASIC) {
+          grid.setupGridWater();
+        }
+
+        grids.push_back(grid);
+        newIndex = (int)grids.size() - 1;
+        break;
+      }
+    }
+
+    newObj.vectorIndex = newIndex;
+    createdObjects.push_back(newObj);
+  }
+
+  std::cout << "Scene loaded from: " << filePath
+            << " with " << createdObjects.size() << " objects.\n";
+}
+
+void savePosition(const glm::vec3 &position) {
+  nlohmann::json j;
+  j["position"] = {position.x, position.y, position.z};
+
+  std::ofstream outFile("object_position.json");
+  if (outFile.is_open()) {
+    outFile << j.dump(4);
+    outFile.close();
+    std::cout << "Position::saved\n";
+  }
+}
+
+glm::vec3 loadPosition() {
+  std::ifstream inFile("object_position.json");
+  if (!inFile.is_open()) {
+    std::cerr << "No saved position found. Using default." << std::endl;
+    return glm::vec3(0.0f);
+  }
+
+  nlohmann::json j;
+  inFile >> j;
+
+  glm::vec3 pos(0.0f);
+  if (j.contains("position") && j["position"].is_array()) {
+    pos.x = j["position"][0];
+    pos.y = j["position"][1];
+    pos.z = j["position"][2];
+  }
+  return pos;
 }
