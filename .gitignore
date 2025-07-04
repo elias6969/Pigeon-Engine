@@ -27,3 +27,13 @@ compile_commands.json
 *.pdb
 .cache/
 build/
+
+# Ignore model archive files
+assets/models/*.zip
+assets/models/*.glb
+assets/models/*.fbx
+assets/models/*.blend
+assets/models/*.obj
+assets/models/*.mtl
+assets/models/*.dae
+assets/models/*.3ds
