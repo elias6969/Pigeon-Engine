@@ -2,8 +2,8 @@
 // System and Library Includes
 // ================================
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h> // GLFW window and input handling
 #include <glad/glad.h>  // OpenGL function loader
+#include <GLFW/glfw3.h> // GLFW window and input handling
 
 // GLM - Mathematics for 3D Graphics
 #include <glm/ext/matrix_float4x4.hpp>
@@ -48,6 +48,7 @@
 #include "animator.h"     // Animation management
 #include "filemanager.h"  // File management system
 #include "modelLoader.h"  // 3D model loader
+#include "Voxel.h"
 
 // ================================
 // Function Declarations
@@ -154,6 +155,9 @@ int main() {
   multiParticles.init(ParticleEffectMode::NOISE_DISTORTION);
   skybox.texturebufferLoading(skyboxshader);
 
+  VoxelChunk voxelchunks(100,16,100);
+  voxelchunks.loadCubes();
+
   // ---------------------------
   // Initialize ImGui (if enabled)
   // ---------------------------
@@ -231,6 +235,7 @@ int main() {
     windowManager.render(camera, window);
     stateGame(opengl);
     skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
+    voxelchunks.draw(camera, window);
 
     // ---------------------------
     // Render ImGui on Top (if enabled)

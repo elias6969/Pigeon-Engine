@@ -27,6 +27,7 @@
 #include "Particle.h"
 #include "SkyBox.h"
 #include "Utils.h"
+#include "textureManager.h"
 #include "WindowModule.h"
 #include <stb_image.h>
 Shader Cube::shader;
@@ -39,42 +40,6 @@ Shader Image::shader;
 ▐▙▄▄▀ ▐▙▄▄▖▝▚▄▄▖▐▙▄▄▖▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌ █  ▗▄█▄▖▝▚▄▞▘▐▌  ▐▌
 */
 unsigned int loadCubemap(std::vector<std::string> faces);
-
-unsigned int loadTexture(const char *filePath) {
-  int width, height, nrChannels;
-  unsigned char *data = stbi_load(filePath, &width, &height, &nrChannels, 0);
-  if (!data) {
-    std::cerr << "Failed to load texture: " << filePath << std::endl;
-    return 0;
-  } else {
-    std::cout << "successfully loaded texture" << filePath << std::endl;
-  }
-
-  GLuint texID;
-  glGenTextures(1, &texID);
-  glBindTexture(GL_TEXTURE_2D, texID);
-
-  // Set up texture parameters
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                  GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  // Determine correct format (RGB or RGBA)
-  GLenum format = (nrChannels == 4) ? GL_RGBA : GL_RGB;
-
-  // Upload the image data to the GPU
-  glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
-               GL_UNSIGNED_BYTE, data);
-  glGenerateMipmap(GL_TEXTURE_2D);
-
-  // Cleanup
-  stbi_image_free(data);
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-  return texID;
-}
 
 namespace Var {
 // Class definitions
@@ -90,16 +55,16 @@ std::string cubemappath = vfs.getFullPath("cubemap/");
 PathManager pathmanagerpOOP;
 
 std::vector<std::string> faces = {
-    "/home/lighht19/Documents/Pigeon-Engine/assets/cubemap/test/"
+    "/home/elias/Documents/Pigeon-Engine/assets/cubemap/test/"
     "yellowcloud_rt.jpg", // right
-    "/home/lighht19/Documents/Pigeon-Engine/assets/cubemap/test/"
+    "/home/elias/Documents/Pigeon-Engine/assets/cubemap/test/"
     "yellowcloud_lf.jpg", // left
-    "/home/lighht19/Documents/Pigeon-Engine/assets/cubemap/test/"
+    "/home/elias/Documents/Pigeon-Engine/assets/cubemap/test/"
     "yellowcloud_dn.jpg", // bottom
-    "/home/lighht19/Documents/Pigeon-Engine/assets/cubemap/test/up.jpg", // top
-    "/home/lighht19/Documents/Pigeon-Engine/assets/cubemap/test/"
+    "/home/elias/Documents/Pigeon-Engine/assets/cubemap/test/up.jpg", // top
+    "/home/elias/Documents/Pigeon-Engine/assets/cubemap/test/"
     "yellowcloud_ft.jpg", // front
-    "/home/lighht19/Documents/Pigeon-Engine/assets/cubemap/test/"
+    "/home/elias/Documents/Pigeon-Engine/assets/cubemap/test/"
     "yellowcloud_up.jpg" // back
 };
 

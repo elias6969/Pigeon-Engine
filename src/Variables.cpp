@@ -1,5 +1,7 @@
 #include "Variables.h"
 #include "filemanager.h"
+#define GLFW_INCLUDE_NONE
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 VirtualFileSystem vfs("../assets");
