@@ -2,8 +2,8 @@
 // System and Library Includes
 // ================================
 #define GLFW_INCLUDE_NONE
-#include <glad/glad.h>  // OpenGL function loader
 #include <GLFW/glfw3.h> // GLFW window and input handling
+#include <glad/glad.h>  // OpenGL function loader
 
 // GLM - Mathematics for 3D Graphics
 #include <glm/ext/matrix_float4x4.hpp>
@@ -44,11 +44,13 @@
 #include "SkyBox.h" // Skybox rendering
 #include "Utils.h"  // Utility functions and global helpers
 #include "Variables.h"
+// #include "Voxel.h"
+#include "Voronoi.h"
+#include "VoxelTest.h"
 #include "WindowModule.h" // Window management module
 #include "animator.h"     // Animation management
 #include "filemanager.h"  // File management system
 #include "modelLoader.h"  // 3D model loader
-#include "Voxel.h"
 
 // ================================
 // Function Declarations
@@ -83,6 +85,10 @@ bool isRender = true;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+const int CHUNK_WIDTH = 16;
+const int CHUNK_HEIGHT = 16;
+const int CHUNK_DEPTH = 16;
 
 // ================================
 // Main Function
@@ -154,9 +160,32 @@ int main() {
   // newParticleSystem.init();
   multiParticles.init(ParticleEffectMode::NOISE_DISTORTION);
   skybox.texturebufferLoading(skyboxshader);
+  std::vector<glm::vec2> seeds;
+  for (int i = 0; i < 100; ++i) {
+    seeds.push_back(
+        glm::vec2(static_cast<float>(rand()) / RAND_MAX, // x in [0,1]
+                  static_cast<float>(rand()) / RAND_MAX  // y in [0,1]
+                  ));
+  }
 
-  VoxelChunk voxelchunks(100,16,100);
-  voxelchunks.loadCubes();
+  std::vector<glm::vec3> seedColors;
+  for (int i = 0; i < seeds.size(); ++i) {
+    seedColors.push_back(glm::vec3(static_cast<float>(rand()) / RAND_MAX,
+                                   static_cast<float>(rand()) / RAND_MAX,
+                                   static_cast<float>(rand()) / RAND_MAX));
+  }
+  Voronoi vor(seeds.size(), seeds);
+  vor.setColors(seedColors);
+
+  const std::string textureFolder = "";
+  // VoxelTest voxels(14,14,14);
+
+  /**VoxelChunk voxelchunks(
+      100,                     // sizeX
+      16,                      // sizeY
+      100,                     // sizeZ
+      PathManager::texturePath // point it at your Textures/ folder
+  );**/
 
   // ---------------------------
   // Initialize ImGui (if enabled)
@@ -216,7 +245,7 @@ int main() {
       ImGui::Checkbox("Out Camera Mode", &isOutcamera);
       ImGui::Checkbox("Moving", &isMoving);
       ImGui::Checkbox("Collided with Cube", &Collided);
-      if(ImGui::Button("Save Position")) {
+      if (ImGui::Button("Save Position")) {
         savePosition(camera.Position);
       }
       ImGui::End();
@@ -235,7 +264,9 @@ int main() {
     windowManager.render(camera, window);
     stateGame(opengl);
     skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
-    voxelchunks.draw(camera, window);
+    // voxels.draw(camera);
+    // voxelchunks.draw(camera);
+    vor.drawVo(camera);
 
     // ---------------------------
     // Render ImGui on Top (if enabled)

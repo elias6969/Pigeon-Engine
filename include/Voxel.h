@@ -2,41 +2,48 @@
 
 #include "Camera.h"
 #include "Shader.h"
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
-#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 #include <vector>
+#include <string>
+#include <glad/glad.h>
 
+// A minimal voxel: position + which texture layer to sample
 struct Voxel {
-  glm::vec3 position;
-  glm::vec3 color;
-  uint8_t textureType;
-  bool isActive;
-
-  Voxel(const glm::vec3 &pos, const glm::vec3 &col, uint8_t texType, bool active = true)
-      : position(pos), color(col), textureType(texType), isActive(active) {}
+    glm::vec3 position;
+    uint8_t   textureType;
+    Voxel(const glm::vec3 &pos, uint8_t texType)
+      : position(pos), textureType(texType) {}
 };
 
 class VoxelChunk {
 public:
-  VoxelChunk(int sizeX, int sizeY, int sizeZ);
+    // Pass in your chunk dimensions and the folder where
+    // you keep: grass.jpg, dirt.jpg, stone.jpg, bedrock.jpg
+    VoxelChunk(int sizeX, int sizeY, int sizeZ,
+               const std::string &textureFolder);
+    ~VoxelChunk();
 
-  const std::vector<Voxel> &getVoxels() const;
-  void loadCubes();
-  void draw(Camera &camera, GLFWwindow *window);
+    // Call each frame to draw
+    void draw(const Camera &camera);
 
 private:
-  const char *texturePath;
-  int sizeX, sizeY, sizeZ;
-  std::vector<Voxel> voxels;
+    void generateVoxels();
+    void buildMesh();        // produce only exposed faces
+    void setupGL();          // VAO/VBO
+    void loadTextureArray(); // pack 4 images into a GL_TEXTURE_2D_ARRAY
 
-  Shader shader;
-  GLuint VAO, VBO, texture;
-  glm::vec3 size = glm::vec3(1.0f);
-  glm::vec3 rotation = glm::vec3(0.0f);
-  float Alpha = 1.0f;
+    int sizeX, sizeY, sizeZ;
+    std::string textureFolder;
 
-  void generateChunk();
-  GLuint textures[4];
+    std::vector<Voxel>      voxels;
+    std::vector<uint8_t>    typeGrid;     // occupancy + textureType per cell
+    std::vector<float>      meshVertices; // x,y,z, u,v, layerPacked
+
+    GLuint VAO = 0, VBO = 0;
+    GLuint textureArray = 0;
+    Shader shader;
+
+    glm::vec3 scale = glm::vec3(1.0f);
+    float     alpha = 1.0f;
 };
+
