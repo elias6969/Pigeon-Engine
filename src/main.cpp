@@ -1,6 +1,7 @@
 // ================================
 // System and Library Includes
 // ================================
+#include "Sphere.h"
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h> // GLFW window and input handling
 #include <glad/glad.h>  // OpenGL function loader
@@ -45,7 +46,7 @@
 #include "Utils.h"  // Utility functions and global helpers
 #include "Variables.h"
 // #include "Voxel.h"
-#include "Voronoi.h"
+// #include "Voronoi.h"  the voronoi diagram
 #include "VoxelTest.h"
 #include "WindowModule.h" // Window management module
 #include "animator.h"     // Animation management
@@ -144,6 +145,7 @@ int main() {
   Model playerModel;
   MesmerizingParticleSystem newParticleSystem(5000);
   MultiEffectParticleSystem multiParticles(5000);
+  Sphere sphere(1, 36, 18);
 
   // Shader declarations
   Shader cubeShader;
@@ -160,32 +162,10 @@ int main() {
   // newParticleSystem.init();
   multiParticles.init(ParticleEffectMode::NOISE_DISTORTION);
   skybox.texturebufferLoading(skyboxshader);
-  std::vector<glm::vec2> seeds;
-  for (int i = 0; i < 100; ++i) {
-    seeds.push_back(
-        glm::vec2(static_cast<float>(rand()) / RAND_MAX, // x in [0,1]
-                  static_cast<float>(rand()) / RAND_MAX  // y in [0,1]
-                  ));
-  }
-
-  std::vector<glm::vec3> seedColors;
-  for (int i = 0; i < seeds.size(); ++i) {
-    seedColors.push_back(glm::vec3(static_cast<float>(rand()) / RAND_MAX,
-                                   static_cast<float>(rand()) / RAND_MAX,
-                                   static_cast<float>(rand()) / RAND_MAX));
-  }
-  Voronoi vor(seeds.size(), seeds);
-  vor.setColors(seedColors);
-
-  const std::string textureFolder = "";
-  // VoxelTest voxels(14,14,14);
-
-  /**VoxelChunk voxelchunks(
-      100,                     // sizeX
-      16,                      // sizeY
-      100,                     // sizeZ
-      PathManager::texturePath // point it at your Textures/ folder
-  );**/
+  /**glm::mat4 projection =
+      glm::perspective(glm::radians(camera.Zoom),
+                       (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+  glm::mat4 view = camera.GetViewMatrix();**/
 
   // ---------------------------
   // Initialize ImGui (if enabled)
@@ -264,9 +244,17 @@ int main() {
     windowManager.render(camera, window);
     stateGame(opengl);
     skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
-    // voxels.draw(camera);
-    // voxelchunks.draw(camera);
-    vor.drawVo(camera);
+
+    glm::mat4 projection =
+        glm::perspective(glm::radians(camera.Zoom),
+                         (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 view = camera.GetViewMatrix();
+
+    // Example position and color
+    glm::vec3 spherePosition(0.0f, 0.0f, 0.0f);
+    glm::vec3 sphereColor(1.0f, 0.5f, 0.6f);
+
+    sphere.Draw(view, projection, spherePosition, sphereColor);
 
     // ---------------------------
     // Render ImGui on Top (if enabled)

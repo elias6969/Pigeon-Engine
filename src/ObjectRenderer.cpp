@@ -4,6 +4,7 @@
 #include "filemanager.h"
 #include "modelLoader.h"
 #include "vao_manager.h"
+#include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <bits/stdc++.h>
 #include <cstdlib>
@@ -26,10 +27,12 @@
 #include "Image.h"
 #include "Particle.h"
 #include "SkyBox.h"
+#include "Sphere.h"
 #include "Utils.h"
-#include "textureManager.h"
 #include "WindowModule.h"
+#include "textureManager.h"
 #include <stb_image.h>
+
 Shader Cube::shader;
 Shader Image::shader;
 
@@ -60,7 +63,7 @@ std::vector<std::string> faces = {
     "/home/elias/Documents/Pigeon-Engine/assets/cubemap/test/"
     "yellowcloud_lf.jpg", // left
     "/home/elias/Documents/Pigeon-Engine/assets/cubemap/test/"
-    "yellowcloud_dn.jpg", // bottom
+    "yellowcloud_dn.jpg",                                             // bottom
     "/home/elias/Documents/Pigeon-Engine/assets/cubemap/test/up.jpg", // top
     "/home/elias/Documents/Pigeon-Engine/assets/cubemap/test/"
     "yellowcloud_ft.jpg", // front
@@ -315,47 +318,46 @@ Shader Grid::gridShader;
 Shader Grid::waterShader;
 
 std::vector<float> Grid::generateGridWater(float size, float spacing) {
-    int numVerts = static_cast<int>(size / spacing) + 1;
-    int vertCount = numVerts * numVerts;
-    int triCount  = (numVerts - 1) * (numVerts - 1) * 2;
+  int numVerts = static_cast<int>(size / spacing) + 1;
+  int vertCount = numVerts * numVerts;
+  int triCount = (numVerts - 1) * (numVerts - 1) * 2;
 
-    // Reserve up front:
-    std::vector<float> vertices;
-    vertices.reserve(vertCount * 3);              // 3 floats per vertex
-    std::vector<unsigned int> indices;
-    indices.reserve(triCount * 3);                // 3 indices per triangle
+  // Reserve up front:
+  std::vector<float> vertices;
+  vertices.reserve(vertCount * 3); // 3 floats per vertex
+  std::vector<unsigned int> indices;
+  indices.reserve(triCount * 3); // 3 indices per triangle
 
-    // Generate vertices
-    for (int z = 0; z < numVerts; ++z) {
-        float zPos = -size * 0.5f + z * spacing;
-        for (int x = 0; x < numVerts; ++x) {
-            float xPos = -size * 0.5f + x * spacing;
-            vertices.push_back(xPos);
-            vertices.push_back(0.0f);            // Y = 0, waves in shader
-            vertices.push_back(zPos);
-        }
+  // Generate vertices
+  for (int z = 0; z < numVerts; ++z) {
+    float zPos = -size * 0.5f + z * spacing;
+    for (int x = 0; x < numVerts; ++x) {
+      float xPos = -size * 0.5f + x * spacing;
+      vertices.push_back(xPos);
+      vertices.push_back(0.0f); // Y = 0, waves in shader
+      vertices.push_back(zPos);
     }
+  }
 
-    // Generate triangle indices
-    for (int z = 0; z < numVerts - 1; ++z) {
-        for (int x = 0; x < numVerts - 1; ++x) {
-            int start = z * numVerts + x;
-            // Triangle 1
-            indices.push_back(start);
-            indices.push_back(start + numVerts);
-            indices.push_back(start + 1);
-            // Triangle 2
-            indices.push_back(start + 1);
-            indices.push_back(start + numVerts);
-            indices.push_back(start + numVerts + 1);
-        }
+  // Generate triangle indices
+  for (int z = 0; z < numVerts - 1; ++z) {
+    for (int x = 0; x < numVerts - 1; ++x) {
+      int start = z * numVerts + x;
+      // Triangle 1
+      indices.push_back(start);
+      indices.push_back(start + numVerts);
+      indices.push_back(start + 1);
+      // Triangle 2
+      indices.push_back(start + 1);
+      indices.push_back(start + numVerts);
+      indices.push_back(start + numVerts + 1);
     }
+  }
 
-    // Move indices into the member so you avoid a copy
-    waterIndices = std::move(indices);
-    return vertices;
+  // Move indices into the member so you avoid a copy
+  waterIndices = std::move(indices);
+  return vertices;
 }
-
 
 void Grid::setupGridWater() {
   // Clean up existing buffers if they exist.
@@ -607,8 +609,8 @@ void Cube::loadCube() {
   texture = loadTexture(texturePath);
 
   // ================== Compile and Use Shader ==================
-    shader.LoadShaders((PathManager::shaderPath + "normalCube.vs").c_str(),
-                       (PathManager::shaderPath + "normalCube.fs").c_str());
+  shader.LoadShaders((PathManager::shaderPath + "normalCube.vs").c_str(),
+                     (PathManager::shaderPath + "normalCube.fs").c_str());
   shader.use();
   shader.setInt("texture1", 0);
   std::cout << "Loading texture for image: " << texturePath
@@ -1100,4 +1102,121 @@ void TransparentWindow::render(Camera &camera, GLFWwindow *window) {
     glDeleteBuffers(1, &EBO);
   }
   glDisable(GL_BLEND);
+}
+
+Sphere::Sphere(float radius, unsigned int sectorCount, unsigned int stackCount)
+    : radius(radius), sectorCount(sectorCount), stackCount(stackCount) {
+  shader.LoadShaders((PathManager::shaderPath + "sphere.vs").c_str(),
+                     (PathManager::shaderPath + "sphere.fs").c_str());
+
+  generateSphere();
+  setupMesh();
+}
+
+Sphere::~Sphere() {
+  glDeleteVertexArrays(1, &VAO);
+  glDeleteBuffers(1, &VBO);
+  glDeleteBuffers(1, &EBO);
+}
+
+void Sphere::generateSphere() {
+  float x, y, z, xy;
+  float sectorStep = 2 * M_PI / sectorCount;
+  float stackStep = M_PI / stackCount;
+  float sectorAngle, stackAngle;
+
+  vertices.clear();
+  indices.clear();
+
+  for (unsigned int i = 0; i <= stackCount; ++i) {
+    stackAngle = M_PI / 2 - i * stackStep;
+    xy = radius * cosf(stackAngle);
+    y = radius * sinf(stackAngle);
+
+    for (unsigned int j = 0; j <= sectorCount; ++j) {
+      sectorAngle = j * sectorStep;
+      float u = (float)j / sectorCount;
+      float v = (float)i / stackCount;
+
+      x = xy * cosf(sectorAngle);
+      z = xy * sinf(sectorAngle);
+
+      vertices.push_back(x);
+      vertices.push_back(y);
+      vertices.push_back(z);
+
+      vertices.push_back(u);
+      vertices.push_back(v);
+    }
+  }
+
+  for (unsigned int i = 0; i < stackCount; ++i) {
+    for (unsigned int j = 0; j < sectorCount; ++j) {
+
+      int first = i * (sectorCount + 1) + j;
+      int second = first + sectorCount + 1;
+
+      indices.push_back(first);
+      indices.push_back(second);
+      indices.push_back(first + 1);
+
+      indices.push_back(second);
+      indices.push_back(second + 1);
+      indices.push_back(first + 1);
+    }
+  }
+}
+
+void Sphere::setupMesh() {
+  glGenVertexArrays(1, &VAO);
+  glGenBuffers(1, &VBO);
+  glGenBuffers(1, &EBO);
+
+  glBindVertexArray(VAO);
+
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float),
+               vertices.data(), GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
+               indices.data(), GL_STATIC_DRAW);
+
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
+  glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                        (void *)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
+
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                  GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  texture = loadTexture((PathManager::texturePath + "lain.jpg").c_str());
+  shader.setInt("texture1", 0);
+  glBindVertexArray(0);
+}
+
+void Sphere::Draw(const glm::mat4 &view, const glm::mat4 &projection,
+                  const glm::vec3 &position, const glm::vec3 &color) {
+  shader.use();
+
+  glm::mat4 model = glm::translate(glm::mat4(1.0f), position);
+
+  shader.setMat4("model", model);
+  shader.setMat4("view", view);
+  shader.setMat4("projection", projection);
+  shader.setVec3("color", color);
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glBindVertexArray(VAO);
+  glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()),
+                 GL_UNSIGNED_INT, 0);
+  glBindVertexArray(0);
 }
