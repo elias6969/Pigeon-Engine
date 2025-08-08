@@ -3,10 +3,12 @@
 #include "Variables.h"
 #include "filemanager.h"
 #include "modelLoader.h"
+#include "pyramid.h"
 #include "vao_manager.h"
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <bits/stdc++.h>
+#include <cstddef>
 #include <cstdlib>
 #include <dirent.h>
 #include <glad/glad.h>
@@ -1218,5 +1220,110 @@ void Sphere::Draw(const glm::mat4 &view, const glm::mat4 &projection,
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()),
                  GL_UNSIGNED_INT, 0);
+  glBindVertexArray(0);
+}
+
+Pyramid::Pyramid(Shader shader, float size, float height) : shader(shader) {
+  init(size, height);
+}
+
+void Pyramid::init(float size, float height) {
+  verts = generatePyramid(size, height);
+
+  glGenVertexArrays(1, &vao);
+  glGenBuffers(1, &vbo);
+
+  glBindVertexArray(vao);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(Vertex), verts.data(),
+               GL_STATIC_DRAW);
+
+  // Position
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(pyramid_Vertex), (void *)0);
+
+  // Normal
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(pyramid_Vertex),
+                        (void *)offsetof(pyramid_Vertex, normal));
+
+  // TexCoords
+  glEnableVertexAttribArray(2);
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(pyramid_Vertex),
+                        (void *)offsetof(pyramid_Vertex, texCoords));
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+  shader.LoadShaders((PathManager::shaderPath + "pyramid.vs").c_str(),
+                     (PathManager::shaderPath + "pyramid.fs").c_str());
+  texture = loadTexture((PathManager::texturePath + "lain.jpg").c_str());
+}
+
+std::vector<pyramid_Vertex> Pyramid::generatePyramid(float size, float height) {
+  std::vector<pyramid_Vertex> verts;
+
+  float h = height;
+  float s = size * 0.5f;
+
+  glm::vec3 top = glm::vec3(0.0f, h, 0.0f);
+
+  glm::vec3 bl = glm::vec3(-s, 0.0f, -s);
+  glm::vec3 br = glm::vec3(s, 0.0f, -s);
+  glm::vec3 tr = glm::vec3(s, 0.0f, s);
+  glm::vec3 tl = glm::vec3(-s, 0.0f, s);
+
+  auto makeFace = [](glm::vec3 a, glm::vec3 b,
+                     glm::vec3 c) -> std::array<pyramid_Vertex, 3> {
+    glm::vec3 normal = glm::normalize(glm::cross(b - a, c - a));
+    return {
+        pyramid_Vertex{a, normal, glm::vec2(0.0f, 0.0f)},
+        pyramid_Vertex{b, normal, glm::vec2(1.0f, 0.0f)},
+        pyramid_Vertex{c, normal, glm::vec2(0.5f, 1.0f)},
+    };
+  };
+
+  // Base (two triangles)
+
+auto base1 = makeFace(bl, tr, br);
+auto base2 = makeFace(bl, tl, tr);
+
+  verts.insert(verts.end(), base1.begin(), base1.end());
+  verts.insert(verts.end(), base2.begin(), base2.end());
+
+  // Sides
+
+auto side1 = makeFace(top, br, bl);
+auto side2 = makeFace(top, tr, br);
+auto side3 = makeFace(top, tl, tr);
+auto side4 = makeFace(top, bl, tl);
+
+  verts.insert(verts.end(), side1.begin(), side1.end());
+  verts.insert(verts.end(), side2.begin(), side2.end());
+  verts.insert(verts.end(), side3.begin(), side3.end());
+  verts.insert(verts.end(), side4.begin(), side4.end());
+
+  return verts;
+}
+
+void Pyramid::draw(Camera &camera) {
+  shader.use();
+
+  glm::mat4 model = glm::translate(glm::mat4(1.0f), position);
+  glm::mat4 view = camera.GetViewMatrix();
+  glm::mat4 projection = glm::perspective(glm::radians(45.0f),
+                                          (float)PathManager::SCR_WIDTH /
+                                              (float)PathManager::SCR_HEIGHT,
+                                          0.1f, 100.0f);
+
+  shader.setMat4("model", model);
+  shader.setMat4("view", view);
+  shader.setMat4("projection", projection);
+  shader.setVec3("color", color);
+
+  shader.setInt("texture_diffuse", 0);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glBindVertexArray(vao);
+  glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(verts.size()));
   glBindVertexArray(0);
 }

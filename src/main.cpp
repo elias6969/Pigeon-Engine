@@ -2,6 +2,7 @@
 // System and Library Includes
 // ================================
 #include "Sphere.h"
+#include "pyramid.h"
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h> // GLFW window and input handling
 #include <glad/glad.h>  // OpenGL function loader
@@ -50,8 +51,9 @@
 #include "VoxelTest.h"
 #include "WindowModule.h" // Window management module
 #include "animator.h"     // Animation management
-#include "filemanager.h"  // File management system
-#include "modelLoader.h"  // 3D model loader
+#include "bird.h"
+#include "filemanager.h" // File management system
+#include "modelLoader.h" // 3D model loader
 
 // ================================
 // Function Declarations
@@ -133,6 +135,8 @@ int main() {
   // ---------------------------
   PathManager pathmanagerctr;
 
+  double newmouseY, newmouseX;
+
   // Instantiate custom classes
   Cube cube;
   Grid grid;
@@ -153,6 +157,8 @@ int main() {
   Shader particleShader;
   Shader PlayerShader;
   Shader boxShader;
+  Shader birdShader;
+  Shader pyramidShader;
 
   OpenGLState opengl = {{0.1f, 0.2f, 0.3f, 1.0f}, true};
   // Initialize modules
@@ -162,10 +168,8 @@ int main() {
   // newParticleSystem.init();
   multiParticles.init(ParticleEffectMode::NOISE_DISTORTION);
   skybox.texturebufferLoading(skyboxshader);
-  /**glm::mat4 projection =
-      glm::perspective(glm::radians(camera.Zoom),
-                       (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-  glm::mat4 view = camera.GetViewMatrix();**/
+  BirdTrail birdtrails(birdShader, 24.0f, 50); // 32 pixels wide
+  Pyramid pyramid(pyramidShader, 2.0f, 3.0f);
 
   // ---------------------------
   // Initialize ImGui (if enabled)
@@ -244,6 +248,25 @@ int main() {
     windowManager.render(camera, window);
     stateGame(opengl);
     skybox.renderSkybox(skyboxshader, SCR_WIDTH, SCR_HEIGHT, window, camera);
+    pyramid.draw(camera);
+
+    glfwGetCursorPos(window, &mouseX, &mouseY);
+
+    // Clamp
+    mouseX = std::clamp(mouseX, 0.0, static_cast<double>(SCR_WIDTH));
+    mouseY = std::clamp(mouseY, 0.0, static_cast<double>(SCR_HEIGHT));
+
+    // Flip Y
+    float screenX = static_cast<float>(mouseX);
+    float screenY = static_cast<float>(SCR_HEIGHT - mouseY);
+
+    glm::vec3 trailPos(screenX, screenY, 0.0f); // No huge Z or scale
+
+
+    float flipY = SCR_HEIGHT - static_cast<float>(mouseY);
+    glm::vec2 screenPos(mouseX, SCR_HEIGHT - mouseY);
+    birdtrails.update(glm::vec2(mouseX, flipY));
+    birdtrails.draw();
 
     glm::mat4 projection =
         glm::perspective(glm::radians(camera.Zoom),
