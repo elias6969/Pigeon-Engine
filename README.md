@@ -15,15 +15,27 @@ PigeonEngine is designed to combine elements of **Blender** and **Unity**, but w
 - [**GLFW**](https://www.glfw.org/) – Window management and input handling.
 - [**GLAD**](https://github.com/Dav1dde/glad) – OpenGL function loader.
 - [**stb_image**](https://github.com/nothings/stb) – Image loading.
+- [**nlohmann/json**](https://github.com/nlohmann/json) – Scene serialization.
+- [**Dear ImGui**](https://github.com/ocornut/imgui) – Editor UI and internal
+  file browser.
 - **CMake** – For building the project.
-- **C++17** or newer compiler.
+- **C++23** compiler.
 ## Features
 
 - **Custom Engine Editor** – Create and modify objects in an interactive UI.
 - **Real-Time Asset Loading** – Import **textures** and **3D models** via file paths.
+- **Arch/Hyprland-Friendly File Browser** – Uses an ImGui browser instead of
+  native `zenity`/`kdialog` dialogs for editor asset selection.
 - **Modern OpenGL Rendering** – Efficient and optimized rendering pipeline.
 - **Lighting & Material Editing** *(In Progress)* – Real-time adjustments inside the engine.
 - **Cross-Platform Codebase** – Designed with portability in mind (Ubuntu-first focus).
 - **Mathematics & Transformations** – Powered by **GLM** for vector/matrix operations.
+
+## Documentation
+
+- [Engine Overview](docs/ENGINE_OVERVIEW.md) explains the current project layout,
+  model-loading path, shader texture names, and asset guidelines.
+- [Folder System](docs/FOLDER_SYSTEM.md) explains where every source, header,
+  asset, shader, UI, model, particle, and procedural file should go.
 
 ---

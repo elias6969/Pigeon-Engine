@@ -6,13 +6,29 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(OpenGL_GL_PREFERENCE GLVND)
 
 file(GLOB_RECURSE SRC_FILES
-    src/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/*.cpp
+)
+
+# Engine include directories are organized by responsibility. The category
+# folders are kept on the include path so existing includes like "Shader.h"
+# continue to work while the files live in clearer folders.
+set(ENGINE_INCLUDE_DIRS
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include/animation
+    ${CMAKE_SOURCE_DIR}/include/core
+    ${CMAKE_SOURCE_DIR}/include/effects
+    ${CMAKE_SOURCE_DIR}/include/models
+    ${CMAKE_SOURCE_DIR}/include/particles
+    ${CMAKE_SOURCE_DIR}/include/procedural
+    ${CMAKE_SOURCE_DIR}/include/rendering
+    ${CMAKE_SOURCE_DIR}/include/ui
 )
 
 # Include directories
-include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${ENGINE_INCLUDE_DIRS})
 include_directories(${CMAKE_SOURCE_DIR}/external)
 include_directories(${CMAKE_SOURCE_DIR}/external/glad/include)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui-docking/imgui)
@@ -32,6 +48,18 @@ add_library(imgui STATIC ${IMGUI_SOURCES})
 find_package(OpenGL REQUIRED)
 find_package(assimp REQUIRED)
 
+# JSON serialization used by the editor scene/object save-load code.
+find_package(nlohmann_json CONFIG QUIET)
+if(NOT nlohmann_json_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(
+        nlohmann_json
+        URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+    FetchContent_MakeAvailable(nlohmann_json)
+endif()
+
 # Find or build GLFW
 find_package(glfw3 QUIET)
 if(NOT glfw3_FOUND)
@@ -44,25 +72,24 @@ else()
     set(GLFW_LIB glfw)
 endif()
 
-# ADD TINYFILEDIALOGS LIBRARY HERE
-add_library(tinyfiledialogs STATIC ${CMAKE_SOURCE_DIR}/src/tinyfiledialogs.c)
-target_include_directories(tinyfiledialogs PUBLIC ${CMAKE_SOURCE_DIR}/include)
-
 # Add the main executable
 add_executable(${PROJECT_NAME} ${SRC_FILES})
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    PIGEON_ASSET_DIR="${CMAKE_SOURCE_DIR}/assets"
+)
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    tinyfiledialogs    
     glad
     imgui
     ${GLFW_LIB}
     OpenGL::GL
     assimp
+    nlohmann_json::nlohmann_json
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/include
+    ${ENGINE_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/external/glad/include
     ${CMAKE_SOURCE_DIR}/external/imgui-docking/imgui
     ${CMAKE_SOURCE_DIR}/external/imgui-docking/imgui/backends
