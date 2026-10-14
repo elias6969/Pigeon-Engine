@@ -8,12 +8,13 @@
 #include <fstream>
 #include <glad/glad.h>
 #include <glm/fwd.hpp>
+#include <glm/glm.hpp>
 #include <imgui.h>
-#include <imfilebrowser.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <iostream>
 
+#include <algorithm>
 #include <chrono>
 #include <nlohmann/json.hpp>
 #include <nlohmann/json_fwd.hpp>
@@ -23,6 +24,8 @@
 #include <vector>
 
 #include "Cube.h"
+#include "DialogueEditorUI.h"
+#include "DialogueSystem.h"
 #include "Grid.h"
 #include "Image.h"
 #include "Particle.h"
@@ -30,11 +33,21 @@
 #include "SkyBox.h"
 #include "Utils.h"
 #include "WindowModule.h"
+#include "fontManager.h"
 #include "imstb_textedit.h"
 #include "modelLoader.h"
+#include "PortalFileChooser.h"
 
 // Enum for Object Types
-enum ObjectType { PARTICLE, CUBE, MODEL_OBJ, IMAGE, WATER_GRID };
+enum ObjectType {
+  PARTICLE,
+  CUBE,
+  MODEL_OBJ,
+  IMAGE,
+  WATER_GRID,
+  DIALOUGE,
+  FONT
+};
 
 // Enum Modes
 ModelRenderMode renderMode;
@@ -122,6 +135,7 @@ struct ObjectConfig {
   float Gridspacing;
   float modelSize;
   bool isWireFrame;
+  DialogueLine dialogue;
 };
 
 std::vector<Cube> cubes;         // All cubes in the scene
@@ -132,41 +146,135 @@ std::vector<Grid> grids;
 std::vector<Shader> shaders;
 std::vector<ObjectConfig> createdObjects; // Stores all created object configs
 
-enum class EditorFileDialogTarget { None, AssetPath, SceneLoad };
+enum class EditorFileDialogTarget {
+  None,
+  AssetPath,
+  SceneLoad,
+  PortraitCreate,
+  PortraitEdit,
+  BackgroundCreate,
+  BackgroundEdit,
+  SceneBackground
+};
 
-static ImGui::FileBrowser editorFileBrowser(ImGuiFileBrowserFlags_CloseOnEsc);
 static EditorFileDialogTarget editorFileDialogTarget =
     EditorFileDialogTarget::None;
 
-static void OpenEditorFileBrowser(EditorFileDialogTarget target,
-                                  const std::string &title,
-                                  const std::vector<std::string> &filters,
-                                  const std::filesystem::path &startPath = ".") {
-  editorFileBrowser.SetTitle(title);
-  editorFileBrowser.SetTypeFilters(filters);
-  editorFileBrowser.SetWindowSize(900, 600);
-  editorFileBrowser.SetPwd(startPath);
+static void
+OpenEditorFileBrowser(EditorFileDialogTarget target, const std::string &title,
+                      const std::vector<std::string> &filters,
+                      const std::filesystem::path &startPath = {}) {
+  if (PortalFileChooser::Instance().IsBusy())
+    return;
+  if (!PortalFileChooser::Instance().Open(title, filters, startPath))
+    return;
   editorFileDialogTarget = target;
-  editorFileBrowser.Open();
 }
 
 static void CopySelectedPathToEditorInput(const std::filesystem::path &path) {
   const std::string selectedPath = path.string();
-  std::snprintf(modelPath, IM_ARRAYSIZE(modelPath), "%s",
-                selectedPath.c_str());
+  std::snprintf(modelPath, IM_ARRAYSIZE(modelPath), "%s", selectedPath.c_str());
   filePath = modelPath;
 }
 
+static int selectedObjectIndex = -1;
+static char sceneName[64] = "Untitled Scene";
+static char sceneBackground[512] = "";
+
 static void loadSceneFromPath(const std::filesystem::path &path);
 
-static void RenderEditorFileBrowser() {
-  editorFileBrowser.Display();
+static void SyncDialogueLine(ObjectConfig &obj) {
+  obj.dialogue.position = glm::vec2(obj.Position[0], obj.Position[1]);
+  obj.dialogue.bodyColor =
+      glm::vec3(obj.color.r, obj.color.g, obj.color.b);
+  obj.dialogue.isDialogue = obj.type == DIALOUGE;
+  if (obj.vectorIndex >= 0)
+    GetDialogueSystem().UpdateLine(obj.vectorIndex, obj.dialogue);
+}
 
-  if (!editorFileBrowser.HasSelected())
+static void PullDialogueSequences() {
+  for (ObjectConfig &obj : createdObjects) {
+    if (obj.type != DIALOUGE || obj.vectorIndex < 0)
+      continue;
+    const DialogueLine *line = GetDialogueSystem().GetLine(obj.vectorIndex);
+    if (line)
+      obj.dialogue.sequence = line->sequence;
+  }
+}
+
+static int FindDialogueObject(int lineIndex) {
+  for (int i = 0; i < static_cast<int>(createdObjects.size()); ++i) {
+    if (createdObjects[i].type == DIALOUGE &&
+        createdObjects[i].vectorIndex == lineIndex)
+      return i;
+  }
+  return -1;
+}
+
+static void DrawSpeakingOrder() {
+  const std::vector<int> order = GetDialogueSystem().DialogueOrder();
+  if (order.empty())
     return;
 
-  const std::filesystem::path selectedPath = editorFileBrowser.GetSelected();
-  editorFileBrowser.ClearSelected();
+  ImGui::Text("Speaking Order");
+  ImGui::Separator();
+  ImGui::TextDisabled("Who speaks, then how long before the next speaker.");
+
+  for (int slot = 0; slot < static_cast<int>(order.size()); ++slot) {
+    const DialogueLine *line = GetDialogueSystem().GetLine(order[slot]);
+    if (!line)
+      continue;
+
+    const int objectIndex = FindDialogueObject(order[slot]);
+    const std::string speaker =
+        line->speaker.empty() ? "Narrator" : line->speaker;
+    std::string preview = line->text;
+    if (preview.size() > 42)
+      preview = preview.substr(0, 42) + "...";
+
+    ImGui::PushID(slot);
+    const std::string label =
+        std::to_string(slot + 1) + ". " + speaker + ": " + preview;
+    if (ImGui::Selectable(label.c_str(), objectIndex == selectedObjectIndex))
+      selectedObjectIndex = objectIndex;
+
+    if (slot > 0 && ImGui::SmallButton("Up")) {
+      GetDialogueSystem().MoveDialogue(slot, -1);
+      PullDialogueSequences();
+    }
+    if (slot > 0)
+      ImGui::SameLine();
+    if (slot + 1 < static_cast<int>(order.size()) && ImGui::SmallButton("Down")) {
+      GetDialogueSystem().MoveDialogue(slot, 1);
+      PullDialogueSequences();
+    }
+
+    if (slot + 1 < static_cast<int>(order.size()) && objectIndex >= 0) {
+      float transition = createdObjects[objectIndex].dialogue.holdAfterLine;
+      if (ImGui::SliderFloat("Transition", &transition, 0.0f, 8.0f,
+                             "then %.2f s")) {
+        createdObjects[objectIndex].dialogue.holdAfterLine = transition;
+        SyncDialogueLine(createdObjects[objectIndex]);
+      }
+    }
+    ImGui::PopID();
+  }
+  ImGui::Spacing();
+}
+
+static void RenderEditorFileBrowser() {
+  PortalFileChooser &chooser = PortalFileChooser::Instance();
+  chooser.Poll();
+
+  std::filesystem::path selectedPath;
+  bool cancelled = false;
+  if (!chooser.ConsumeCompletion(selectedPath, cancelled))
+    return;
+
+  if (cancelled || selectedPath.empty()) {
+    editorFileDialogTarget = EditorFileDialogTarget::None;
+    return;
+  }
 
   switch (editorFileDialogTarget) {
   case EditorFileDialogTarget::AssetPath:
@@ -174,6 +282,33 @@ static void RenderEditorFileBrowser() {
     break;
   case EditorFileDialogTarget::SceneLoad:
     loadSceneFromPath(selectedPath);
+    break;
+  case EditorFileDialogTarget::PortraitCreate:
+    DialogueCreationDraft().portraitPath = selectedPath.string();
+    break;
+  case EditorFileDialogTarget::PortraitEdit:
+    if (selectedObjectIndex >= 0 &&
+        selectedObjectIndex < static_cast<int>(createdObjects.size())) {
+      ObjectConfig &obj = createdObjects[selectedObjectIndex];
+      if (obj.type == FONT || obj.type == DIALOUGE)
+        obj.dialogue.portraitPath = selectedPath.string();
+    }
+    break;
+  case EditorFileDialogTarget::BackgroundCreate:
+    DialogueCreationDraft().backgroundPath = selectedPath.string();
+    break;
+  case EditorFileDialogTarget::BackgroundEdit:
+    if (selectedObjectIndex >= 0 &&
+        selectedObjectIndex < static_cast<int>(createdObjects.size())) {
+      ObjectConfig &obj = createdObjects[selectedObjectIndex];
+      if (obj.type == FONT || obj.type == DIALOUGE)
+        obj.dialogue.backgroundPath = selectedPath.string();
+    }
+    break;
+  case EditorFileDialogTarget::SceneBackground:
+    std::snprintf(sceneBackground, IM_ARRAYSIZE(sceneBackground), "%s",
+                  selectedPath.string().c_str());
+    GetDialogueSystem().SetSceneBackground(sceneBackground);
     break;
   case EditorFileDialogTarget::None:
     break;
@@ -198,10 +333,6 @@ void initIMGUI(GLFWwindow *window) {
   ImGui_ImplOpenGL3_Init("#version 330");
 }
 
-static int selectedObjectIndex =
-    -1; // Which object is currently selected in the list
-static char sceneName[64] = "Untitled Scene";
-
 void UpdateManager(GLFWwindow *window, Camera &camera) {}
 
 void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
@@ -220,7 +351,7 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
   if (ImGui::Button("Save")) {
     // TODO: Implement a Save Scene function (serialize objects to a file).
     std::cout << "Saving scene named: " << sceneName << std::endl;
-    //isSaveScene = true;
+    // isSaveScene = true;
     saveScene();
   }
   ImGui::SameLine();
@@ -229,6 +360,26 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
     std::cout << "Loading scene into: " << sceneName << std::endl;
     loadScene();
   }
+  ImGui::SameLine();
+  if (GetDialogueSystem().IsPlaying()) {
+    if (ImGui::Button("Stop"))
+      GetDialogueSystem().Stop();
+    ImGui::SameLine();
+    ImGui::TextDisabled("Playing dialogue...");
+  } else if (ImGui::Button("Play Scene")) {
+    GetDialogueSystem().Play();
+  }
+
+  ImGui::InputText("Scene Background", sceneBackground,
+                   IM_ARRAYSIZE(sceneBackground));
+  ImGui::SameLine();
+  if (ImGui::Button("Browse##SceneBackground")) {
+    OpenEditorFileBrowser(EditorFileDialogTarget::SceneBackground,
+                          "Select a Scene Background",
+                          PortalFileChooser::ImageExtensions());
+  }
+
+  GetDialogueSystem().SetSceneBackground(sceneBackground);
 
   ImGui::Separator();
   ImGui::Spacing();
@@ -241,8 +392,9 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
 
   // Object Type Selection
   ImGui::Text("Select Object Type:");
-  const char *objectTypes[] = {"Particle", "Cube", "3D Model (OBJ)", "Image",
-                               "Water"};
+  const char *objectTypes[] = {"Particle", "Cube",  "3D Model (OBJ)",
+                               "Image",    "Water", "Dialouge",
+                               "Font"};
   int currentItem = static_cast<int>(selectedType);
   if (ImGui::Combo("##ObjectType", &currentItem, objectTypes,
                    IM_ARRAYSIZE(objectTypes))) {
@@ -289,7 +441,7 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
     if (ImGui::Button("Browse")) {
       OpenEditorFileBrowser(EditorFileDialogTarget::AssetPath,
                             "Select an Image",
-                            {".png", ".jpg", ".jpeg", ".bmp"});
+                            PortalFileChooser::ImageExtensions());
     }
   }
   if (selectedType == CUBE) {
@@ -301,8 +453,23 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
     if (ImGui::Button("Browse")) {
       OpenEditorFileBrowser(EditorFileDialogTarget::AssetPath,
                             "Select a Texture",
-                            {".png", ".jpg", ".jpeg", ".bmp"});
+                            PortalFileChooser::ImageExtensions());
     }
+  }
+
+  if (selectedType == FONT || selectedType == DIALOUGE) {
+    DrawDialogueCreationFields(
+        selectedType == DIALOUGE,
+        []() {
+          OpenEditorFileBrowser(EditorFileDialogTarget::PortraitCreate,
+                                "Select a Portrait",
+                                PortalFileChooser::ImageExtensions());
+        },
+        []() {
+          OpenEditorFileBrowser(EditorFileDialogTarget::BackgroundCreate,
+                                "Select a Background",
+                                PortalFileChooser::ImageExtensions());
+        });
   }
 
   if (selectedType == MODEL_OBJ) {
@@ -322,7 +489,7 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
     if (ImGui::Button("Browse")) {
       OpenEditorFileBrowser(EditorFileDialogTarget::AssetPath,
                             "Select a 3D Model",
-                            {".obj", ".glb", ".gltf", ".fbx"});
+                            PortalFileChooser::ModelExtensions());
     }
   }
 
@@ -346,7 +513,7 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
     if (ImGui::Button("Browse")) {
       OpenEditorFileBrowser(EditorFileDialogTarget::AssetPath,
                             "Select a Particle Texture",
-                            {".png", ".jpg", ".jpeg", ".bmp"});
+                            PortalFileChooser::ImageExtensions());
     }
   }
   if (selectedType == WATER_GRID) {
@@ -486,6 +653,30 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
       }
       grids.push_back(newGrid);
       newIndex = static_cast<int>(grids.size()) - 1;
+    } else if (selectedType == FONT || selectedType == DIALOUGE) {
+      newObj.dialogue = DialogueCreationDraft();
+      newObj.dialogue.isDialogue = selectedType == DIALOUGE;
+      if (selectedType == DIALOUGE) {
+        newObj.color = {newObj.dialogue.bodyColor.r, newObj.dialogue.bodyColor.g,
+                        newObj.dialogue.bodyColor.b};
+      } else {
+        newObj.dialogue.bodyColor =
+            glm::vec3(objectColor[0], objectColor[1], objectColor[2]);
+      }
+      if (selectedType == FONT) {
+        newObj.Position[0] = 100.0f;
+        newObj.Position[1] = 400.0f;
+      } else {
+        newObj.Position[0] = 80.0f;
+        newObj.Position[1] = 40.0f;
+      }
+      newObj.dialogue.position =
+          glm::vec2(newObj.Position[0], newObj.Position[1]);
+      newIndex = GetDialogueSystem().AddLine(newObj.dialogue);
+      if (const DialogueLine *stored = GetDialogueSystem().GetLine(newIndex))
+        newObj.dialogue.sequence = stored->sequence;
+      if (selectedType == DIALOUGE)
+        DialogueCreationDraft().text.clear();
     }
 
     newObj.vectorIndex = newIndex;
@@ -518,6 +709,12 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
     case MODEL_OBJ:
       typeLabel = "Model";
       break;
+    case FONT:
+      typeLabel = "Font";
+      break;
+    case DIALOUGE:
+      typeLabel = "Dialogue";
+      break;
     default:
       typeLabel = "Other";
       break;
@@ -531,30 +728,39 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
   }
   ImGui::EndChild();
 
+  DrawSpeakingOrder();
+
   // ------------------------------------------------
   // EDIT THE SELECTED OBJECT
   // ------------------------------------------------
   if (selectedObjectIndex >= 0 &&
       selectedObjectIndex < (int)createdObjects.size()) {
     ObjectConfig &obj = createdObjects[selectedObjectIndex];
-    if(isSaveScene) {
-      //saveScene();
+    if (isSaveScene) {
+      // saveScene();
     }
     ImGui::Separator();
     ImGui::Text("Editing Object: %d", selectedObjectIndex);
 
     // --- Transform Controls ---
     if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
-      ImGui::DragFloat3("Position", obj.Position, 0.1f, -50.0f, 50.0f, "%.2f");
-      ImGui::DragFloat3("Rotation", obj.rotation, 0.1f, -360.0f, 360.0f,
-                        "%.1f");
-      ImGui::DragFloat3("Scale", obj.size, 0.1f, 0.1f, 50.0f, "%.2f");
-      if (ImGui::Button("Save Position")) {
-        glm::vec3 newPos(obj.Position[0], obj.Position[1], obj.Position[2]);
-        savePosition(newPos);
-      }
-      if(ImGui::Button("Load Position")) {
-        loadPosition();
+      if (obj.type == FONT || obj.type == DIALOUGE) {
+        ImGui::DragFloat2("Screen Position", obj.Position, 1.0f, 0.0f, 4000.0f,
+                          "%.0f");
+        ImGui::TextDisabled("Origin is bottom-left of the viewport.");
+      } else {
+        ImGui::DragFloat3("Position", obj.Position, 0.1f, -50.0f, 50.0f,
+                          "%.2f");
+        ImGui::DragFloat3("Rotation", obj.rotation, 0.1f, -360.0f, 360.0f,
+                          "%.1f");
+        ImGui::DragFloat3("Scale", obj.size, 0.1f, 0.1f, 50.0f, "%.2f");
+        if (ImGui::Button("Save Position")) {
+          glm::vec3 newPos(obj.Position[0], obj.Position[1], obj.Position[2]);
+          savePosition(newPos);
+        }
+        if (ImGui::Button("Load Position")) {
+          loadPosition();
+        }
       }
     }
     ImGui::Spacing();
@@ -603,6 +809,24 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
       ImGui::SliderFloat("Spacing", &obj.Gridspacing, 0.0f, 10.0f);
     }
     ImGui::Spacing();
+
+    if ((obj.type == FONT || obj.type == DIALOUGE) &&
+        ImGui::CollapsingHeader("Text Settings",
+                                ImGuiTreeNodeFlags_DefaultOpen)) {
+      DrawDialogueEditFields(
+          obj.dialogue, obj.type == DIALOUGE,
+          []() {
+            OpenEditorFileBrowser(EditorFileDialogTarget::PortraitEdit,
+                                  "Select a Portrait",
+                                  PortalFileChooser::ImageExtensions());
+          },
+          []() {
+            OpenEditorFileBrowser(EditorFileDialogTarget::BackgroundEdit,
+                                  "Select a Background",
+                                  PortalFileChooser::ImageExtensions());
+          });
+    }
+    ImGui::Spacing();
     int idx = obj.vectorIndex;
     if (obj.type == IMAGE && idx >= 0 && idx < (int)images.size()) {
       images[idx].r = obj.color.r;
@@ -647,37 +871,45 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
       grids[idx].speed = obj.Gridspeed;
       grids[idx].spacing = obj.Gridspacing;
       grids[idx].size = obj.Gridsize;
+    } else if (obj.type == FONT || obj.type == DIALOUGE) {
+      SyncDialogueLine(obj);
     }
 
     // -------------------
     // Delete button
     // -------------------
     if (ImGui::Button("Delete Object")) {
-      // Remove from createdObjects
+      const ObjectType deletedType = obj.type;
+      const int deletedIndex = idx;
       createdObjects.erase(createdObjects.begin() + selectedObjectIndex);
 
-      // Also remove from the specific vector
-      if (obj.type == IMAGE && idx >= 0 && idx < (int)images.size()) {
-        images.erase(images.begin() + idx);
+      if (deletedType == IMAGE && deletedIndex >= 0 &&
+          deletedIndex < (int)images.size()) {
+        images.erase(images.begin() + deletedIndex);
         std::cout << "DELETED::IMAGE" << std::endl;
       }
-      if (obj.type == PARTICLE && idx >= 0 && idx < (int)particles.size()) {
-        particles.erase(particles.begin() + idx);
+      if (deletedType == PARTICLE && deletedIndex >= 0 &&
+          deletedIndex < (int)particles.size()) {
+        particles.erase(particles.begin() + deletedIndex);
         std::cout << "DELETED::PARTICLE" << std::endl;
       }
-      if (obj.type == MODEL_OBJ && idx >= 0 &&
-          idx < (int)ModelManagers.size()) {
-        ModelManagers.erase(ModelManagers.begin() + idx);
+      if (deletedType == MODEL_OBJ && deletedIndex >= 0 &&
+          deletedIndex < (int)ModelManagers.size()) {
+        ModelManagers.erase(ModelManagers.begin() + deletedIndex);
         std::cout << "DELETED::MODEL" << std::endl;
       }
 
-      if (obj.type == CUBE && idx >= 0 && idx < (int)cubes.size()) {
-        cubes.erase(cubes.begin() + idx);
+      if (deletedType == CUBE && deletedIndex >= 0 &&
+          deletedIndex < (int)cubes.size()) {
+        cubes.erase(cubes.begin() + deletedIndex);
       }
 
-      if (obj.type == WATER_GRID && idx >= 0 && idx < (int)grids.size()) {
-        grids.erase(grids.begin() + idx);
+      if (deletedType == WATER_GRID && deletedIndex >= 0 &&
+          deletedIndex < (int)grids.size()) {
+        grids.erase(grids.begin() + deletedIndex);
       }
+      if (deletedType == FONT || deletedType == DIALOUGE)
+        GetDialogueSystem().RemoveLine(deletedIndex);
       selectedObjectIndex = -1;
     }
   }
@@ -701,8 +933,20 @@ void CreationManager(GLFWwindow *window, Shader &shader, Camera &camera,
     gridsWat.renderGridWater(camera, window);
   }
 
+  int previewLine = -1;
+  if (selectedObjectIndex >= 0 &&
+      selectedObjectIndex < static_cast<int>(createdObjects.size()) &&
+      createdObjects[selectedObjectIndex].type == DIALOUGE) {
+    previewLine = createdObjects[selectedObjectIndex].vectorIndex;
+  }
+  GetDialogueSystem().SetPreviewLine(previewLine);
+
   RenderEditorFileBrowser();
   ImGui::End();
+}
+
+void RenderEditorText(FontManager &fontManager, int scrwidth, int scrheight) {
+  GetDialogueSystem().Render(fontManager, scrwidth, scrheight);
 }
 
 void stateGame(OpenGLState &opengl) {
@@ -728,7 +972,6 @@ EditorSceneStats GetEditorSceneStats() {
   return stats;
 }
 
-
 static std::string SceneFileName() {
   std::string name = sceneName;
   if (name.empty())
@@ -747,6 +990,7 @@ void saveScene() {
 
   nlohmann::json sceneJson;
   sceneJson["sceneName"] = sceneName;
+  sceneJson["backgroundPath"] = sceneBackground;
 
   for (const auto &obj : createdObjects) {
     nlohmann::json objJson;
@@ -773,6 +1017,7 @@ void saveScene() {
     objJson["Gridspacing"] = obj.Gridspacing;
     objJson["modelSize"] = obj.modelSize;
     objJson["isWireFrame"] = obj.isWireFrame;
+    WriteDialogueJson(objJson, obj.dialogue);
 
     sceneJson["objects"].push_back(objJson);
   }
@@ -789,12 +1034,10 @@ void saveScene() {
   }
 }
 
-
-
 void loadScene() {
   std::filesystem::create_directory("Scenes");
   OpenEditorFileBrowser(EditorFileDialogTarget::SceneLoad, "Load Scene",
-                        {".json"}, "Scenes");
+                        PortalFileChooser::SceneExtensions(), "Scenes");
 }
 
 static void loadSceneFromPath(const std::filesystem::path &path) {
@@ -809,7 +1052,16 @@ static void loadSceneFromPath(const std::filesystem::path &path) {
   inFile.close();
 
   if (sceneJson.contains("sceneName")) {
-    strncpy(sceneName, sceneJson["sceneName"].get<std::string>().c_str(), sizeof(sceneName));
+    strncpy(sceneName, sceneJson["sceneName"].get<std::string>().c_str(),
+            sizeof(sceneName));
+  }
+
+  sceneBackground[0] = '\0';
+  if (sceneJson.contains("backgroundPath")) {
+    strncpy(sceneBackground,
+            sceneJson["backgroundPath"].get<std::string>().c_str(),
+            sizeof(sceneBackground) - 1);
+    sceneBackground[sizeof(sceneBackground) - 1] = '\0';
   }
 
   // Clear current scene data
@@ -819,6 +1071,8 @@ static void loadSceneFromPath(const std::filesystem::path &path) {
   particles.clear();
   ModelManagers.clear();
   grids.clear();
+  GetDialogueSystem().Clear();
+  GetDialogueSystem().SetSceneBackground(sceneBackground);
 
   // Rebuild each object
   for (const auto &objJson : sceneJson["objects"]) {
@@ -834,11 +1088,8 @@ static void loadSceneFromPath(const std::filesystem::path &path) {
       newObj.rotation[i] = objJson["rotation"][i];
     }
 
-    newObj.color = {
-      objJson["color"][0],
-      objJson["color"][1],
-      objJson["color"][2]
-    };
+    newObj.color = {objJson["color"][0], objJson["color"][1],
+                    objJson["color"][2]};
 
     newObj.transparency = objJson["transparency"];
     newObj.shininess = objJson["shininess"];
@@ -849,7 +1100,8 @@ static void loadSceneFromPath(const std::filesystem::path &path) {
     newObj.height = objJson["height"];
     newObj.Speed = objJson["Speed"];
     newObj.modelPath = objJson["modelPath"];
-    newObj.filepath = newObj.modelPath.c_str(); // pointer for legacy compatibility
+    newObj.filepath =
+        newObj.modelPath.c_str(); // pointer for legacy compatibility
     newObj.Gridamplitude = objJson["Gridamplitude"];
     newObj.Gridspeed = objJson["Gridspeed"];
     newObj.Gridfrequency = objJson["Gridfrequency"];
@@ -857,95 +1109,117 @@ static void loadSceneFromPath(const std::filesystem::path &path) {
     newObj.Gridspacing = objJson["Gridspacing"];
     newObj.modelSize = objJson["modelSize"];
     newObj.isWireFrame = objJson["isWireFrame"];
+    ReadDialogueJson(objJson, newObj.dialogue);
+    newObj.dialogue.position =
+        glm::vec2(newObj.Position[0], newObj.Position[1]);
+    newObj.dialogue.bodyColor =
+        glm::vec3(newObj.color.r, newObj.color.g, newObj.color.b);
+    newObj.dialogue.isDialogue = newObj.type == DIALOUGE;
 
     int newIndex = -1;
 
     // Object reconstruction logic
     switch (newObj.type) {
-      case CUBE: {
-        Cube cube;
-        cube.r = newObj.color.r;
-        cube.g = newObj.color.g;
-        cube.b = newObj.color.b;
-        cube.Alpha = newObj.transparency;
-        cube.Position = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
-        cube.Rotation = glm::vec3(newObj.rotation[0], newObj.rotation[1], newObj.rotation[2]);
-        cube.size = glm::vec3(newObj.size[0], newObj.size[1], newObj.size[2]);
-        cube.texturePath = newObj.filepath;
-        cube.loadCube();
+    case CUBE: {
+      Cube cube;
+      cube.r = newObj.color.r;
+      cube.g = newObj.color.g;
+      cube.b = newObj.color.b;
+      cube.Alpha = newObj.transparency;
+      cube.Position =
+          glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
+      cube.Rotation =
+          glm::vec3(newObj.rotation[0], newObj.rotation[1], newObj.rotation[2]);
+      cube.size = glm::vec3(newObj.size[0], newObj.size[1], newObj.size[2]);
+      cube.texturePath = newObj.filepath;
+      cube.loadCube();
 
-        cubes.push_back(cube);
-        newIndex = (int)cubes.size() - 1;
-        break;
+      cubes.push_back(cube);
+      newIndex = (int)cubes.size() - 1;
+      break;
+    }
+
+    case IMAGE: {
+      Image image;
+      image.imagePath = newObj.filepath;
+      image.Position =
+          glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
+      image.Rotation =
+          glm::vec3(newObj.rotation[0], newObj.rotation[1], newObj.rotation[2]);
+      image.loadImage();
+
+      images.push_back(image);
+      newIndex = (int)images.size() - 1;
+      break;
+    }
+
+    case PARTICLE: {
+      Particle particle;
+      particle.Position =
+          glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
+      particle.texturePath = newObj.filepath;
+      particle.Height = newObj.height;
+      particle.ParticleAmount = newObj.amount;
+      particle.Speed = newObj.Speed;
+      particle.InitParticle();
+
+      particles.push_back(particle);
+      newIndex = (int)particles.size() - 1;
+      break;
+    }
+
+    case MODEL_OBJ: {
+      CharacterModel model;
+      model.ModelPath = newObj.modelPath.c_str();
+      model.modelSize = newObj.modelSize;
+      model.vHeight = modelShaderHeight;
+      model.isWire = newObj.isWireFrame;
+      model.ModelPosition =
+          glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
+      model.ModelRotation =
+          glm::vec3(newObj.rotation[0], newObj.rotation[1], newObj.rotation[2]);
+      model.currentRenderMode =
+          renderMode; // You could load from JSON if needed
+
+      model.IMGUIinitializeModelRenderingSystem();
+
+      ModelManagers.push_back(model);
+      newIndex = (int)ModelManagers.size() - 1;
+      break;
+    }
+
+    case WATER_GRID: {
+      Grid grid;
+      grid.amplitude = newObj.Gridamplitude;
+      grid.speed = newObj.Gridspeed;
+      grid.frequency = newObj.Gridfrequency;
+      grid.size = newObj.Gridsize;
+      grid.spacing = newObj.Gridspacing;
+
+      if (lod == LOD::BASIC) {
+        grid.setupGridWater();
       }
 
-      case IMAGE: {
-        Image image;
-        image.imagePath = newObj.filepath;
-        image.Position = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
-        image.Rotation = glm::vec3(newObj.rotation[0], newObj.rotation[1], newObj.rotation[2]);
-        image.loadImage();
+      grids.push_back(grid);
+      newIndex = (int)grids.size() - 1;
+      break;
+    }
 
-        images.push_back(image);
-        newIndex = (int)images.size() - 1;
-        break;
-      }
-
-      case PARTICLE: {
-        Particle particle;
-        particle.Position = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
-        particle.texturePath = newObj.filepath;
-        particle.Height = newObj.height;
-        particle.ParticleAmount = newObj.amount;
-        particle.Speed = newObj.Speed;
-        particle.InitParticle();
-
-        particles.push_back(particle);
-        newIndex = (int)particles.size() - 1;
-        break;
-      }
-
-      case MODEL_OBJ: {
-        CharacterModel model;
-        model.ModelPath = newObj.modelPath.c_str();
-        model.modelSize = newObj.modelSize;
-        model.vHeight = modelShaderHeight;
-        model.isWire = newObj.isWireFrame;
-        model.ModelPosition = glm::vec3(newObj.Position[0], newObj.Position[1], newObj.Position[2]);
-        model.ModelRotation = glm::vec3(newObj.rotation[0], newObj.rotation[1], newObj.rotation[2]);
-        model.currentRenderMode = renderMode; // You could load from JSON if needed
-
-        model.IMGUIinitializeModelRenderingSystem();
-
-        ModelManagers.push_back(model);
-        newIndex = (int)ModelManagers.size() - 1;
-        break;
-      }
-
-      case WATER_GRID: {
-        Grid grid;
-        grid.amplitude = newObj.Gridamplitude;
-        grid.speed = newObj.Gridspeed;
-        grid.frequency = newObj.Gridfrequency;
-        grid.size = newObj.Gridsize;
-        grid.spacing = newObj.Gridspacing;
-
-        if (lod == LOD::BASIC) {
-          grid.setupGridWater();
-        }
-
-        grids.push_back(grid);
-        newIndex = (int)grids.size() - 1;
-        break;
-      }
+    case FONT:
+    case DIALOUGE: {
+      newIndex = GetDialogueSystem().AddLine(newObj.dialogue);
+      if (const DialogueLine *stored = GetDialogueSystem().GetLine(newIndex))
+        newObj.dialogue.sequence = stored->sequence;
+      break;
+    }
     }
 
     newObj.vectorIndex = newIndex;
     createdObjects.push_back(newObj);
   }
 
-  std::cout << "Scene loaded from: " << path.string()
-            << " with " << createdObjects.size() << " objects.\n";
+  std::cout << "Scene loaded from: " << path.string() << " with "
+            << createdObjects.size() << " objects.\n";
 }
 
 void savePosition(const glm::vec3 &position) {

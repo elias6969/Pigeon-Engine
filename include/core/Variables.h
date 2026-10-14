@@ -12,7 +12,6 @@ public:
     static std::string texturePath;
     static std::string shaderPath;
     static std::string cubemappath;
-    static std::string cubemappathtest;
     static std::string fontpath;
     static std::string modelPath;
     static unsigned int SCR_HEIGHT;

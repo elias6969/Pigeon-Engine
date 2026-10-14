@@ -91,6 +91,7 @@ void Application::InitEngineResources() {
   m_Sphere = std::make_unique<Sphere>(1.0f, countfirst, countsecond);
   m_Pyramid = std::make_unique<Pyramid>(m_PyramidShader, 2.0f, 3.0f);
   m_Pyramid->position = glm::vec3(10.0f, 0.0f, 0.0f);
+  m_Fontmanager = std::make_unique<FontManager>();
 }
 
 void Application::InitImGui() {
@@ -241,6 +242,9 @@ void Application::RenderScene() {
   glm::mat4 view = m_Camera.GetViewMatrix();
 
   m_Sphere->Draw(view, projection, glm::vec3(5.0f), glm::vec3(spherecolor[0], spherecolor[1], spherecolor[2]));
+
+  if (m_Fontmanager)
+    RenderEditorText(*m_Fontmanager, m_ScreenWidth, m_ScreenHeight);
 }
 
 void Application::RenderImGui() {

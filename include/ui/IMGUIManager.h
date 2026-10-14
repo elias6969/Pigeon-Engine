@@ -8,10 +8,13 @@
 #include "Camera.h"
 #include "iostream"
 
+#include "fontManager.h"
+
 void initIMGUI(GLFWwindow* window);
 
 void UpdateManager(GLFWwindow* window, Camera &camera);
 void CreationManager(GLFWwindow* window, Shader &shader, Camera &camera, int scrwidth, int scrheight, double &mouseX, double &mouseY, bool &ishovering, bool &isMoving);
+void RenderEditorText(FontManager &fontManager, int scrwidth, int scrheight);
 
 void AddEmojiRanges(ImVector<ImWchar>& ranges);
 struct OpenGLState {

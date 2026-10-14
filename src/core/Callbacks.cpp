@@ -55,7 +55,7 @@ void Callbacks::ProcessInput(Application &app, float deltaTime) {
   GLFWwindow *window = app.m_Window;
 
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    glfwSetWindowShouldClose(window, true);
+    //glfwSetWindowShouldClose(window, true);
 
   app.m_Camera.MovementSpeed =
       (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) ? 10.0f : 2.5f;

@@ -24,6 +24,7 @@
 #include "bird.h"
 #include "modelLoader.h"
 #include "pyramid.h"
+#include "fontManager.h"
 
 class Application {
 public:
@@ -96,6 +97,7 @@ private:
 
   std::unique_ptr<Pyramid> m_Pyramid;
   std::unique_ptr<Sphere> m_Sphere;
+  std::unique_ptr<FontManager> m_Fontmanager;
 };
 
 #endif

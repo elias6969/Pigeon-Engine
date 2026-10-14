@@ -19,6 +19,7 @@ set(ENGINE_INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/include/animation
     ${CMAKE_SOURCE_DIR}/include/core
+    ${CMAKE_SOURCE_DIR}/include/dialogue
     ${CMAKE_SOURCE_DIR}/include/effects
     ${CMAKE_SOURCE_DIR}/include/models
     ${CMAKE_SOURCE_DIR}/include/particles
@@ -76,6 +77,16 @@ endif()
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     PIGEON_ASSET_DIR="${CMAKE_SOURCE_DIR}/assets"
+)
+
+
+find_package(Freetype REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBSYSTEMD REQUIRED IMPORTED_TARGET libsystemd)
+
+target_link_libraries(PigeonEngine PRIVATE
+    Freetype::Freetype
+    PkgConfig::LIBSYSTEMD
 )
 
 # Link libraries
